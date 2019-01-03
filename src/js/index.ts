@@ -1,6 +1,9 @@
 import 'bootstrap';
-import 'fabric';
 import '../scss/index.scss';
+import { fabric } from 'fabric';
+import 'jquery';
+
+console.log("xixi")
 
 enum Tool {
   Selection,
@@ -16,6 +19,7 @@ $(document).keyup(function(e) {
     canvas.remove(line);
   }
 });
+
 
 $('#line').on('click', function(){
   T = Tool.Line;
