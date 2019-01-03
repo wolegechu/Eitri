@@ -21,8 +21,23 @@ $('#line').on('click', function(){
   T = Tool.Line;
 });
 
+fabric.Canvas.prototype.orderObjects = function(compare) {
+  this._objects.sort(compare);
+  this.renderAll();
+}
+
 var canvas = new fabric.Canvas('c');
 var line;
+
+function compare(x, y){
+  if(x.type == 'circle' && y.type == 'line') {
+    return true;
+  }else{
+    return false;
+  }
+}
+
+canvas.orderObjects(compare);
 
 function makeCircle(point, radius=12) {
   var c = new fabric.Circle({
@@ -62,7 +77,7 @@ canvas.on('mouse:down', function(o) {
   if(!drawingLine) {
     drawingLine = true;
   }
-  
+
   canvas.add(circle);
   canvas.add(line);
 });
@@ -77,9 +92,10 @@ canvas.on('mouse:move', function(o) {
 });
 
 canvas.on('object:moving', function(e) {
+  
   var p = e.target;
   p.line_1 && p.line_1.set({'x1': p.left + p.radius, 'y1':p.top + p.radius});
   p.line_2 && p.line_2.set({'x2': p.left + p.radius, 'y2':p.top + p.radius});
-  canvas.renderAll();
+  canvas.orderObjects(compare);
 })
 
