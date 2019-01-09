@@ -1,5 +1,5 @@
 import {AssertionError} from 'assert';
-import * as FssEvent from '../events/__init__';
+import * as FssEvent from '../events/index';
 
 
 export abstract class BaseState {

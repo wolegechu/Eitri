@@ -1,4 +1,4 @@
-import * as FssEvent from '../../events/__init__';
+import * as FssEvent from '../../events/index';
 import {BaseState} from '../state_machine';
 
 
