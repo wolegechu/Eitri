@@ -1,12 +1,12 @@
-import {Canvas} from '../view_elements/canvas';
+import {ViewCanvas} from '../view_elements/canvas';
 
-import {Event, keyPressCheckersMap, Type} from './event_checker';
+import {FssEvent, keyPressCheckersMap, EventType} from './event_checker';
 
 
-type Observer = (e: Event) => void;
-const observersMap: Map<Type, Observer[]> = new Map();
+type Observer = (e: FssEvent) => void;
+const observersMap: Map<EventType, Observer[]> = new Map();
 
-export function AddEventListener(event: Type, observer: Observer) {
+export function AddEventListener(event: EventType, observer: Observer) {
   let list = observersMap.get(event);
   if (!list) {
     observersMap.set(event, []);
@@ -17,7 +17,7 @@ export function AddEventListener(event: Type, observer: Observer) {
   }
 }
 
-export function RemoveEventListener(event: Type, observer: Observer) {
+export function RemoveEventListener(event: EventType, observer: Observer) {
   const list = observersMap.get(event);
   if (!list) return;
 
@@ -44,15 +44,15 @@ document.onkeypress = (e) => {
 };
 
 // Get all canvas click event
-const canvas = Canvas.GetInstance();
-canvas.SetMouseDownCallBack((point) => {
-  const type = Type.MOUSE_CLICK_CANVAS;
+const canvas = ViewCanvas.GetInstance();
+canvas.OnMouseDown((point) => {
+  const type = EventType.MOUSE_CLICK_CANVAS;
 
   const observers = GetObservers(type);
   if (!observers) return;
 
   // create the event
-  const event = new Event();
+  const event = new FssEvent();
   event.type = type;
   event.position = point;
 
@@ -62,7 +62,7 @@ canvas.SetMouseDownCallBack((point) => {
   });
 });
 
-function GetObservers(type: Type): Observer[] {
+function GetObservers(type: EventType): Observer[] {
   const observers = observersMap.get(type);
   if (!observers || !observers.length) return null;
   return observers;

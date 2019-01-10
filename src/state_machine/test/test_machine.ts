@@ -1,4 +1,4 @@
-import * as FssEvent from '../../events/index';
+import * as EventSystem from '../../events/index';
 import {BaseState, StateMachine} from '../state_machine';
 
 import {TestStateA} from './test_state';
@@ -12,12 +12,12 @@ export class TestMachine extends StateMachine {
     {
       origin: this.stateA,
       target: this.stateB,
-      event: FssEvent.Type.KEY_PRESS_ANY
+      event: EventSystem.EventType.KEY_PRESS_ANY
     },
     {
       origin: this.stateB,
       target: this.stateA,
-      event: FssEvent.Type.KEY_PRESS_ANY
+      event: EventSystem.EventType.KEY_PRESS_ANY
     }
   ];
 

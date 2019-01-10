@@ -1,9 +1,10 @@
-import {AssertionError} from 'assert';
-import * as FssEvent from '../events/index';
+import * as EventSystem from '../events/index';
 
 
 export abstract class BaseState {
+  
   machine: StateMachine;
+  // name: string
 
   constructor(m: StateMachine) {
     this.machine = m;
@@ -13,11 +14,11 @@ export abstract class BaseState {
 }
 
 type TransitionTable =
-    Array<{origin: BaseState; target: BaseState; event: FssEvent.Type;}>;
+  Array<{ origin: BaseState; target: BaseState; event: EventSystem.EventType;}>;
 
 export abstract class StateMachine {
+
   protected abstract transisionTable: TransitionTable;
-  protected stateTable: {[key: string]: BaseState};
   protected state: BaseState;
 
   constructor() {}
@@ -27,7 +28,7 @@ export abstract class StateMachine {
     this.state = s;
   }
 
-  Transition(event: FssEvent.Type): void {
+  Transition(event: EventSystem.EventType): void {
     const table = this.transisionTable;
     const result = table.filter(e => {
       return e.event === event && e.origin === this.state;

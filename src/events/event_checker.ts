@@ -1,11 +1,11 @@
 import {Point} from '../utils/index';
 
-export class Event {
-  type: Type;
+export class FssEvent {
+  type: EventType;
   position: Point;
 }
 
-export enum Type {
+export enum EventType {
   // START
   KEY_PRESS_START = 1,
   KEY_PRESS_ANY,
@@ -22,13 +22,13 @@ export enum Type {
 /*******
  * All Key Press Event Checker
  */
-type KeyPressChecker = (e: KeyboardEvent) => Event;
-export let keyPressCheckersMap = new Map<Type, KeyPressChecker>([
-  [Type.KEY_PRESS_ANY, CheckKeyPressAny],
+type KeyPressChecker = (e: KeyboardEvent) => FssEvent;
+export let keyPressCheckersMap = new Map<EventType, KeyPressChecker>([
+  [EventType.KEY_PRESS_ANY, CheckKeyPressAny],
 ]);
 
-function CheckKeyPressAny(e: KeyboardEvent): Event {
-  const event = new Event();
-  event.type = Type.KEY_PRESS_ANY;
+function CheckKeyPressAny(e: KeyboardEvent): FssEvent {
+  const event = new FssEvent();
+  event.type = EventType.KEY_PRESS_ANY;
   return event;
 }

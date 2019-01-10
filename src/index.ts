@@ -1,8 +1,8 @@
-import './events/event_system';
-import {TestMachine} from './state_machine/test/test_machine';
+import { TestMachine } from "./state_machine/test/test_machine";
+
 // import { DrawLineState } from "./state_machine/designer/draw_line/draw_line";
 
-const m = new TestMachine();
+new TestMachine();
 // var machine = new StateMachine(DrawLineState.GetInstance());
 // import { Canvas } from './view_elements/canvas';
 // import { fabric } from 'fabric';

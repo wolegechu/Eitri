@@ -1,6 +1,5 @@
-import * as FssEvent from '../../events/index';
+import * as EventSystem from '../../events/index';
 import {BaseState} from '../state_machine';
-
 
 export class TestStateA extends BaseState {
   name: string;
@@ -8,7 +7,7 @@ export class TestStateA extends BaseState {
   // must do like this !
   // in javascript we can use keyword 'that' to avoid 'this' problem.
   // in typescript we should use 'arrow function'.
-  private funcOnPressAny = (e: FssEvent.Event) => {
+  private funcOnPressAny = (e: EventSystem.FssEvent) => {
     this.OnPressAny(e);
   };
 
@@ -16,17 +15,17 @@ export class TestStateA extends BaseState {
     console.log('Test State ' + this.name + ': Enter');
 
     // listen
-    FssEvent.AddEventListener(FssEvent.Type.KEY_PRESS_ANY, this.funcOnPressAny);
+    EventSystem.AddEventListener(EventSystem.EventType.KEY_PRESS_ANY, this.funcOnPressAny);
   }
 
   Leave(): void {
     console.log('Test State ' + this.name + ': Leave');
 
-    FssEvent.RemoveEventListener(
-        FssEvent.Type.KEY_PRESS_ANY, this.funcOnPressAny);
+    EventSystem.RemoveEventListener(
+      EventSystem.EventType.KEY_PRESS_ANY, this.funcOnPressAny);
   }
 
-  private OnPressAny(event: FssEvent.Event): void {
+  private OnPressAny(event: EventSystem.FssEvent): void {
     this.machine.Transition(event.type);
   }
 }
