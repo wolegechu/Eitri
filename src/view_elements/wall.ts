@@ -13,16 +13,29 @@ export class Wall extends ViewObject {
   // rooms: ID[];
   // doors: ID[];
 
-  constructor(id: number, p1: Point, p2: Point) {
+  constructor(id: number, point1: Point, point2: Point|Joint) {
     super(id);
 
-    // new two Joint
+    let p1: Point, p2: Point;
+
+    // First Joint
+    p1 = point1;
     const joint1 = ViewFactory.CreateJoint(p1);
-    const joint2 = ViewFactory.CreateJoint(p2);
     this.jointIDs.push(joint1.id);
-    this.jointIDs.push(joint2.id);
     joint1.wallIDs.push(this.id);
+
+    // Second Joint
+    let joint2: Joint;
+
+    if (point2 instanceof Joint) {
+      joint2 = (point2 as Joint);
+      p2 = joint2.position;
+    } else {
+      p2 = point2 as Point;
+      joint2 = ViewFactory.CreateJoint(p2);
+    }
     joint2.wallIDs.push(this.id);
+    this.jointIDs.push(joint2.id);
 
     // new line
     this.view = new fabric.Line(
@@ -42,6 +55,14 @@ export class Wall extends ViewObject {
       'y1': joint1.position.y,
       'x2': joint2.position.x,
       'y2': joint2.position.y,
+    });
+  }
+
+  RemoveSelf() {
+    super.RemoveSelf();
+    this.jointIDs.forEach(jointID => {
+      const joint = ViewFactory.GetViewObject(jointID) as Joint;
+      joint.RemoveWallID(this.id);
     });
   }
 }

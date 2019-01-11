@@ -23,6 +23,7 @@ export class Joint extends ViewObject {
       radius: JOINT_RADIUS,
       fill: '#fff',
       stroke: '#666',
+      selectable: false
     });
     this.view.hasControls = false;
 
@@ -31,9 +32,20 @@ export class Joint extends ViewObject {
     canvas.OnObjectMove((e) => this.OnObjectMove(e));
   }
 
+  RemoveWallID(id: number) {
+    const index = this.wallIDs.indexOf(id);
+    this.wallIDs.splice(index);
+    if (0 === this.wallIDs.length) this.RemoveSelf();
+  }
+
+  SetPosition(point: Point) {
+    this.position = point;
+    this.UpdateViewPosition();
+  }
+  
   private OnObjectMove(e: fabric.IEvent) {
     if (e.target !== this.view) return;
-
+    console.debug('On Joint Move');
     this.UpdatePosition();
     this.UpdateWalls();
   }
@@ -49,5 +61,15 @@ export class Joint extends ViewObject {
   private UpdatePosition() {
     this.position.x = this.view.left + JOINT_RADIUS;
     this.position.y = this.view.top + JOINT_RADIUS;
+  }
+
+  private UpdateViewPosition() {
+    this.view.set({
+      left: this.position.x - JOINT_RADIUS,
+      top: this.position.y - JOINT_RADIUS,
+    });
+
+    this.UpdateWalls();
+    ViewCanvas.GetInstance().Render();
   }
 }

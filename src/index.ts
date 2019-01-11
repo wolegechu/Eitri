@@ -1,8 +1,9 @@
-import { TestMachine } from "./state_machine/test/test_machine";
+import {WallDrawingMachine} from './state_machine/designer/draw_wall/draw_wall_machine';
+
 
 // import { DrawLineState } from "./state_machine/designer/draw_line/draw_line";
 
-new TestMachine();
+const a = new WallDrawingMachine();
 // var machine = new StateMachine(DrawLineState.GetInstance());
 // import { Canvas } from './view_elements/canvas';
 // import { fabric } from 'fabric';

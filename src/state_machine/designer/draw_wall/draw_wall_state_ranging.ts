@@ -1,12 +1,10 @@
-import * as EventSystem from '../../events/index';
-import {BaseState} from '../state_machine';
+import * as EventSystem from '../../../events/index';
+import {BaseState} from '../../state_machine';
 
-export class TestStateA extends BaseState {
+// 输入长度
+export class RangingState extends BaseState {
   name: string;
 
-  // must do like this !
-  // in javascript we can use keyword 'that' to avoid 'this' problem.
-  // in typescript we should use 'arrow function'.
   private funcOnPressAny = (e: EventSystem.FssEvent) => {
     this.OnPressAny(e);
   };

@@ -2,7 +2,6 @@ import * as EventSystem from '../events/index';
 
 
 export abstract class BaseState {
-  
   machine: StateMachine;
   // name: string
 
@@ -13,11 +12,10 @@ export abstract class BaseState {
   abstract Leave(): void;
 }
 
-type TransitionTable =
-  Array<{ origin: BaseState; target: BaseState; event: EventSystem.EventType;}>;
+type TransitionTable = Array<
+    {origin: BaseState; target: BaseState; event: EventSystem.EventType;}>;
 
 export abstract class StateMachine {
-
   protected abstract transisionTable: TransitionTable;
   protected state: BaseState;
 
