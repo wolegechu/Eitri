@@ -1,6 +1,6 @@
 import {ViewCanvas} from '../view_elements/canvas';
 
-import {FssEvent, keyPressCheckersMap, EventType} from './event_checker';
+import {EventType, FssEvent, keyPressCheckersMap} from './event_checker';
 
 
 type Observer = (e: FssEvent) => void;
@@ -29,12 +29,14 @@ export function RemoveEventListener(event: EventType, observer: Observer) {
 
 // Get all key press event from document
 document.onkeypress = (e) => {
+  console.log('press ' + e.code);
   keyPressCheckersMap.forEach((func, type, keyPressCheckersMap) => {
     const observers = GetObservers(type);
     if (!observers) return;
 
     // create the event
     const event = func(e);
+    if (!event) return;
 
     // pass event to all observers
     observers.forEach(observer => {
@@ -43,7 +45,11 @@ document.onkeypress = (e) => {
   });
 };
 
-// Get all canvas click event
+
+/*****
+ * Get all canvas based  event
+ */
+// - mouse click event
 const canvas = ViewCanvas.GetInstance();
 canvas.OnMouseDown((point) => {
   const type = EventType.MOUSE_CLICK_CANVAS;
@@ -61,6 +67,25 @@ canvas.OnMouseDown((point) => {
     observer(event);
   });
 });
+
+// - mouse move on canvas event
+canvas.OnMouseMove((point) => {
+  const type = EventType.MOUSE_MOVE_CANVAS;
+
+  const observers = GetObservers(type);
+  if (!observers) return;
+
+  // create the event
+  const event = new FssEvent();
+  event.type = type;
+  event.position = point;
+
+  // pass event to all observers
+  observers.forEach(observer => {
+    observer(event);
+  });
+});
+
 
 function GetObservers(type: EventType): Observer[] {
   const observers = observersMap.get(type);

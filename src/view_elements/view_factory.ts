@@ -19,7 +19,7 @@ export function CreateJoint(pos: Point): Joint {
   return joint;
 }
 
-export function CreateWall(p1: Point, p2: Point): Wall {
+export function CreateWall(p1: Point|Joint, p2: Point|Joint): Wall {
   const id = GetNewID();
   const wall = new Wall(id, p1, p2);
   viewMap.set(wall.id, wall);
@@ -28,4 +28,8 @@ export function CreateWall(p1: Point, p2: Point): Wall {
 
 export function GetViewObject(id: number): ViewObject {
   return viewMap.get(id);
+}
+
+export function RemoveObject(id: number) {
+  viewMap.delete(id);
 }

@@ -13,22 +13,21 @@ export class Wall extends ViewObject {
   // rooms: ID[];
   // doors: ID[];
 
-  constructor(id: number, p1: Point, p2: Point) {
+  constructor(id: number, point1: Point|Joint, point2: Point|Joint) {
     super(id);
 
-    // new two Joint
-    const joint1 = ViewFactory.CreateJoint(p1);
-    const joint2 = ViewFactory.CreateJoint(p2);
-    this.jointIDs.push(joint1.id);
-    this.jointIDs.push(joint2.id);
-    joint1.wallIDs.push(this.id);
-    joint2.wallIDs.push(this.id);
+    const p1 = this.GetOrCreateJoint(point1).position;
+    const p2 = this.GetOrCreateJoint(point2).position;
 
     // new line
-    this.view = new fabric.Line(
-        [p1.x, p1.y, p2.x, p2.y],
-        {strokeWidth: 3, stroke: 'red', selectable: false, evented: false});
-    this.view.hasControls = false;
+    this.view = new fabric.Line([p1.x, p1.y, p2.x, p2.y], {
+      strokeWidth: 3,
+      stroke: 'red',
+      selectable: false,
+      evented: false,
+    });
+    this.view.hasControls = this.view.hasBorders = false;
+    this.view.perPixelTargetFind = true;
 
     ViewCanvas.GetInstance().Add(this.view);
   }
@@ -43,5 +42,27 @@ export class Wall extends ViewObject {
       'x2': joint2.position.x,
       'y2': joint2.position.y,
     });
+    this.view.setCoords();
+  }
+
+  RemoveSelf() {
+    super.RemoveSelf();
+    this.jointIDs.forEach(jointID => {
+      const joint = ViewFactory.GetViewObject(jointID) as Joint;
+      joint.RemoveWallID(this.id);
+    });
+  }
+
+  private GetOrCreateJoint(point: Point|Joint): Joint {
+    let joint: Joint;
+
+    if (point instanceof Joint) {
+      joint = (point as Joint);
+    } else {
+      joint = ViewFactory.CreateJoint(point);
+    }
+    joint.wallIDs.push(this.id);
+    this.jointIDs.push(joint.id);
+    return joint;
   }
 }
