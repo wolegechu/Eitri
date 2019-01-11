@@ -20,10 +20,14 @@ export class Wall extends ViewObject {
     const p2 = this.GetOrCreateJoint(point2).position;
 
     // new line
-    this.view = new fabric.Line(
-        [p1.x, p1.y, p2.x, p2.y],
-        {strokeWidth: 3, stroke: 'red', selectable: false, evented: false});
-    this.view.hasControls = false;
+    this.view = new fabric.Line([p1.x, p1.y, p2.x, p2.y], {
+      strokeWidth: 3,
+      stroke: 'red',
+      selectable: false,
+      evented: false,
+    });
+    this.view.hasControls = this.view.hasBorders = false;
+    this.view.perPixelTargetFind = true;
 
     ViewCanvas.GetInstance().Add(this.view);
   }
@@ -38,6 +42,7 @@ export class Wall extends ViewObject {
       'x2': joint2.position.x,
       'y2': joint2.position.y,
     });
+    this.view.setCoords();
   }
 
   RemoveSelf() {

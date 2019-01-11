@@ -17,7 +17,7 @@ export class ViewCanvas {
   }
 
   Render(): void {
-    this.canvas.renderAll();
+    this.canvas.requestRenderAll();
   }
 
   OnMouseDown(callback: (p: Point) => void): void {
@@ -42,6 +42,20 @@ export class ViewCanvas {
 
   Add(obj: fabric.Object): void {
     this.canvas.add(obj);
+    // this.canvas._objects.sort((a, b) => {
+    //   if (a instanceof fabric.Line) return -1;
+    //   return 1;
+    // });
+    // this.canvas.renderAll();
+    // const objs = this.canvas._objects;
+    // if (obj instanceof fabric.Line) {
+    //   objs.splice(0, 0, obj);
+    // }
+    // else {
+    //   objs.push(obj);
+    // }
+
+    this.canvas.requestRenderAll();
   }
 
   Remove(obj: fabric.Object): void {
