@@ -1,4 +1,5 @@
 import * as EventSystem from '../../../events/index';
+import {ChangeToSelectionMode} from '../../../index';
 import * as ViewFactory from '../../../view_elements/view_factory';
 import {Wall} from '../../../view_elements/wall';
 import {StateMachine} from '../../state_machine';
@@ -35,7 +36,7 @@ export class WallDrawingMachine extends StateMachine {
         EventSystem.EventType.KEY_PRESS_ENTER, this.funcOnPressESC);
   }
 
-  private OnPressESC(e: EventSystem.FssEvent) {
+  Exit(): void {
     EventSystem.RemoveEventListener(
         EventSystem.EventType.KEY_PRESS_ENTER, this.funcOnPressESC);
     this.state.Leave();
@@ -43,5 +44,9 @@ export class WallDrawingMachine extends StateMachine {
     // remove the last Wall
     const wall = ViewFactory.GetViewObject(this.lastWallID) as Wall;
     if (wall) wall.RemoveSelf();
+  }
+
+  private OnPressESC(e: EventSystem.FssEvent) {
+    ChangeToSelectionMode();
   }
 }

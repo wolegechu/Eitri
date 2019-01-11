@@ -47,4 +47,11 @@ export class ViewCanvas {
   Remove(obj: fabric.Object): void {
     this.canvas.remove(obj);
   }
+
+  SetAllSelectable(selectable: boolean) {
+    const objs = this.canvas.getObjects();
+    objs.forEach(obj => {
+      obj.selectable = selectable;
+    });
+  }
 }

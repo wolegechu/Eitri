@@ -26,6 +26,8 @@ export abstract class StateMachine {
     this.state = s;
   }
 
+  abstract Exit(): void;
+
   Transition(event: EventSystem.EventType): void {
     const table = this.transisionTable;
     const result = table.filter(e => {

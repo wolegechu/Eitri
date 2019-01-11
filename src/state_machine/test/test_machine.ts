@@ -29,4 +29,6 @@ export class TestMachine extends StateMachine {
 
     this.InitState(this.stateA);
   }
+
+  Exit(): void {}
 }

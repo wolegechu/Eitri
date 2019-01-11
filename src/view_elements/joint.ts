@@ -42,7 +42,7 @@ export class Joint extends ViewObject {
     this.position = point;
     this.UpdateViewPosition();
   }
-  
+
   private OnObjectMove(e: fabric.IEvent) {
     if (e.target !== this.view) return;
     console.debug('On Joint Move');
