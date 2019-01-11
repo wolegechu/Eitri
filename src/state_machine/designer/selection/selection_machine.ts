@@ -6,7 +6,7 @@ export class SelectionMachine extends StateMachine {
 
   constructor() {
     super();
-    console.log('Enter Seletion Mode ');
+    console.debug('Enter Seletion Mode ');
     const canvas = ViewCanvas.GetInstance();
     canvas.SetAllSelectable(true);
   }
