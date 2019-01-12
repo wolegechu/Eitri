@@ -44,6 +44,16 @@ export class Joint extends ViewObject {
     this.UpdateViewPosition();
   }
 
+  Merge(other: Joint) {
+    other.wallIDs.forEach(id => {
+      const wall = ViewFactory.GetViewObject(id) as Wall;
+      const index = wall.jointIDs.indexOf(other.id);
+      wall.jointIDs[index] = this.id;
+    });
+    this.wallIDs = this.wallIDs.concat(other.wallIDs);
+    other.RemoveSelf();
+  }
+
   private OnObjectMove(e: fabric.IEvent) {
     if (e.target !== this.view) return;
     console.debug('On Joint Move');

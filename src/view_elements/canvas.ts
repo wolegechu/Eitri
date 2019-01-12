@@ -1,5 +1,6 @@
 import {fabric} from 'fabric';
 import {Point} from '../utils/index';
+import {Joint} from './joint';
 
 
 // Singleton
@@ -42,10 +43,10 @@ export class ViewCanvas {
 
   Add(obj: fabric.Object): void {
     this.canvas.add(obj);
-    // this.canvas._objects.sort((a, b) => {
-    //   if (a instanceof fabric.Line) return -1;
-    //   return 1;
-    // });
+    this.canvas._objects.sort((a, b) => {
+      if (a instanceof fabric.Line) return -1;
+      return 1;
+    });
     // this.canvas.renderAll();
     // const objs = this.canvas._objects;
     // if (obj instanceof fabric.Line) {

@@ -1,4 +1,6 @@
 import {Point} from '../utils/index';
+import {GetDistance} from '../utils/math';
+
 import {Joint} from './joint';
 import {ViewObject} from './view_object';
 import {Wall} from './wall';
@@ -32,4 +34,40 @@ export function GetViewObject(id: number): ViewObject {
 
 export function RemoveObject(id: number) {
   viewMap.delete(id);
+}
+
+export function GetNearestJoint(point: Point): Joint {
+  let min = 1e10;
+  let ret: Joint = null;
+
+  for (const obj of viewMap.values()) {
+    if (!(obj instanceof Joint)) continue;
+    const dis = GetDistance(obj.position, point);
+    if (dis < min) {
+      min = dis;
+      ret = obj;
+    }
+  }
+
+  return ret;
+}
+
+/**
+ * get the joint nearest to the point except of a specific joint
+ */
+export function GetNearestJointExcept(except: Joint, point: Point): Joint {
+  let min = 1e10;
+  let ret: Joint = null;
+
+  for (const obj of viewMap.values()) {
+    if (!(obj instanceof Joint)) continue;
+    if (obj === except) continue;
+    const dis = GetDistance(obj.position, point);
+    if (dis < min) {
+      min = dis;
+      ret = obj;
+    }
+  }
+
+  return ret;
 }
