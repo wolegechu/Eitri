@@ -25,7 +25,8 @@ export class Joint extends ViewObject {
       stroke: '#666',
       selectable: false
     });
-    this.view.hasControls = false;
+    this.view.hasControls = this.view.hasBorders = false;
+    this.view.perPixelTargetFind = true;
 
     const canvas = ViewCanvas.GetInstance();
     canvas.Add(this.view);
@@ -68,7 +69,7 @@ export class Joint extends ViewObject {
       left: this.position.x - JOINT_RADIUS,
       top: this.position.y - JOINT_RADIUS,
     });
-
+    this.view.setCoords();
     this.UpdateWalls();
     ViewCanvas.GetInstance().Render();
   }
