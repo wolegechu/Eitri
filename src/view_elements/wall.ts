@@ -9,6 +9,13 @@ export class Wall extends ViewObject {
   jointIDs: number[] = [];
   width: number;
   view: fabric.Line;
+
+  get length(): number{
+    const joint1 = ViewFactory.GetViewObject(this.jointIDs[0]) as Joint;
+    const joint2 = ViewFactory.GetViewObject(this.jointIDs[1]) as Joint;
+    
+    return 1;
+  }
   // type: int;
   // rooms: ID[];
   // doors: ID[];
