@@ -1,7 +1,8 @@
 import {ViewCanvas} from '../../../view_elements/canvas';
 import {StateMachine} from '../../state_machine';
 import * as EventSystem from '../../../events/index';
-
+import {displayWallProperty} from '../../../properties/index';
+import { Wall } from '../../../view_elements/wall';
 export class SelectionMachine extends StateMachine {
   protected transisionTable: [];
 
@@ -14,7 +15,6 @@ export class SelectionMachine extends StateMachine {
     console.debug('Enter Seletion Mode ');
     const canvas = ViewCanvas.GetInstance();
     canvas.SetAllSelectable(true);
-
     EventSystem.AddEventListener(EventSystem.EventType.OBJECT_SELECT, this.funcOnObjectSelect);
   }
 
@@ -23,7 +23,12 @@ export class SelectionMachine extends StateMachine {
     canvas.SetAllSelectable(false);
   }
 
+  
   private OnObjectSelect(event: EventSystem.FssEvent): void {
-    event.target
+    const target = event.target;
+    // Map
+    if(target instanceof Wall){
+      displayWallProperty(target);
+    }
   }
 }

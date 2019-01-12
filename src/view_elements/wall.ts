@@ -1,5 +1,5 @@
 import {fabric} from 'fabric';
-import {Point} from '../utils/math';
+import {Point, GetDistance} from '../utils/math';
 import {ViewCanvas} from './canvas';
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
@@ -14,7 +14,8 @@ export class Wall extends ViewObject {
     const joint1 = ViewFactory.GetViewObject(this.jointIDs[0]) as Joint;
     const joint2 = ViewFactory.GetViewObject(this.jointIDs[1]) as Joint;
     
-    return 1;
+    const length = GetDistance(joint1.position, joint2.position);
+    return length;
   }
   // type: int;
   // rooms: ID[];
@@ -31,7 +32,6 @@ export class Wall extends ViewObject {
       strokeWidth: 3,
       stroke: 'red',
       selectable: false,
-      evented: false,
     });
     this.view.hasControls = this.view.hasBorders = false;
     this.view.perPixelTargetFind = true;
