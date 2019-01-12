@@ -1,9 +1,13 @@
+import {GRAB_DISTANCE} from '../../../CONFIG';
 import * as EventSystem from '../../../events/index';
+import {GetDistance, Point} from '../../../utils/math';
 import {Joint} from '../../../view_elements/joint';
 import * as ViewFactory from '../../../view_elements/view_factory';
+import {Wall} from '../../../view_elements/wall';
 import {BaseState} from '../../state_machine';
 
 import {WallDrawingMachine} from './draw_wall_machine';
+
 
 /*****
  * when Mouse Move: update the Wall, follow the mouse
@@ -38,14 +42,26 @@ export class DrawingState extends BaseState {
   }
 
   private OnMouseMove(event: EventSystem.FssEvent): void {
+    console.debug('drawing state mouse move');
     const joint = ViewFactory.GetViewObject(this.machine.lastJointID) as Joint;
-    joint.SetPosition(event.position);
+    const grabJoint = ViewFactory.GetGrabJoint(event.position, [joint]);
+    if (grabJoint) {
+      joint.SetPosition(grabJoint.position);
+    } else {
+      joint.SetPosition(event.position);
+    }
   }
 
   private OnMouseDown(event: EventSystem.FssEvent): void {
+    console.debug('drawing state mouse down');
     const joint = ViewFactory.GetViewObject(this.machine.lastJointID) as Joint;
     const pos = event.position;
-    const wall = ViewFactory.CreateWall(pos, joint);
+
+    let wall: Wall;
+    const grabJoint = ViewFactory.GetGrabJoint(pos, [joint]);
+    if (grabJoint) joint.Merge(grabJoint);
+
+    wall = ViewFactory.CreateWall(pos, joint);
     this.machine.lastWallID = wall.id;
     this.machine.lastJointID = wall.jointIDs[0];
   }

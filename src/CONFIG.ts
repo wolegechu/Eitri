@@ -1,0 +1,1 @@
+export const GRAB_DISTANCE = 40;

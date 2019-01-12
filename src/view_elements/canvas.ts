@@ -1,6 +1,9 @@
 import {fabric} from 'fabric';
+
 import {Point} from '../utils/index';
 
+import * as ViewFactory from './view_factory';
+import {ViewObject} from './view_object';
 
 // Singleton
 export class ViewCanvas {
@@ -40,12 +43,20 @@ export class ViewCanvas {
     });
   }
 
+  OnObjectSelect(callback: (p: ViewObject) => void): void {
+    const canvas = this.canvas;
+    canvas.on('selection:created', (event) => {
+      const obj = ViewFactory.GetObjectByFabric(event.target);
+      callback(obj);
+    });
+  }
+
   Add(obj: fabric.Object): void {
     this.canvas.add(obj);
-    // this.canvas._objects.sort((a, b) => {
-    //   if (a instanceof fabric.Line) return -1;
-    //   return 1;
-    // });
+    this.canvas._objects.sort((a, b) => {
+      if (a instanceof fabric.Line) return -1;
+      return 1;
+    });
     // this.canvas.renderAll();
     // const objs = this.canvas._objects;
     // if (obj instanceof fabric.Line) {

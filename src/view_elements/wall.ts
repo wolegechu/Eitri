@@ -24,7 +24,8 @@ export class Wall extends ViewObject {
       strokeWidth: 3,
       stroke: 'red',
       selectable: false,
-      evented: false,
+      lockMovementX: true,
+      lockMovementY: true,
     });
     this.view.hasControls = this.view.hasBorders = false;
     this.view.perPixelTargetFind = true;

@@ -10,7 +10,7 @@ const JOINT_RADIUS = 12.0;
 export class Joint extends ViewObject {
   wallIDs: number[] = [];
   position: Point;
-  protected view: fabric.Circle;
+  view: fabric.Circle;
 
   constructor(id: number, pos: Point) {
     super(id);
@@ -42,6 +42,16 @@ export class Joint extends ViewObject {
   SetPosition(point: Point) {
     this.position = point;
     this.UpdateViewPosition();
+  }
+
+  Merge(other: Joint) {
+    other.wallIDs.forEach(id => {
+      const wall = ViewFactory.GetViewObject(id) as Wall;
+      const index = wall.jointIDs.indexOf(other.id);
+      wall.jointIDs[index] = this.id;
+    });
+    this.wallIDs = this.wallIDs.concat(other.wallIDs);
+    other.RemoveSelf();
   }
 
   private OnObjectMove(e: fabric.IEvent) {

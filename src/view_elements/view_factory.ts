@@ -1,4 +1,7 @@
+import {GRAB_DISTANCE} from '../CONFIG';
 import {Point} from '../utils/index';
+import {GetDistance} from '../utils/math';
+
 import {Joint} from './joint';
 import {ViewObject} from './view_object';
 import {Wall} from './wall';
@@ -32,4 +35,48 @@ export function GetViewObject(id: number): ViewObject {
 
 export function RemoveObject(id: number) {
   viewMap.delete(id);
+}
+
+/**
+ * get the joint grab the position.
+ * ignore the joints in exception array.
+ */
+export function GetGrabJoint(pos: Point, exception: Joint[] = []): Joint {
+  const nearestJoint = GetNearestJoint(pos, exception);
+  if (nearestJoint && GetDistance(nearestJoint.position, pos) < GRAB_DISTANCE) {
+    return nearestJoint;
+  } else {
+    return null;
+  }
+}
+
+/**
+ * get the joint nearest to the point.
+ * ignore the joints in exception array.
+ */
+function GetNearestJoint(point: Point, exception: Joint[] = []): Joint {
+  let min = 1e10;
+  let ret: Joint = null;
+
+  for (const obj of viewMap.values()) {
+    if (!(obj instanceof Joint)) continue;
+    if (-1 !== exception.indexOf(obj)) continue;
+
+    const dis = GetDistance(obj.position, point);
+    if (dis < min) {
+      min = dis;
+      ret = obj;
+    }
+  }
+
+  return ret;
+}
+
+export function GetObjectByFabric(view: fabric.Object): ViewObject {
+  for (const obj of viewMap.values()) {
+    if (view === obj.view) {
+      return obj;
+    }
+  }
+  return null;
 }
