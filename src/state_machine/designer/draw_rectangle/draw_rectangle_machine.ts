@@ -39,30 +39,10 @@ export class DrawRectangleMachine extends StateMachine {
         EventSystem.EventType.MOUSE_CLICK_CANVAS, this.funcOnMouseDown);
   }
 
-  private GetGrabJoint(pos: Point): Joint {
-    const nearestJoint = ViewFactory.GetNearestJoint(pos);
-    if (nearestJoint &&
-        GetDistance(nearestJoint.position, pos) < GRAB_DISTANCE) {
-      return nearestJoint;
-    } else {
-      return null;
-    }
-  }
-
-  private GetGrabJointExcept(joint: Joint, pos: Point): Joint {
-    const nearestJoint = ViewFactory.GetNearestJointExcept(joint, pos);
-    if (nearestJoint &&
-        GetDistance(nearestJoint.position, pos) < GRAB_DISTANCE) {
-      return nearestJoint;
-    } else {
-      return null;
-    }
-  }
-
   private OnMouseMove(e: EventSystem.FssEvent) {
     if (this.isIdle) return;
     let pos = e.position;
-    const grabJoint = this.GetGrabJointExcept(this.downRightJoint, pos);
+    const grabJoint = ViewFactory.GetGrabJoint(pos, [this.downRightJoint]);
     if (grabJoint) pos = grabJoint.position;
 
     const upLeftPos = this.upLeftJoint.position;
@@ -77,7 +57,7 @@ export class DrawRectangleMachine extends StateMachine {
     if (this.isIdle) {
       this.isIdle = false;
 
-      const grabJoint = this.GetGrabJoint(pos);
+      const grabJoint = ViewFactory.GetGrabJoint(pos);
       if (grabJoint) {
         this.upLeftJoint = grabJoint;
       } else {
@@ -98,7 +78,7 @@ export class DrawRectangleMachine extends StateMachine {
           ViewFactory.CreateWall(this.upRightJoint, this.downRightJoint);
 
     } else {
-      const grabJoint = this.GetGrabJointExcept(this.downRightJoint, pos);
+      const grabJoint = ViewFactory.GetGrabJoint(pos, [this.downRightJoint]);
       if (grabJoint) this.downRightJoint.Merge(grabJoint);
       ChangeToSelectionMode();
     }

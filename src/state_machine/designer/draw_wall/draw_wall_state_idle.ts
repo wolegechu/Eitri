@@ -30,22 +30,12 @@ export class IdleState extends BaseState {
         EventSystem.EventType.MOUSE_CLICK_CANVAS, this.funcOnClick);
   }
 
-  private GetGrabJoint(pos: Point): Joint {
-    const nearestJoint = ViewFactory.GetNearestJoint(pos);
-    if (nearestJoint &&
-        GetDistance(nearestJoint.position, pos) < GRAB_DISTANCE) {
-      return nearestJoint;
-    } else {
-      return null;
-    }
-  }
-
   private OnClick(event: EventSystem.FssEvent): void {
     console.debug('idle state on click');
     const pos = event.position;
 
     let wall: Wall;
-    const grabJoint = this.GetGrabJoint(pos);
+    const grabJoint = ViewFactory.GetGrabJoint(pos);
     if (grabJoint) {
       wall = ViewFactory.CreateWall(grabJoint, pos);
     } else {

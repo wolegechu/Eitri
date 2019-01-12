@@ -41,20 +41,10 @@ export class DrawingState extends BaseState {
         EventSystem.EventType.MOUSE_CLICK_CANVAS, this.funcOnMouseDown);
   }
 
-  private GetGrabJoint(joint: Joint, pos: Point): Joint {
-    const nearestJoint = ViewFactory.GetNearestJointExcept(joint, pos);
-    if (nearestJoint &&
-        GetDistance(nearestJoint.position, pos) < GRAB_DISTANCE) {
-      return nearestJoint;
-    } else {
-      return null;
-    }
-  }
-
   private OnMouseMove(event: EventSystem.FssEvent): void {
     console.debug('drawing state mouse move');
     const joint = ViewFactory.GetViewObject(this.machine.lastJointID) as Joint;
-    const grabJoint = this.GetGrabJoint(joint, event.position);
+    const grabJoint = ViewFactory.GetGrabJoint(event.position, [joint]);
     if (grabJoint) {
       joint.SetPosition(grabJoint.position);
     } else {
@@ -68,7 +58,7 @@ export class DrawingState extends BaseState {
     const pos = event.position;
 
     let wall: Wall;
-    const grabJoint = this.GetGrabJoint(joint, pos);
+    const grabJoint = ViewFactory.GetGrabJoint(pos, [joint]);
     if (grabJoint) joint.Merge(grabJoint);
 
     wall = ViewFactory.CreateWall(pos, joint);
