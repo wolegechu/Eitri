@@ -41,27 +41,49 @@ export class DrawingState extends BaseState {
         EventSystem.EventType.MOUSE_CLICK_CANVAS, this.funcOnMouseDown);
   }
 
+  /**
+   * when 'shift' key down, make the Wall align to axis
+   */
+  private ShiftPosition(pos: Point):Point {
+    const lastWall = ViewFactory.GetViewObject(this.machine.lastWallID) as Wall;
+    const pivotJointID = lastWall.jointIDs[
+      lastWall.jointIDs.indexOf(this.machine.lastJointID) ^ 1
+    ];
+    const pivotJoint = ViewFactory.GetViewObject(pivotJointID) as Joint;
+    const dx = Math.abs(pos.x - pivotJoint.position.x);
+    const dy = Math.abs(pos.y - pivotJoint.position.y);
+    if (dx > dy) {
+      return { x: pos.x, y: pivotJoint.position.y };
+    }
+    else {
+      return { x: pivotJoint.position.x, y: pos.y };
+    }
+  }
+
   private OnMouseMove(event: EventSystem.FssEvent): void {
     console.debug('drawing state mouse move');
     const joint = ViewFactory.GetViewObject(this.machine.lastJointID) as Joint;
+
     const grabJoint = ViewFactory.GetGrabJoint(event.position, [joint]);
-    if (grabJoint) {
+    if (grabJoint && !event.shiftDown) {
       joint.SetPosition(grabJoint.position);
     } else {
-      joint.SetPosition(event.position);
+      let pos = event.position;
+      if (event.shiftDown) pos = this.ShiftPosition(pos);
+      joint.SetPosition(pos);
     }
   }
 
   private OnMouseDown(event: EventSystem.FssEvent): void {
     console.debug('drawing state mouse down');
     const joint = ViewFactory.GetViewObject(this.machine.lastJointID) as Joint;
-    const pos = event.position;
+    let pos = event.position;
+    if (event.shiftDown) pos = this.ShiftPosition(pos);
 
-    let wall: Wall;
     const grabJoint = ViewFactory.GetGrabJoint(pos, [joint]);
-    if (grabJoint) joint.Merge(grabJoint);
+    if (grabJoint && !event.shiftDown) joint.Merge(grabJoint);
 
-    wall = ViewFactory.CreateWall(pos, joint);
+    const wall = ViewFactory.CreateWall(pos, joint);
     this.machine.lastWallID = wall.id;
     this.machine.lastJointID = wall.jointIDs[0];
   }

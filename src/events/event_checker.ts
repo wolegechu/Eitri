@@ -1,17 +1,23 @@
 import {Point} from '../utils/index';
 import {ViewObject} from '../view_elements/view_object';
+import { shiftdown } from './event_system';
+
 
 export class FssEvent {
   type: EventType;
   target: ViewObject;
   position: Point;
+  shiftDown: boolean;
+  constructor() {
+    this.shiftDown = shiftdown;
+  }
 }
 
 export enum EventType {
   // START
   KEY_PRESS_START = 1,
   KEY_PRESS_ANY,
-  KEY_PRESS_ENTER,
+  KEY_PRESS_ESC,
   KEY_PRESS_TOTAL = 1000,
   // END
 
@@ -33,7 +39,7 @@ export enum EventType {
 type KeyPressChecker = (e: KeyboardEvent) => FssEvent;
 export let keyPressCheckersMap = new Map<EventType, KeyPressChecker>([
   [EventType.KEY_PRESS_ANY, CheckKeyPressAny],
-  [EventType.KEY_PRESS_ENTER, CheckKeyPressEnter],
+  [EventType.KEY_PRESS_ESC, CheckKeyPressEsc],
 ]);
 
 function CheckKeyPressAny(e: KeyboardEvent): FssEvent {
@@ -42,9 +48,9 @@ function CheckKeyPressAny(e: KeyboardEvent): FssEvent {
   return event;
 }
 
-function CheckKeyPressEnter(e: KeyboardEvent): FssEvent {
-  if ('Enter' !== e.code) return;
+function CheckKeyPressEsc(e: KeyboardEvent): FssEvent {
+  if ('Escape' !== e.code) return;
   const event = new FssEvent();
-  event.type = EventType.KEY_PRESS_ENTER;
+  event.type = EventType.KEY_PRESS_ESC;
   return event;
 }
