@@ -44,19 +44,18 @@ export class DrawingState extends BaseState {
   /**
    * when 'shift' key down, make the Wall align to axis
    */
-  private ShiftPosition(pos: Point):Point {
+  private ShiftPosition(pos: Point): Point {
     const lastWall = ViewFactory.GetViewObject(this.machine.lastWallID) as Wall;
-    const pivotJointID = lastWall.jointIDs[
-      lastWall.jointIDs.indexOf(this.machine.lastJointID) ^ 1
-    ];
+    const pivotJointID =
+        lastWall
+            .jointIDs[lastWall.jointIDs.indexOf(this.machine.lastJointID) ^ 1];
     const pivotJoint = ViewFactory.GetViewObject(pivotJointID) as Joint;
     const dx = Math.abs(pos.x - pivotJoint.position.x);
     const dy = Math.abs(pos.y - pivotJoint.position.y);
     if (dx > dy) {
-      return { x: pos.x, y: pivotJoint.position.y };
-    }
-    else {
-      return { x: pivotJoint.position.x, y: pos.y };
+      return {x: pos.x, y: pivotJoint.position.y};
+    } else {
+      return {x: pivotJoint.position.x, y: pos.y};
     }
   }
 

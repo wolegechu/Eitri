@@ -31,9 +31,9 @@ export let shiftdown = false;
 // Get all key press event from document
 document.onkeydown = (e) => {
   console.debug('key down ' + e.code);
-  if (-1 !== e.code.indexOf("Shift")) shiftdown = true;
+  if (-1 !== e.code.indexOf('Shift')) shiftdown = true;
 
-  // check all event types if have any obsever 
+  // check all event types if have any obsever
   keyPressCheckersMap.forEach((func, type, keyPressCheckersMap) => {
     const observers = GetObservers(type);
     if (!observers) return;
@@ -50,7 +50,7 @@ document.onkeydown = (e) => {
 };
 
 document.onkeyup = (e) => {
-  if (-1 !== e.code.indexOf("Shift")) shiftdown = false;
+  if (-1 !== e.code.indexOf('Shift')) shiftdown = false;
 };
 
 /*****
