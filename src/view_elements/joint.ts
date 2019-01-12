@@ -10,7 +10,7 @@ const JOINT_RADIUS = 12.0;
 export class Joint extends ViewObject {
   wallIDs: number[] = [];
   position: Point;
-  protected view: fabric.Circle;
+  view: fabric.Circle;
 
   constructor(id: number, pos: Point) {
     super(id);

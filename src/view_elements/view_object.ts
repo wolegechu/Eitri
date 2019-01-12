@@ -4,7 +4,7 @@ import * as ViewFactory from './view_factory';
 
 export abstract class ViewObject {
   id: number;
-  protected view: fabric.Object;
+  view: fabric.Object;
 
   constructor(id: number) {
     this.id = id;

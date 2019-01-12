@@ -86,6 +86,23 @@ canvas.OnMouseMove((point) => {
   });
 });
 
+// - object select event
+canvas.OnObjectSelect((obj) => {
+  const type = EventType.OBJECT_SELECT;
+
+  const observers = GetObservers(type);
+  if (!observers) return;
+
+  // create the event
+  const event = new FssEvent();
+  event.type = type;
+  event.target = obj;
+
+  // pass event to all observers
+  observers.forEach(observer => {
+    observer(event);
+  });
+});
 
 function GetObservers(type: EventType): Observer[] {
   const observers = observersMap.get(type);

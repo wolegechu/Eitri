@@ -1,7 +1,7 @@
 import {fabric} from 'fabric';
 import {Point} from '../utils/index';
-import {Joint} from './joint';
-
+import { ViewObject } from './view_object';
+import * as ViewFactory from './view_factory';
 
 // Singleton
 export class ViewCanvas {
@@ -38,6 +38,14 @@ export class ViewCanvas {
     canvas.on('mouse:move', (event) => {
       const pos = canvas.getPointer(event.e);
       callback(pos);
+    });
+  }
+
+  OnObjectSelect(callback: (p: ViewObject) => void): void {
+    const canvas = this.canvas;
+    canvas.on('selection:created', (event) => {
+      const obj = ViewFactory.GetObjectByFabric(event.target);
+      callback(obj);
     });
   }
 

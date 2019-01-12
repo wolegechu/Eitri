@@ -71,3 +71,12 @@ export function GetNearestJointExcept(except: Joint, point: Point): Joint {
 
   return ret;
 }
+
+export function GetObjectByFabric(view: fabric.Object): ViewObject {
+  for (const obj of viewMap.values()) {
+    if (view === obj.view) {
+      return obj;
+    }
+  }
+  return null;
+}

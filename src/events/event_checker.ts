@@ -1,7 +1,9 @@
 import {Point} from '../utils/index';
+import { ViewObject } from '../view_elements/view_object';
 
 export class FssEvent {
   type: EventType;
+  target: ViewObject;
   position: Point;
 }
 
@@ -17,8 +19,12 @@ export enum EventType {
   MOUSE_START = 1001,
   MOUSE_CLICK_CANVAS,
   MOUSE_MOVE_CANVAS,
-  MOUSE_TOTAL = 2000
+  MOUSE_TOTAL = 2000,
   // END
+
+  OBJECT_START = 3001,
+  OBJECT_SELECT,
+  OBJECT_TOTAL = 4000,
 }
 
 /*******
