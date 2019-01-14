@@ -35,6 +35,7 @@ export class IdleState extends BaseState {
     const pos = event.position;
 
     let wall: Wall;
+    // the Joint grab mouse
     const grabJoint = ViewFactory.GetGrabJoint(pos);
     if (grabJoint) {
       wall = ViewFactory.CreateWall(grabJoint, pos);
