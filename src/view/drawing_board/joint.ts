@@ -1,8 +1,8 @@
 import {fabric} from 'fabric';
-import {Point} from '../utils/index';
+import {Point} from '../../utils/index';
 import {ViewCanvas} from './canvas';
 import * as ViewFactory from './view_factory';
-import {ViewObject} from './view_object';
+import {ViewObject, JointExportedProperties} from './view_object';
 import {Wall} from './wall';
 
 const JOINT_RADIUS = 12.0;
@@ -31,6 +31,16 @@ export class Joint extends ViewObject {
     const canvas = ViewCanvas.GetInstance();
     canvas.Add(this.view);
     canvas.OnObjectMove((e) => this.OnObjectMove(e));
+  }
+
+  ExportProperties(): JointExportedProperties {
+    const properties: JointExportedProperties =
+              {
+                id: this.id,
+                x: this.position.x,
+                y: this.position.y
+              };
+    return properties;
   }
 
   RemoveWallID(id: number) {

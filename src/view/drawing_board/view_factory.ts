@@ -1,4 +1,4 @@
-import {Point} from '../utils/index';
+import {Point} from '../../utils/index';
 import {Joint} from './joint';
 import {ViewObject} from './view_object';
 import {Wall} from './wall';

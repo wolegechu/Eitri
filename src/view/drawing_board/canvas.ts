@@ -1,5 +1,5 @@
 import {fabric} from 'fabric';
-import {Point} from '../utils/index';
+import {Point} from '../../utils/index';
 
 
 // Singleton

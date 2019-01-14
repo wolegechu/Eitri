@@ -1,9 +1,9 @@
 import {fabric} from 'fabric';
-import {Point, GetDistance} from '../utils/math';
+import {Point, GetDistance} from '../../utils/math';
 import {ViewCanvas} from './canvas';
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
-import {ViewObject} from './view_object';
+import {ViewObject, WallExportedProperties} from './view_object';
 
 export class Wall extends ViewObject {
   jointIDs: number[] = [];
@@ -37,6 +37,12 @@ export class Wall extends ViewObject {
     this.view.perPixelTargetFind = true;
 
     ViewCanvas.GetInstance().Add(this.view);
+  }
+
+  ExportProperties():  WallExportedProperties{
+    const properties: WallExportedProperties = 
+                  {id: this.id, length: this.length};
+    return properties;
   }
 
   UpdateViewPosition() {

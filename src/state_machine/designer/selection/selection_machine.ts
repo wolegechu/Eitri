@@ -1,8 +1,8 @@
-import {ViewCanvas} from '../../../view_elements/canvas';
+import {ViewCanvas} from '../../../view/drawing_board/canvas';
 import {StateMachine} from '../../state_machine';
 import * as EventSystem from '../../../events/index';
-import {displayWallProperty} from '../../../properties/index';
-import { Wall } from '../../../view_elements/wall';
+import { Wall } from '../../../view/drawing_board/wall';
+import { UIIndex } from '../../../view/components/index';
 export class SelectionMachine extends StateMachine {
   protected transisionTable: [];
 
@@ -26,9 +26,7 @@ export class SelectionMachine extends StateMachine {
   
   private OnObjectSelect(event: EventSystem.FssEvent): void {
     const target = event.target;
-    // Map
-    if(target instanceof Wall){
-      displayWallProperty(target);
-    }
+    // Pass the target to UI view
+    UIIndex(target);
   }
 }
