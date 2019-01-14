@@ -42,6 +42,8 @@ export class DrawRectangleMachine extends StateMachine {
   private OnMouseMove(e: EventSystem.FssEvent) {
     if (this.isIdle) return;
     let pos = e.position;
+
+    // the Joint grab mouse
     const grabJoint = ViewFactory.GetGrabJoint(pos, [this.downRightJoint]);
     if (grabJoint) pos = grabJoint.position;
 
@@ -57,6 +59,7 @@ export class DrawRectangleMachine extends StateMachine {
     if (this.isIdle) {
       this.isIdle = false;
 
+      // the Joint grab mouse
       const grabJoint = ViewFactory.GetGrabJoint(pos);
       if (grabJoint) {
         this.upLeftJoint = grabJoint;
@@ -78,6 +81,7 @@ export class DrawRectangleMachine extends StateMachine {
           ViewFactory.CreateWall(this.upRightJoint, this.downRightJoint);
 
     } else {
+      // the Joint grab mouse
       const grabJoint = ViewFactory.GetGrabJoint(pos, [this.downRightJoint]);
       if (grabJoint) this.downRightJoint.Merge(grabJoint);
       ChangeToSelectionMode();

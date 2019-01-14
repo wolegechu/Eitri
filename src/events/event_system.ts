@@ -27,9 +27,13 @@ export function RemoveEventListener(event: EventType, observer: Observer) {
   }
 }
 
+export let shiftdown = false;
 // Get all key press event from document
-document.onkeypress = (e) => {
-  console.log('press ' + e.code);
+document.onkeydown = (e) => {
+  console.debug('key down ' + e.code);
+  if (-1 !== e.code.indexOf('Shift')) shiftdown = true;
+
+  // check all event types if have any obsever
   keyPressCheckersMap.forEach((func, type, keyPressCheckersMap) => {
     const observers = GetObservers(type);
     if (!observers) return;
@@ -45,6 +49,9 @@ document.onkeypress = (e) => {
   });
 };
 
+document.onkeyup = (e) => {
+  if (-1 !== e.code.indexOf('Shift')) shiftdown = false;
+};
 
 /*****
  * Get all canvas based  event

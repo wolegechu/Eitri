@@ -33,12 +33,12 @@ export class WallDrawingMachine extends StateMachine {
     this.InitState(this.idleState);
 
     EventSystem.AddEventListener(
-        EventSystem.EventType.KEY_PRESS_ENTER, this.funcOnPressESC);
+        EventSystem.EventType.KEY_PRESS_ESC, this.funcOnPressESC);
   }
 
   Exit(): void {
     EventSystem.RemoveEventListener(
-        EventSystem.EventType.KEY_PRESS_ENTER, this.funcOnPressESC);
+        EventSystem.EventType.KEY_PRESS_ESC, this.funcOnPressESC);
     this.state.Leave();
 
     // remove the last Wall
