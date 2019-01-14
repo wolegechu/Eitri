@@ -1,6 +1,6 @@
-import {GRAB_DISTANCE} from '../CONFIG';
+import {GRAB_JOINT_DISTANCE, GRAB_WALL_DISTANCE} from '../CONFIG';
 import {Point} from '../utils/index';
-import {GetDistance} from '../utils/math';
+import {Point2PointDistance, Point2SegmentDistance} from '../utils/math';
 
 import {Joint} from './joint';
 import {ViewObject} from './view_object';
@@ -43,7 +43,8 @@ export function RemoveObject(id: number) {
  */
 export function GetGrabJoint(pos: Point, exception: Joint[] = []): Joint {
   const nearestJoint = GetNearestJoint(pos, exception);
-  if (nearestJoint && GetDistance(nearestJoint.position, pos) < GRAB_DISTANCE) {
+  if (nearestJoint &&
+      Point2PointDistance(nearestJoint.position, pos) < GRAB_JOINT_DISTANCE) {
     return nearestJoint;
   } else {
     return null;
@@ -62,7 +63,45 @@ function GetNearestJoint(point: Point, exception: Joint[] = []): Joint {
     if (!(obj instanceof Joint)) continue;
     if (-1 !== exception.indexOf(obj)) continue;
 
-    const dis = GetDistance(obj.position, point);
+    const dis = Point2PointDistance(obj.position, point);
+    if (dis < min) {
+      min = dis;
+      ret = obj;
+    }
+  }
+
+  return ret;
+}
+
+/**
+ * get the wall grab the position.
+ * ignore the wall in exception array.
+ */
+export function GetGrabWall(pos: Point, exception: Wall[] = []): Wall {
+  const nearestWall = GetNearestWall(pos, exception);
+  if (!nearestWall) return null;
+  
+  const p1 = (GetViewObject(nearestWall.jointIDs[0]) as Joint).position;
+  const p2 = (GetViewObject(nearestWall.jointIDs[1]) as Joint).position;
+  const dis = Point2SegmentDistance(pos, {p1, p2});
+  if (dis < GRAB_WALL_DISTANCE) {
+    return nearestWall;
+  } else {
+    return null;
+  }
+}
+
+function GetNearestWall(pos: Point, exception: Wall[] = []): Wall {
+  let min = 1e10;
+  let ret: Wall = null;
+
+  for (const obj of viewMap.values()) {
+    if (!(obj instanceof Wall)) continue;
+    if (-1 !== exception.indexOf(obj)) continue;
+
+    const p1 = (GetViewObject(obj.jointIDs[0]) as Joint).position;
+    const p2 = (GetViewObject(obj.jointIDs[1]) as Joint).position;
+    const dis = Point2SegmentDistance(pos, {p1, p2});
     if (dis < min) {
       min = dis;
       ret = obj;
