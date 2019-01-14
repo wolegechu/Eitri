@@ -19,6 +19,7 @@ export abstract class ViewObject {
   id: number;
   protected view: fabric.Object;
 
+  // exposure properties. It's usually used by the UIView.
   abstract ExportProperties(): ExportedProperties;
 
   constructor(id: number) {
