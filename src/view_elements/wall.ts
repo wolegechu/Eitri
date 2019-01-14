@@ -1,5 +1,5 @@
 import {fabric} from 'fabric';
-import {Point} from '../utils/math';
+import {Point} from '../utils';
 import {ViewCanvas} from './canvas';
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
@@ -31,6 +31,17 @@ export class Wall extends ViewObject {
     this.view.perPixelTargetFind = true;
 
     ViewCanvas.GetInstance().Add(this.view);
+  }
+
+  /**
+   * Split the wall to two walls through a joint between two ends of the wall.
+   */
+  Split(cutJoint: Joint) {
+    const endJoint1 = ViewFactory.GetViewObject(this.jointIDs[0]) as Joint;
+    const endJoint2 = ViewFactory.GetViewObject(this.jointIDs[1]) as Joint;
+    ViewFactory.CreateWall(cutJoint, endJoint1);
+    ViewFactory.CreateWall(cutJoint, endJoint2);
+    this.RemoveSelf();
   }
 
   UpdateViewPosition() {

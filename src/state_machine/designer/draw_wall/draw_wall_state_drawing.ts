@@ -1,6 +1,7 @@
-import {GRAB_DISTANCE} from '../../../CONFIG';
+import {GRAB_JOINT_DISTANCE} from '../../../CONFIG';
 import * as EventSystem from '../../../events/index';
-import {GetDistance, Point} from '../../../utils/math';
+import {Point} from '../../../utils';
+import {Point2PointDistance, Point2SegmentNearestPoint} from '../../../utils/math';
 import {Joint} from '../../../view_elements/joint';
 import * as ViewFactory from '../../../view_elements/view_factory';
 import {Wall} from '../../../view_elements/wall';
@@ -53,37 +54,56 @@ export class DrawingState extends BaseState {
     const dx = Math.abs(pos.x - pivotJoint.position.x);
     const dy = Math.abs(pos.y - pivotJoint.position.y);
     if (dx > dy) {
-      return {x: pos.x, y: pivotJoint.position.y};
+      return new Point(pos.x, pivotJoint.position.y);
     } else {
-      return {x: pivotJoint.position.x, y: pos.y};
+      return new Point(pivotJoint.position.x, pos.y);
     }
   }
 
   private OnMouseMove(event: EventSystem.FssEvent): void {
     console.debug('drawing state mouse move');
     const joint = ViewFactory.GetViewObject(this.machine.lastJointID) as Joint;
+    const wall = ViewFactory.GetViewObject(this.machine.lastWallID) as Wall;
+    const pos = event.position;
 
-    const grabJoint = ViewFactory.GetGrabJoint(event.position, [joint]);
+    const grabJoint = ViewFactory.GetGrabJoint(pos, [joint]);
+    const grabWall = ViewFactory.GetGrabWall(pos, [wall]);
     if (grabJoint && !event.shiftDown) {
       joint.SetPosition(grabJoint.position);
+    }
+    if (grabWall) {
+      const joint1 = ViewFactory.GetViewObject(grabWall.jointIDs[0]) as Joint;
+      const joint2 = ViewFactory.GetViewObject(grabWall.jointIDs[1]) as Joint;
+
+      const newPos = Point2SegmentNearestPoint(
+          pos, {p1: joint1.position, p2: joint2.position});
+
+      joint.SetPosition(newPos);
+
     } else {
-      let pos = event.position;
-      if (event.shiftDown) pos = this.ShiftPosition(pos);
-      joint.SetPosition(pos);
+      let newPos = pos;
+      if (event.shiftDown) newPos = this.ShiftPosition(pos);
+      joint.SetPosition(newPos);
     }
   }
 
   private OnMouseDown(event: EventSystem.FssEvent): void {
     console.debug('drawing state mouse down');
     const joint = ViewFactory.GetViewObject(this.machine.lastJointID) as Joint;
+    const wall = ViewFactory.GetViewObject(this.machine.lastWallID) as Wall;
     let pos = event.position;
     if (event.shiftDown) pos = this.ShiftPosition(pos);
 
     const grabJoint = ViewFactory.GetGrabJoint(pos, [joint]);
-    if (grabJoint && !event.shiftDown) joint.Merge(grabJoint);
+    const grabWall = ViewFactory.GetGrabWall(pos, [wall]);
+    if (grabJoint && !event.shiftDown) {
+      joint.Merge(grabJoint);
+    } else if (grabWall) {
+      grabWall.Split(joint);
+    }
 
-    const wall = ViewFactory.CreateWall(pos, joint);
-    this.machine.lastWallID = wall.id;
-    this.machine.lastJointID = wall.jointIDs[0];
+    const newWall = ViewFactory.CreateWall(pos, joint);
+    this.machine.lastWallID = newWall.id;
+    this.machine.lastJointID = newWall.jointIDs[0];
   }
 }

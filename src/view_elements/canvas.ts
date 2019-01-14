@@ -27,7 +27,7 @@ export class ViewCanvas {
     const canvas = this.canvas;
     canvas.on('mouse:down', (event) => {
       const pos = canvas.getPointer(event.e);
-      callback(pos);
+      callback(new Point(pos.x, pos.y));
     });
   }
 
@@ -39,7 +39,7 @@ export class ViewCanvas {
     const canvas = this.canvas;
     canvas.on('mouse:move', (event) => {
       const pos = canvas.getPointer(event.e);
-      callback(pos);
+      callback(new Point(pos.x, pos.y));
     });
   }
 

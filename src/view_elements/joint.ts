@@ -35,7 +35,7 @@ export class Joint extends ViewObject {
 
   RemoveWallID(id: number) {
     const index = this.wallIDs.indexOf(id);
-    this.wallIDs.splice(index);
+    this.wallIDs.splice(index, 1);
     if (0 === this.wallIDs.length) this.RemoveSelf();
   }
 
