@@ -2,7 +2,7 @@ import {GRAB_JOINT_DISTANCE} from '../../../CONFIG';
 import * as EventSystem from '../../../events/index';
 import {ChangeToSelectionMode} from '../../../index';
 import {Point} from '../../../utils';
-import {GetDistanceByPoint2Point} from '../../../utils/math';
+import {GetDistanceOfPoint2Point} from '../../../utils/math';
 import {Joint} from '../../../view_elements/joint';
 import * as ViewFactory from '../../../view_elements/view_factory';
 import {StateMachine} from '../../state_machine';

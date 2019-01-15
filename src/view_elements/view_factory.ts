@@ -1,6 +1,6 @@
 import {GRAB_JOINT_DISTANCE, GRAB_WALL_DISTANCE} from '../CONFIG';
 import {Point} from '../utils/index';
-import {GetDistanceByPoint2LineSegment, GetDistanceByPoint2Point} from '../utils/math';
+import {GetDistanceOfPoint2LineSegment, GetDistanceOfPoint2Point} from '../utils/math';
 
 import {Joint} from './joint';
 import {ViewObject} from './view_object';
@@ -54,7 +54,7 @@ export function GetNearestJoint(
     if (!(obj instanceof Joint)) continue;
     if (-1 !== exception.indexOf(obj)) continue;
 
-    const dis = GetDistanceByPoint2Point(obj.position, pos);
+    const dis = GetDistanceOfPoint2Point(obj.position, pos);
     if (dis <= min) {
       min = dis;
       nearestJoint = obj;
@@ -83,7 +83,7 @@ export function GetNearestWall(
 
     const p1 = (GetViewObject(obj.jointIDs[0]) as Joint).position;
     const p2 = (GetViewObject(obj.jointIDs[1]) as Joint).position;
-    const dis = GetDistanceByPoint2LineSegment(pos, {p1, p2});
+    const dis = GetDistanceOfPoint2LineSegment(pos, {p1, p2});
     if (dis <= min) {
       min = dis;
       nearestWall = obj;
