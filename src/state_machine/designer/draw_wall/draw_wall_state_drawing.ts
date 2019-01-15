@@ -44,9 +44,13 @@ export class DrawingState extends BaseState {
 
   /**
    * when 'shift' key down, make the Wall align to axis
+   * @param pos origin mouse position
    */
   private ShiftPosition(pos: Point): Point {
     const lastWall = ViewFactory.GetViewObject(this.machine.lastWallID) as Wall;
+    // the pivot joint on wall
+    // you may ask what is pivot joint. pivot joint is the joint not move with
+    // mouse.
     const pivotJointID =
         lastWall
             .jointIDs[lastWall.jointIDs.indexOf(this.machine.lastJointID) ^ 1];

@@ -1,8 +1,7 @@
 import {GRAB_JOINT_DISTANCE} from '../../../CONFIG';
 import * as EventSystem from '../../../events/index';
 import {ChangeToSelectionMode} from '../../../index';
-import {Point} from '../../../utils';
-import {GetDistanceOfPoint2Point} from '../../../utils/math';
+import {Point, GetDistanceOfPoint2Point} from '../../../utils';
 import {Joint} from '../../../view_elements/joint';
 import * as ViewFactory from '../../../view_elements/view_factory';
 import {StateMachine} from '../../state_machine';
@@ -43,7 +42,9 @@ export class DrawRectangleMachine extends StateMachine {
   private OnMouseMove(e: EventSystem.FssEvent) {
     if (this.isIdle) return;
     let pos = e.position;
-    const grabJoint = ViewFactory.GetNearestJoint(
+
+    // the Joint grab mouse
+	const grabJoint = ViewFactory.GetNearestJoint(
         pos, [this.downRightJoint], GRAB_JOINT_DISTANCE);
     if (grabJoint) pos = grabJoint.position;
 
@@ -59,6 +60,7 @@ export class DrawRectangleMachine extends StateMachine {
     if (this.isIdle) {
       this.isIdle = false;
 
+      // the Joint grab mouse
       const grabJoint =
           ViewFactory.GetNearestJoint(pos, [], GRAB_JOINT_DISTANCE);
       if (grabJoint) {
@@ -81,6 +83,7 @@ export class DrawRectangleMachine extends StateMachine {
           ViewFactory.CreateWall(this.upRightJoint, this.downRightJoint);
 
     } else {
+      // the Joint grab mouse
       const grabJoint = ViewFactory.GetNearestJoint(
           pos, [this.downRightJoint], GRAB_JOINT_DISTANCE);
       if (grabJoint) this.downRightJoint.Merge(grabJoint);
