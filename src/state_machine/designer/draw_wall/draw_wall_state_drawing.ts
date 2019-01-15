@@ -1,7 +1,7 @@
 import {GRAB_JOINT_DISTANCE, GRAB_WALL_DISTANCE} from '../../../CONFIG';
 import * as EventSystem from '../../../events/index';
 import {Point} from '../../../utils';
-import {GetDistanceByPoint2Point, GetPointByPoint2LineSegment} from '../../../utils/math';
+import {GetDistanceOfPoint2Point, GetClosestPointOnSegment2Point} from '../../../utils/math';
 import {Joint} from '../../../view_elements/joint';
 import * as ViewFactory from '../../../view_elements/view_factory';
 import {Wall} from '../../../view_elements/wall';
@@ -76,7 +76,7 @@ export class DrawingState extends BaseState {
       const joint1 = ViewFactory.GetViewObject(grabWall.jointIDs[0]) as Joint;
       const joint2 = ViewFactory.GetViewObject(grabWall.jointIDs[1]) as Joint;
 
-      const newPos = GetPointByPoint2LineSegment(
+      const newPos = GetClosestPointOnSegment2Point(
           pos, {a: joint1.position, b: joint2.position});
 
       joint.SetPosition(newPos);
