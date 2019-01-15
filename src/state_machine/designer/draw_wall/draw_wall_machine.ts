@@ -1,7 +1,7 @@
 import * as EventSystem from '../../../events/index';
 import {ChangeToSelectionMode} from '../../../index';
 import * as ViewFactory from '../../../view/drawing_board/view_factory';
-import { Wall } from '../../../view/drawing_board/wall';
+import {Wall} from '../../../view/drawing_board/wall';
 import {StateMachine} from '../../state_machine';
 
 import {DrawingState} from './draw_wall_state_drawing';

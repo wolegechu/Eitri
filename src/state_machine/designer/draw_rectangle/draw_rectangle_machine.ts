@@ -1,10 +1,10 @@
 import {GRAB_JOINT_DISTANCE} from '../../../CONFIG';
 import * as EventSystem from '../../../events/index';
 import {ChangeToSelectionMode} from '../../../index';
-import {Point, GetDistanceOfPoint2Point} from '../../../utils';
+import {GetDistanceOfPoint2Point, Point} from '../../../utils';
+import {Joint} from '../../../view/drawing_board/joint';
 import * as ViewFactory from '../../../view/drawing_board/view_factory';
 import {StateMachine} from '../../state_machine';
-import { Joint } from '../../../view/drawing_board/joint';
 
 
 export class DrawRectangleMachine extends StateMachine {
@@ -44,7 +44,7 @@ export class DrawRectangleMachine extends StateMachine {
     let pos = e.position;
 
     // the Joint grab mouse
-	const grabJoint = ViewFactory.GetNearestJoint(
+    const grabJoint = ViewFactory.GetNearestJoint(
         pos, [this.downRightJoint], GRAB_JOINT_DISTANCE);
     if (grabJoint) pos = grabJoint.position;
 

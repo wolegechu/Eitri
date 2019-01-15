@@ -1,5 +1,6 @@
 import {fabric} from 'fabric';
-import {Point, GetDistanceOfPoint2Point} from '../../utils';
+
+import {GetDistanceOfPoint2Point, Point} from '../../utils';
 
 import {ViewCanvas} from './canvas';
 import {Joint} from './joint';

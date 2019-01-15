@@ -1,6 +1,7 @@
 import {Point} from '../utils/index';
-import {shiftdown} from './event_system';
 import {ViewObject} from '../view/drawing_board/view_object';
+
+import {shiftdown} from './event_system';
 
 export class FssEvent {
   type: EventType;
