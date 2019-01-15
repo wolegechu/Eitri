@@ -1,5 +1,7 @@
 import {fabric} from 'fabric';
-import {Point, GetDistance} from '../../utils/math';
+
+import {GetDistance, Point} from '../../utils/math';
+
 import {ViewCanvas} from './canvas';
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
@@ -10,10 +12,10 @@ export class Wall extends ViewObject {
   width: number;
   view: fabric.Line;
 
-  get length(): number{
+  get length(): number {
     const joint1 = ViewFactory.GetViewObject(this.jointIDs[0]) as Joint;
     const joint2 = ViewFactory.GetViewObject(this.jointIDs[1]) as Joint;
-    
+
     const length = GetDistance(joint1.position, joint2.position);
     return length;
   }
@@ -39,9 +41,9 @@ export class Wall extends ViewObject {
     ViewCanvas.GetInstance().Add(this.view);
   }
 
-  ExportProperties():  WallExportedProperties{
-    const properties: WallExportedProperties = 
-                  {id: this.id, length: this.length};
+  ExportProperties(): WallExportedProperties {
+    const properties:
+        WallExportedProperties = {id: this.id, length: this.length};
     return properties;
   }
 

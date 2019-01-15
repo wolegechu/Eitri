@@ -5,12 +5,12 @@ class ExportedProperties {
   id: number;
 }
 
-export interface WallExportedProperties extends ExportedProperties{
-  //id: number;
+export interface WallExportedProperties extends ExportedProperties {
+  // id: number;
   length: number;
 }
 
-export interface JointExportedProperties extends ExportedProperties{
+export interface JointExportedProperties extends ExportedProperties {
   x: number;
   y: number;
 }
