@@ -24,6 +24,8 @@ export class SelectionMachine extends StateMachine {
   Exit(): void {
     const canvas = ViewCanvas.GetInstance();
     canvas.SetAllSelectable(false);
+    EventSystem.RemoveEventListener(
+        EventSystem.EventType.OBJECT_SELECT, this.funcOnObjectSelect);
   }
 
 
