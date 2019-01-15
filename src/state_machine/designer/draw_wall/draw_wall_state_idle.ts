@@ -1,7 +1,7 @@
-import {GRAB_JOINT_DISTANCE} from '../../../CONFIG';
+import {GRAB_JOINT_DISTANCE, GRAB_WALL_DISTANCE} from '../../../CONFIG';
 import * as EventSystem from '../../../events/index';
 import {Point} from '../../../utils/index';
-import {Point2PointDistance, Point2SegmentNearestPoint} from '../../../utils/math';
+import {GetDistanceByPoint2Point, GetPointByPoint2LineSegment} from '../../../utils/math';
 import {Joint} from '../../../view_elements/joint';
 import * as ViewFactory from '../../../view_elements/view_factory';
 import {Wall} from '../../../view_elements/wall';
@@ -34,8 +34,8 @@ export class IdleState extends BaseState {
     console.debug('idle state on click');
     const pos = event.position;
 
-    const grabWall = ViewFactory.GetGrabWall(pos);
-    const grabJoint = ViewFactory.GetGrabJoint(pos);
+    const grabWall = ViewFactory.GetNearestWall(pos, [], GRAB_WALL_DISTANCE);
+    const grabJoint = ViewFactory.GetNearestJoint(pos, [], GRAB_JOINT_DISTANCE);
     let wall: Wall;
 
     if (grabJoint) {
@@ -44,8 +44,8 @@ export class IdleState extends BaseState {
       const joint1 = ViewFactory.GetViewObject(grabWall.jointIDs[0]) as Joint;
       const joint2 = ViewFactory.GetViewObject(grabWall.jointIDs[1]) as Joint;
 
-      const newPos = Point2SegmentNearestPoint(
-          pos, {p1: joint1.position, p2: joint2.position});
+      const newPos = GetPointByPoint2LineSegment(
+          pos, {a: joint1.position, b: joint2.position});
 
       wall = ViewFactory.CreateWall(newPos, pos);
       const cutJoint = ViewFactory.GetViewObject(wall.jointIDs[0]) as Joint;

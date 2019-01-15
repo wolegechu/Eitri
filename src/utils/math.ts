@@ -1,11 +1,11 @@
 import {Point} from '.';
 
 
-export function Point2PointDistance(a: Point, b: Point) {
+export function GetDistanceByPoint2Point(a: Point, b: Point) {
   return a.distance(b);
 }
 
-export function Point2SegmentDistance(
+export function GetDistanceByPoint2LineSegment(
     p: Point, line: {p1: Point, p2: Point}): number {
   const a = line.p1, b = line.p2;
   const vec1 = p.clone().subtract(a);
@@ -21,9 +21,12 @@ export function Point2SegmentDistance(
   }
 }
 
-export function Point2SegmentNearestPoint(
-    p: Point, line: {p1: Point, p2: Point}): Point {
-  const a = line.p1, b = line.p2;
+/**
+ * return the point on Line Segment 'ab' closest to the point 'p'.
+ */
+export function GetPointByPoint2LineSegment(
+    p: Point, line: {a: Point, b: Point}): Point {
+  const a = line.a, b = line.b;
   const vec1 = p.clone().subtract(a);
   const vec2 = b.clone().subtract(a);
   const ret = vec1.dot(vec2) / vec2.lengthSq();
