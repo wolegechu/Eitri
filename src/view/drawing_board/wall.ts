@@ -1,14 +1,23 @@
 import {fabric} from 'fabric';
-import {Point} from '../utils';
+import {Point, GetDistanceOfPoint2Point} from '../../utils';
+
 import {ViewCanvas} from './canvas';
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
-import {ViewObject} from './view_object';
+import {ViewObject, WallExportedProperties} from './view_object';
 
 export class Wall extends ViewObject {
   jointIDs: number[] = [];
   width: number;
   view: fabric.Line;
+
+  get length(): number {
+    const joint1 = ViewFactory.GetViewObject(this.jointIDs[0]) as Joint;
+    const joint2 = ViewFactory.GetViewObject(this.jointIDs[1]) as Joint;
+
+    const length = GetDistanceOfPoint2Point(joint1.position, joint2.position);
+    return length;
+  }
   // type: int;
   // rooms: ID[];
   // doors: ID[];
@@ -42,6 +51,12 @@ export class Wall extends ViewObject {
     ViewFactory.CreateWall(cutJoint, endJoint1);
     ViewFactory.CreateWall(cutJoint, endJoint2);
     this.RemoveSelf();
+  }
+
+  ExportProperties(): WallExportedProperties {
+    const properties:
+        WallExportedProperties = {id: this.id, length: this.length};
+    return properties;
   }
 
   UpdateViewPosition() {

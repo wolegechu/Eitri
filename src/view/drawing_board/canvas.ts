@@ -1,6 +1,5 @@
 import {fabric} from 'fabric';
-
-import {Point} from '../utils/index';
+import {Point} from '../../utils/index';
 
 import * as ViewFactory from './view_factory';
 import {ViewObject} from './view_object';

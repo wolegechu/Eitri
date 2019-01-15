@@ -1,7 +1,6 @@
-import {GRAB_JOINT_DISTANCE, GRAB_WALL_DISTANCE} from '../CONFIG';
-import {Point} from '../utils/index';
-import {GetDistanceOfPoint2LineSegment, GetDistanceOfPoint2Point} from '../utils/math';
-
+import {GRAB_JOINT_DISTANCE, GRAB_WALL_DISTANCE} from '../../CONFIG';
+import {GetDistanceOfPoint2LineSegment, GetDistanceOfPoint2Point} from '../../utils/math';
+import {Point} from '../../utils/index';
 import {Joint} from './joint';
 import {ViewObject} from './view_object';
 import {Wall} from './wall';

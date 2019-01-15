@@ -2,9 +2,9 @@ import {GRAB_JOINT_DISTANCE, GRAB_WALL_DISTANCE} from '../../../CONFIG';
 import * as EventSystem from '../../../events/index';
 import {Point} from '../../../utils';
 import {GetDistanceOfPoint2Point, GetClosestPointOnSegment2Point} from '../../../utils/math';
-import {Joint} from '../../../view_elements/joint';
-import * as ViewFactory from '../../../view_elements/view_factory';
-import {Wall} from '../../../view_elements/wall';
+import {Joint} from '../../../view/drawing_board/joint';
+import * as ViewFactory from '../../../view/drawing_board/view_factory';
+import { Wall } from '../../../view/drawing_board/wall';
 import {BaseState} from '../../state_machine';
 
 import {WallDrawingMachine} from './draw_wall_machine';
