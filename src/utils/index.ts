@@ -1,3 +1,3 @@
 import Victor = require('victor');
-export {Point2PointDistance, Point2SegmentDistance} from './math';
+export {GetDistanceByPoint2Point, GetDistanceByPoint2LineSegment, GetPointByPoint2LineSegment} from './math';
 export {Victor as Point};
