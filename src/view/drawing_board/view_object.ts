@@ -15,7 +15,9 @@ export interface JointExportedProperties extends ExportedProperties {
   y: number;
 }
 
-export interface AccessoryExportedProperties extends ExportedProperties {}
+export interface AccessoryExportedProperties extends ExportedProperties {
+  wallID: number;
+}
 
 export abstract class ViewObject {
   id: number;
