@@ -15,6 +15,8 @@ export interface JointExportedProperties extends ExportedProperties {
   y: number;
 }
 
+export interface AccessoryExportedProperties extends ExportedProperties {}
+
 export abstract class ViewObject {
   id: number;
   view: fabric.Object;

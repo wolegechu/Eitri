@@ -75,7 +75,7 @@ export class Joint extends ViewObject {
   private UpdateWalls() {
     this.wallIDs.forEach(id => {
       const wall = ViewFactory.GetViewObject(id) as Wall;
-      wall.UpdateViewPosition();
+      wall.UpdatePosition();
     });
   }
 

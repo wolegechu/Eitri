@@ -2,6 +2,7 @@ import {GRAB_JOINT_DISTANCE, GRAB_WALL_DISTANCE} from '../../CONFIG';
 import {Point} from '../../utils/index';
 import {GetDistanceOfPoint2LineSegment, GetDistanceOfPoint2Point} from '../../utils/math';
 
+import {Accessory} from './accessory';
 import {Joint} from './joint';
 import {ViewObject} from './view_object';
 import {Wall} from './wall';
@@ -27,6 +28,13 @@ export function CreateWall(p1: Point|Joint, p2: Point|Joint): Wall {
   const wall = new Wall(id, p1, p2);
   viewMap.set(wall.id, wall);
   return wall;
+}
+
+export function CreateAccessory(pos: Point, img: HTMLImageElement): Accessory {
+  const id = GetNewID();
+  const viewWindle = new Accessory(id, pos, img);
+  viewMap.set(viewWindle.id, viewWindle);
+  return viewWindle;
 }
 
 export function GetViewObject(id: number): ViewObject {
