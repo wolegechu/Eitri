@@ -2,6 +2,7 @@ import {fabric} from 'fabric';
 
 import {GetDistanceOfPoint2Point, Point} from '../../utils';
 
+import {Accessory} from './accessory';
 import {ViewCanvas} from './canvas';
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
@@ -9,6 +10,7 @@ import {ViewObject, WallExportedProperties} from './view_object';
 
 export class Wall extends ViewObject {
   jointIDs: number[] = [];
+  accessoryIDs: number[] = [];
   width: number;
   view: fabric.Line;
 
@@ -60,7 +62,7 @@ export class Wall extends ViewObject {
     return properties;
   }
 
-  UpdateViewPosition() {
+  UpdatePosition() {
     const joint1 = ViewFactory.GetViewObject(this.jointIDs[0]) as Joint;
     const joint2 = ViewFactory.GetViewObject(this.jointIDs[1]) as Joint;
 
@@ -71,6 +73,11 @@ export class Wall extends ViewObject {
       'y2': joint2.position.y,
     });
     this.view.setCoords();
+
+    this.accessoryIDs.forEach(id => {
+      const obj = ViewFactory.GetViewObject(id) as Accessory;
+      obj.OnWallMove();
+    });
   }
 
   RemoveSelf() {
@@ -79,6 +86,16 @@ export class Wall extends ViewObject {
       const joint = ViewFactory.GetViewObject(jointID) as Joint;
       joint.RemoveWallID(this.id);
     });
+  }
+
+  AddAccessoryID(id: number) {
+    const index = this.accessoryIDs.indexOf(id);
+    if (index === -1) this.accessoryIDs.push(id);
+  }
+
+  RemoveAccessoryID(id: number) {
+    const index = this.accessoryIDs.indexOf(id);
+    if (index !== -1) this.accessoryIDs.splice(index, 1);
   }
 
   private GetOrCreateJoint(point: Point|Joint): Joint {
