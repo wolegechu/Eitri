@@ -50,21 +50,35 @@ export class ViewCanvas {
     });
   }
 
+  AddImage(htmlImage: HTMLImageElement): void {
+    const canvas = this.canvas;
+    const scale = Math.min(
+        canvas.getWidth() / htmlImage.width,
+        canvas.getHeight() / htmlImage.height,
+    );
+    const image = new fabric.Image(htmlImage, {
+      angle: 0,
+      padding: 10,
+      opacity: 0.5,
+      lockMovementX: true,
+      lockMovementY: true,
+      hasControls: false,
+      hasBorders: false,
+      scaleX: scale,
+      scaleY: scale
+    });
+
+    canvas.centerObject(image);
+    canvas.add(image);
+    canvas.renderAll();
+  }
+
   Add(obj: fabric.Object): void {
     this.canvas.add(obj);
     this.canvas._objects.sort((a, b) => {
       if (a instanceof fabric.Line) return -1;
       return 1;
     });
-    // this.canvas.renderAll();
-    // const objs = this.canvas._objects;
-    // if (obj instanceof fabric.Line) {
-    //   objs.splice(0, 0, obj);
-    // }
-    // else {
-    //   objs.push(obj);
-    // }
-
     this.canvas.requestRenderAll();
   }
 
