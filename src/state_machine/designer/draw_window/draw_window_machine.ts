@@ -1,11 +1,8 @@
-import {fabric} from 'fabric';
-
 import {ChangeToSelectionMode} from '../../..';
 import {GRAB_WALL_DISTANCE} from '../../../CONFIG';
 import * as EventSystem from '../../../events/index';
 import {GetClosestPointOnSegment2Point, Point} from '../../../utils';
 import {Accessory} from '../../../view/drawing_board/accessory';
-import {ViewCanvas} from '../../../view/drawing_board/canvas';
 import {Joint} from '../../../view/drawing_board/joint';
 import * as ViewFactory from '../../../view/drawing_board/view_factory';
 import {StateMachine} from '../../state_machine';

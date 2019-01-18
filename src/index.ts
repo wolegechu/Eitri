@@ -3,6 +3,7 @@ import {fabric} from 'fabric';
 import {DrawRectangleMachine} from './state_machine/designer/draw_rectangle/draw_rectangle_machine';
 import {WallDrawingMachine} from './state_machine/designer/draw_wall/draw_wall_machine';
 import {DrawWindowMachine} from './state_machine/designer/draw_window/draw_window_machine';
+import {GenerateRoomMachine} from './state_machine/designer/generate_room/generate_room_machine';
 import {SelectionMachine} from './state_machine/designer/selection/selection_machine';
 import {StateMachine} from './state_machine/state_machine';
 import {ViewCanvas} from './view/drawing_board/canvas';
@@ -12,6 +13,7 @@ let machine: StateMachine = new SelectionMachine();
 const buttonDrawWall = document.getElementById('draw_wall');
 const buttonDrawRectangle = document.getElementById('draw_rectangle');
 const buttonDrawWindow = document.getElementById('draw_window');
+const buttonGenerateRoom = document.getElementById('generate_room');
 
 buttonDrawWall.onclick = (e) => {
   machine.Exit();
@@ -26,6 +28,11 @@ buttonDrawRectangle.onclick = (e) => {
 buttonDrawWindow.onclick = (e) => {
   machine.Exit();
   machine = new DrawWindowMachine();
+};
+
+buttonGenerateRoom.onclick = (e) => {
+  machine.Exit();
+  machine = new GenerateRoomMachine();
 };
 
 export function ChangeToSelectionMode(): void {

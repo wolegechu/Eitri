@@ -39,3 +39,25 @@ export function GetClosestPointOnSegment2Point(
     return a.clone().add(addition);
   }
 }
+
+/**
+ * check if the order of vertexes array is clockwise.
+ * only Convex Polygon can use this function.
+ * Concave Polygon may get wrong result.
+ * @param verts the vertexes form the Polygon.
+ */
+export function PolygonIsClockWise(verts: Point[]) {
+  for (let i = 0; i <= verts.length - 3; ++i) {
+    const a = verts[i + 0].clone();
+    const b = verts[i + 1].clone();
+    const c = verts[i + 2].clone();
+    const vec1 = b.clone().subtract(a);
+    const vec2 = c.clone().subtract(a);
+    const ret = vec2.cross(vec1);
+    if (ret > 1e-8)
+      return true;
+    else if (ret < -1e-8)
+      return false;
+  }
+  return false;  // not a polygon
+}
