@@ -65,7 +65,8 @@ export class ViewCanvas {
       hasControls: false,
       hasBorders: false,
       scaleX: scale,
-      scaleY: scale
+      scaleY: scale,
+      evented: false
     });
 
     canvas.centerObject(image);

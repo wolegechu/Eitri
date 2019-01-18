@@ -18,6 +18,7 @@ export enum EventType {
   KEY_PRESS_START = 1,
   KEY_PRESS_ANY,
   KEY_PRESS_ESC,
+  KEY_PRESS_BACKSPACE,
   KEY_PRESS_TOTAL = 1000,
   // END
 
@@ -40,6 +41,7 @@ type KeyPressChecker = (e: KeyboardEvent) => FssEvent;
 export let keyPressCheckersMap = new Map<EventType, KeyPressChecker>([
   [EventType.KEY_PRESS_ANY, CheckKeyPressAny],
   [EventType.KEY_PRESS_ESC, CheckKeyPressEsc],
+  [EventType.KEY_PRESS_BACKSPACE, CheckKeyPressBackspace],
 ]);
 
 function CheckKeyPressAny(e: KeyboardEvent): FssEvent {
@@ -52,5 +54,12 @@ function CheckKeyPressEsc(e: KeyboardEvent): FssEvent {
   if ('Escape' !== e.code) return;
   const event = new FssEvent();
   event.type = EventType.KEY_PRESS_ESC;
+  return event;
+}
+
+function CheckKeyPressBackspace(e: KeyboardEvent): FssEvent {
+  if ('Backspace' !== e.code) return;
+  const event = new FssEvent();
+  event.type = EventType.KEY_PRESS_BACKSPACE;
   return event;
 }

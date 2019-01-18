@@ -42,9 +42,9 @@ export class Room extends ViewObject {
 
 
     this.view = new fabric.Path(path.join(' '), {
-      fill: 'red',
+      fill: 'blue',
       stroke: 'green',
-      opacity: 0.2,
+      opacity: 0.1,
       lockMovementX: true,
       lockMovementY: true
     });

@@ -54,10 +54,11 @@ export function PolygonIsClockWise(verts: Point[]) {
     const vec1 = b.clone().subtract(a);
     const vec2 = c.clone().subtract(a);
     const ret = vec2.cross(vec1);
-    if (ret > 1e-8)
+    if (ret > 1e-8) {
       return true;
-    else if (ret < -1e-8)
+    } else if (ret < -1e-8) {
       return false;
+    }
   }
   return false;  // not a polygon
 }
