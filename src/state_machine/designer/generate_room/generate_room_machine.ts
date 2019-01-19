@@ -85,8 +85,9 @@ export class GenerateRoomMachine extends StateMachine {
     for (const wall of GetViewObjectsWithType<Wall>(Wall)) {
       if (edges.indexOf(wall) !== -1) continue;
       if (vertexIDs.indexOf(wall.jointIDs[0]) !== -1 &&
-          vertexIDs.indexOf(wall.jointIDs[1]) !== -1)
+          vertexIDs.indexOf(wall.jointIDs[1]) !== -1) {
         return false;
+      }
     }
     return true;
   }
