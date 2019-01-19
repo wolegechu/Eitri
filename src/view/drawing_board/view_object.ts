@@ -1,7 +1,7 @@
 import {ViewCanvas} from './canvas';
 import * as ViewFactory from './view_factory';
 
-class ExportedProperties {
+export class ExportedProperties {
   id: number;
 }
 

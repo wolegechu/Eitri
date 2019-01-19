@@ -4,6 +4,7 @@ import {GetDistanceOfPoint2LineSegment, GetDistanceOfPoint2Point} from '../../ut
 
 import {Accessory} from './accessory';
 import {Joint} from './joint';
+import {Room} from './room';
 import {ViewObject} from './view_object';
 import {Wall} from './wall';
 
@@ -37,8 +38,31 @@ export function CreateAccessory(pos: Point, img: HTMLImageElement): Accessory {
   return viewWindle;
 }
 
+export function CreateRoom(edges: Wall[], vertex: Joint): Room {
+  const id = GetNewID();
+  const room = new Room(id, edges, vertex);
+  viewMap.set(room.id, room);
+  return room;
+}
+
 export function GetViewObject(id: number): ViewObject {
   return viewMap.get(id);
+}
+
+/**
+ * get the objects of type T.
+ * because of rubbish js/ts, we hava to use this uncomfortable tricky method.
+ * https://github.com/Microsoft/TypeScript/issues/5236
+ */
+export function GetViewObjectsWithType<T>(
+    // tslint:disable-next-line:no-any
+    constructor: {new (...args: any[]): T}): T[] {
+  const ret: T[] = [];
+  for (const obj of viewMap.values()) {
+    if (obj instanceof constructor) ret.push(obj);
+  }
+
+  return ret;
 }
 
 export function RemoveObject(id: number) {
