@@ -1,8 +1,14 @@
 import {fabric} from 'fabric';
+
 import {Point} from '../../utils/index';
 
+import {Accessory} from './accessory';
+import {Background} from './background';
+import {Joint} from './joint';
+import {Room} from './room';
 import * as ViewFactory from './view_factory';
 import {ViewObject} from './view_object';
+import {Wall} from './wall';
 
 // Singleton
 export class ViewCanvas {
@@ -45,42 +51,14 @@ export class ViewCanvas {
   OnObjectSelect(callback: (p: ViewObject) => void): void {
     const canvas = this.canvas;
     canvas.on('selection:created', (event) => {
-      const obj = ViewFactory.GetObjectByFabric(event.target);
+      const obj = ViewFactory.GetViewObjectWithView(event.target);
       callback(obj);
     });
   }
 
-  AddImage(htmlImage: HTMLImageElement): void {
-    const canvas = this.canvas;
-    const scale = Math.min(
-        canvas.getWidth() / htmlImage.width,
-        canvas.getHeight() / htmlImage.height,
-    );
-    const image = new fabric.Image(htmlImage, {
-      angle: 0,
-      padding: 10,
-      opacity: 0.5,
-      lockMovementX: true,
-      lockMovementY: true,
-      hasControls: false,
-      hasBorders: false,
-      scaleX: scale,
-      scaleY: scale,
-      evented: false
-    });
-
-    canvas.centerObject(image);
-    canvas.add(image);
-    canvas.renderAll();
-  }
-
-  Add(obj: fabric.Object): void {
-    this.canvas.add(obj);
-    this.canvas._objects.sort((a, b) => {
-      if (a instanceof fabric.Line) return -1;
-      return 1;
-    });
-    this.canvas.requestRenderAll();
+  Add(obj: ViewObject): void {
+    this.canvas.add(obj.view);
+    this.SortViewObjects();
   }
 
   Remove(obj: fabric.Object): void {
@@ -92,5 +70,34 @@ export class ViewCanvas {
     objs.forEach(obj => {
       obj.selectable = selectable;
     });
+  }
+
+  private SortViewObjects() {
+    this.canvas._objects.sort((a, b) => {
+      return this.GetSortPriority(a) - this.GetSortPriority(b);
+    });
+    this.canvas.requestRenderAll();
+  }
+
+  private GetSortPriority(view: fabric.Object): number {
+    const obj = ViewFactory.GetViewObjectWithView(view);
+    if (obj instanceof Background) {
+      return 0;
+    }
+    else if (obj instanceof Room) {
+      return 5;
+    }
+    else if (obj instanceof Wall) {
+      return 10;
+    }
+    else if (obj instanceof Joint) {
+      return 15;
+    }
+    else if (obj instanceof Accessory) {
+      return 20;
+    }
+    else {
+      console.assert(true, 'don\'t have this type');
+    }
   }
 }

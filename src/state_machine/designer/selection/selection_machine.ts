@@ -44,7 +44,7 @@ export class SelectionMachine extends StateMachine {
 
     // filter
     if (target instanceof Joint) return;
-
+    console.debug(target);
     this.selectedObject = target;
     UIIndex(target);
   }

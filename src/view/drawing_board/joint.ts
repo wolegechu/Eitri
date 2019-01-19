@@ -31,7 +31,6 @@ export class Joint extends ViewObject {
     this.view.perPixelTargetFind = true;
 
     const canvas = ViewCanvas.GetInstance();
-    canvas.Add(this.view);
     canvas.OnObjectMove((e) => this.OnObjectMove(e));
   }
 
