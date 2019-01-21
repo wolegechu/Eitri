@@ -1,12 +1,10 @@
-import {fabric} from 'fabric';
-
 import {DrawRectangleMachine} from './state_machine/designer/draw_rectangle/draw_rectangle_machine';
 import {WallDrawingMachine} from './state_machine/designer/draw_wall/draw_wall_machine';
 import {DrawWindowMachine} from './state_machine/designer/draw_window/draw_window_machine';
 import {GenerateRoomMachine} from './state_machine/designer/generate_room/generate_room_machine';
 import {SelectionMachine} from './state_machine/designer/selection/selection_machine';
 import {StateMachine} from './state_machine/state_machine';
-import {ViewCanvas} from './view/drawing_board/canvas';
+import * as ViewFactory from './view/drawing_board/view_factory';
 
 let machine: StateMachine = new SelectionMachine();
 
@@ -48,7 +46,7 @@ document.getElementById('imgLoader').onchange = (e) => {
     imgObj.src = (event.target as FileReader).result as string;
 
     imgObj.onload = () => {
-      ViewCanvas.GetInstance().AddImage(imgObj);
+      ViewFactory.CreateBackground(imgObj);
     };
   };
   reader.readAsDataURL((e.srcElement as HTMLInputElement).files[0]);

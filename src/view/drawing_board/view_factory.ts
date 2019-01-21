@@ -3,13 +3,16 @@ import {Point} from '../../utils/index';
 import {GetDistanceOfPoint2LineSegment, GetDistanceOfPoint2Point} from '../../utils/math';
 
 import {Accessory} from './accessory';
+import {Background} from './background';
+import {ViewCanvas} from './canvas';
 import {Joint} from './joint';
 import {Room} from './room';
 import {ViewObject} from './view_object';
 import {Wall} from './wall';
 
 
-export let viewMap = new Map<number, ViewObject>();
+const idObjectMap = new Map<number, ViewObject>();
+const viewObjectMap = new Map<fabric.Object, ViewObject>();
 let idCount = 0;
 
 function GetNewID(): number {
@@ -20,33 +23,54 @@ function GetNewID(): number {
 export function CreateJoint(pos: Point): Joint {
   const id = GetNewID();
   const joint = new Joint(id, pos);
-  viewMap.set(id, joint);
+  idObjectMap.set(joint.id, joint);
+  viewObjectMap.set(joint.view, joint);
+  ViewCanvas.GetInstance().Add(joint);
   return joint;
 }
 
 export function CreateWall(p1: Point|Joint, p2: Point|Joint): Wall {
   const id = GetNewID();
   const wall = new Wall(id, p1, p2);
-  viewMap.set(wall.id, wall);
+  idObjectMap.set(wall.id, wall);
+  viewObjectMap.set(wall.view, wall);
+  ViewCanvas.GetInstance().Add(wall);
   return wall;
 }
 
 export function CreateAccessory(pos: Point, img: HTMLImageElement): Accessory {
   const id = GetNewID();
-  const viewWindle = new Accessory(id, pos, img);
-  viewMap.set(viewWindle.id, viewWindle);
-  return viewWindle;
+  const accessory = new Accessory(id, pos, img);
+  idObjectMap.set(accessory.id, accessory);
+  viewObjectMap.set(accessory.view, accessory);
+  ViewCanvas.GetInstance().Add(accessory);
+  return accessory;
 }
 
 export function CreateRoom(edges: Wall[], vertex: Joint): Room {
   const id = GetNewID();
   const room = new Room(id, edges, vertex);
-  viewMap.set(room.id, room);
+  idObjectMap.set(room.id, room);
+  viewObjectMap.set(room.view, room);
+  ViewCanvas.GetInstance().Add(room);
   return room;
 }
 
+export function CreateBackground(htmlImage: HTMLImageElement) {
+  const id = GetNewID();
+  const back = new Background(id, htmlImage);
+  idObjectMap.set(back.id, back);
+  viewObjectMap.set(back.view, back);
+  ViewCanvas.GetInstance().Add(back);
+  return back;
+}
+
 export function GetViewObject(id: number): ViewObject {
-  return viewMap.get(id);
+  return idObjectMap.get(id);
+}
+
+export function GetViewObjectWithView(view: fabric.Object) {
+  return viewObjectMap.get(view);
 }
 
 /**
@@ -58,15 +82,16 @@ export function GetViewObjectsWithType<T>(
     // tslint:disable-next-line:no-any
     constructor: {new (...args: any[]): T}): T[] {
   const ret: T[] = [];
-  for (const obj of viewMap.values()) {
+  for (const obj of idObjectMap.values()) {
     if (obj instanceof constructor) ret.push(obj);
   }
 
   return ret;
 }
 
-export function RemoveObject(id: number) {
-  viewMap.delete(id);
+export function RemoveObject(obj: ViewObject) {
+  idObjectMap.delete(obj.id);
+  viewObjectMap.delete(obj.view);
 }
 
 /**
@@ -82,7 +107,7 @@ export function GetNearestJoint(
   let min = distanceUpperBound;
   let nearestJoint: Joint = null;
 
-  for (const obj of viewMap.values()) {
+  for (const obj of idObjectMap.values()) {
     if (!(obj instanceof Joint)) continue;
     if (-1 !== exception.indexOf(obj)) continue;
 
@@ -109,7 +134,7 @@ export function GetNearestWall(
   let min = distanceUpperBound;
   let nearestWall: Wall = null;
 
-  for (const obj of viewMap.values()) {
+  for (const obj of idObjectMap.values()) {
     if (!(obj instanceof Wall)) continue;
     if (-1 !== exception.indexOf(obj)) continue;
 
@@ -123,13 +148,4 @@ export function GetNearestWall(
   }
 
   return nearestWall;
-}
-
-export function GetObjectByFabric(view: fabric.Object): ViewObject {
-  for (const obj of viewMap.values()) {
-    if (view === obj.view) {
-      return obj;
-    }
-  }
-  return null;
 }

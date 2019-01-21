@@ -40,7 +40,6 @@ export class Room extends ViewObject {
 
     path[path.length - 1] = 'z';
 
-
     this.view = new fabric.Path(path.join(' '), {
       fill: 'blue',
       stroke: 'green',
@@ -50,9 +49,6 @@ export class Room extends ViewObject {
     });
     this.view.hasControls = this.view.hasBorders = false;
     this.view.perPixelTargetFind = true;
-
-    const canvas = ViewCanvas.GetInstance();
-    canvas.Add(this.view);
   }
 
   ExportProperties(): AccessoryExportedProperties {

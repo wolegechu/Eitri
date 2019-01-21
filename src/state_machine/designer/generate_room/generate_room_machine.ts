@@ -3,7 +3,6 @@ import {PolygonIsClockWise} from '../../../utils/math';
 import {Joint} from '../../../view/drawing_board/joint';
 import {Room} from '../../../view/drawing_board/room';
 import * as ViewFactory from '../../../view/drawing_board/view_factory';
-import {GetViewObjectsWithType} from '../../../view/drawing_board/view_factory';
 import {Wall} from '../../../view/drawing_board/wall';
 import {StateMachine} from '../../state_machine';
 
@@ -24,7 +23,7 @@ export class GenerateRoomMachine extends StateMachine {
   }
 
   private GenerateRooms() {
-    GetViewObjectsWithType<Joint>(Joint).forEach(v => {
+    ViewFactory.GetViewObjectsWithType<Joint>(Joint).forEach(v => {
       this.Dfs(v, [v], []);
     });
   }
@@ -82,7 +81,7 @@ export class GenerateRoomMachine extends StateMachine {
     const vertexIDs = vertexes.map(vert => {
       return vert.id;
     });
-    for (const wall of GetViewObjectsWithType<Wall>(Wall)) {
+    for (const wall of ViewFactory.GetViewObjectsWithType<Wall>(Wall)) {
       if (edges.indexOf(wall) !== -1) continue;
       if (vertexIDs.indexOf(wall.jointIDs[0]) !== -1 &&
           vertexIDs.indexOf(wall.jointIDs[1]) !== -1) {
