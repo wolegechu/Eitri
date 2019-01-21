@@ -43,6 +43,7 @@ export class SelectionMachine extends StateMachine {
     const target = event.target;
 
     // filter
+    console.debug('luoyuchu');
     if (target instanceof Joint) return;
     console.debug(target);
     this.selectedObject = target;

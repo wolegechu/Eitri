@@ -15,7 +15,7 @@
 <body>
   <div class="container">
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-5">
           <form id="uploadImg" runat="server">
             <input type="file" id="imgLoader" />
           </form>
@@ -23,24 +23,34 @@
           <button type="button" class="btn btn-primary" id='draw_rectangle'>画房间</button>
           <button type="button" class="btn btn-primary" id='draw_window'>画窗</button>
           <button type="button" class="btn btn-primary" id='generate_room'>生成房间</button>
-          <div class="card">
-            <form>
-              <div class="form-row row">
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text">Length</div>
+            <div class="card">
+              <div class="card-header">
+                Quote
+              </div>
+              <div class="card-body">
+                <div class="form-group row">
+                  <label for="staticEmail" class="col-sm-2 col-form-label">ID</label>
+                  <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext" id="text_id" value="">
                   </div>
-                  <input type="text" class="form-control" name="length" id="property_length">
+                </div>
+                <div class="form-group row">
+                  <label for="inputPassword" class="col-sm-2 col-form-label">长度</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="text_length" placeholder="">
+                  </div>
                 </div>
               </div>
-            </form>
-          </div>
+            </div>
         </div>
-      <div class="col-md-8">
+      <div class="col-md-7">
         <canvas id='c' width="1000" height="500"></canvas>
       </div>
     </div>
   </div>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
   <script src="bundle.js"></script>
 </body>
 
