@@ -33,8 +33,8 @@ export class Wall extends ViewObject {
 
     // new line
     this.view = new fabric.Line([p1.x, p1.y, p2.x, p2.y], {
-      strokeWidth: 3,
-      stroke: 'red',
+      strokeWidth: 9,
+      stroke: '#808080',
       selectable: false,
       lockMovementX: true,
       lockMovementY: true,

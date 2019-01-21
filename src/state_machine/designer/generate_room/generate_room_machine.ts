@@ -1,3 +1,5 @@
+import Flatten from 'flatten-js';
+
 import {ChangeToSelectionMode} from '../../..';
 import {PolygonIsClockWise} from '../../../utils/math';
 import {Joint} from '../../../view/drawing_board/joint';
@@ -65,9 +67,6 @@ export class GenerateRoomMachine extends StateMachine {
   }
 
   private CheckRoomLegal(vertexes: Joint[], edges: Wall[]): boolean {
-    // clockwise test
-    if (!PolygonIsClockWise(vertexes.map(v => v.position))) return false;
-
     // the first vertex position test
     const pivotPos = vertexes[0].position;  // the first vertex
     for (const vert of vertexes) {
@@ -77,16 +76,41 @@ export class GenerateRoomMachine extends StateMachine {
       }
     }
 
-    // cross edge test
-    const vertexIDs = vertexes.map(vert => {
-      return vert.id;
-    });
+    // the clockwise test
+    if (vertexes[1].id > vertexes[vertexes.length - 2].id) {
+      return false;
+    }
+
+    // is room test
+    if (this.IsRoom(vertexes.slice(0, -1), edges)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private IsRoom(vertexes: Joint[], edges: Wall[]): boolean {
+    const verts = new Array<Flatten.Point>();
+    for (const vert of vertexes) {
+      verts.push(new Flatten.Point(vert.position.x, vert.position.y));
+    }
+
+
+    const polygon = new Flatten.Polygon();
+    polygon.addFace(verts);
+
     for (const wall of ViewFactory.GetViewObjectsWithType<Wall>(Wall)) {
       if (edges.indexOf(wall) !== -1) continue;
-      if (vertexIDs.indexOf(wall.jointIDs[0]) !== -1 &&
-          vertexIDs.indexOf(wall.jointIDs[1]) !== -1) {
-        return false;
-      }
+      const joint1 = ViewFactory.GetViewObject(wall.jointIDs[0]) as Joint;
+      const joint2 = ViewFactory.GetViewObject(wall.jointIDs[1]) as Joint;
+      let p1 = new Flatten.Point(joint1.position.x, joint1.position.y);
+      let p2 = new Flatten.Point(joint2.position.x, joint2.position.y);
+      let vec = new Flatten.Vector(p1, p2);
+      vec = vec.normalize();
+      p1 = p1.translate(vec.multiply(1e-3));
+      p2 = p2.translate(vec.multiply(-1e-3));
+      if (polygon.contains(p1)) return false;
+      if (polygon.contains(p2)) return false;
     }
     return true;
   }

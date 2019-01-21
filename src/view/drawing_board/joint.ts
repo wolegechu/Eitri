@@ -7,7 +7,7 @@ import * as ViewFactory from './view_factory';
 import {JointExportedProperties, ViewObject} from './view_object';
 import {Wall} from './wall';
 
-const JOINT_RADIUS = 12.0;
+const JOINT_RADIUS = 8.0;
 
 export class Joint extends ViewObject {
   wallIDs: number[] = [];
@@ -23,9 +23,9 @@ export class Joint extends ViewObject {
       top: pos.y - JOINT_RADIUS,
       strokeWidth: 5,
       radius: JOINT_RADIUS,
-      fill: '#fff',
-      stroke: '#666',
-      selectable: false
+      fill: '#B0B0B0',
+      stroke: '#B0B0B0',
+      selectable: false,
     });
     this.view.hasControls = this.view.hasBorders = false;
     this.view.perPixelTargetFind = true;
@@ -45,7 +45,7 @@ export class Joint extends ViewObject {
 
   RemoveWallID(id: number) {
     const index = this.wallIDs.indexOf(id);
-    this.wallIDs.splice(index, 1);
+    if (index !== -1) this.wallIDs.splice(index, 1);
     if (0 === this.wallIDs.length) this.RemoveSelf();
   }
 
@@ -55,6 +55,9 @@ export class Joint extends ViewObject {
   }
 
   Merge(other: Joint) {
+    // special case: same joint
+    if (this === other) return;
+
     other.wallIDs.forEach(id => {
       const wall = ViewFactory.GetViewObject(id) as Wall;
       const index = wall.jointIDs.indexOf(other.id);
@@ -62,6 +65,14 @@ export class Joint extends ViewObject {
     });
     this.wallIDs = this.wallIDs.concat(other.wallIDs);
     other.RemoveSelf();
+
+    // special case: this and other has a common wall.
+    for (let i = this.wallIDs.length - 1; i >= 0; --i) {
+      const wall = ViewFactory.GetViewObject(this.wallIDs[i]) as Wall;
+      if (wall.jointIDs[0] === wall.jointIDs[1]) {
+        wall.RemoveSelf();
+      }
+    }
   }
 
   private OnObjectMove(e: fabric.IEvent) {
