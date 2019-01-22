@@ -50,7 +50,14 @@ export class ViewCanvas {
 
   OnObjectSelect(callback: (p: ViewObject) => void): void {
     const canvas = this.canvas;
+    canvas.on('selection:updated', (event) => {
+      console.debug('fabric: selection:updated');
+      const obj = ViewFactory.GetViewObjectWithView(event.target);
+      callback(obj);
+    });
+
     canvas.on('selection:created', (event) => {
+      console.debug('fabric: selection:created');
       const obj = ViewFactory.GetViewObjectWithView(event.target);
       callback(obj);
     });
@@ -83,20 +90,15 @@ export class ViewCanvas {
     const obj = ViewFactory.GetViewObjectWithView(view);
     if (obj instanceof Background) {
       return 0;
-    }
-    else if (obj instanceof Room) {
+    } else if (obj instanceof Room) {
       return 5;
-    }
-    else if (obj instanceof Wall) {
+    } else if (obj instanceof Wall) {
       return 10;
-    }
-    else if (obj instanceof Joint) {
+    } else if (obj instanceof Joint) {
       return 15;
-    }
-    else if (obj instanceof Accessory) {
+    } else if (obj instanceof Accessory) {
       return 20;
-    }
-    else {
+    } else {
       console.assert(true, 'don\'t have this type');
     }
   }

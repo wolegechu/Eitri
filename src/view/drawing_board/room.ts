@@ -1,5 +1,4 @@
 import {fabric} from 'fabric';
-import {ViewCanvas} from './canvas';
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
 import {AccessoryExportedProperties, ViewObject} from './view_object';
@@ -41,8 +40,8 @@ export class Room extends ViewObject {
     path[path.length - 1] = 'z';
 
     this.view = new fabric.Path(path.join(' '), {
-      fill: 'blue',
-      stroke: 'green',
+      fill: '#A2875E',
+      stroke: '#A2875E',
       opacity: 0.1,
       lockMovementX: true,
       lockMovementY: true
