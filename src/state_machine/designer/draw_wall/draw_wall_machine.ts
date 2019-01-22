@@ -1,5 +1,6 @@
 import * as EventSystem from '../../../events/index';
 import {ChangeToSelectionMode} from '../../../index';
+import {Joint} from '../../../view/drawing_board/joint';
 import * as ViewFactory from '../../../view/drawing_board/view_factory';
 import {Wall} from '../../../view/drawing_board/wall';
 import {StateMachine} from '../../state_machine';
@@ -11,6 +12,7 @@ import {RangingState} from './draw_wall_state_ranging';
 export class WallDrawingMachine extends StateMachine {
   lastWallID: number;
   lastJointID: number;
+  lengthInputCache: number;
 
   idleState: IdleState = new IdleState(this);
   drawingState: DrawingState = new DrawingState(this);
@@ -26,6 +28,21 @@ export class WallDrawingMachine extends StateMachine {
       target: this.drawingState,
       event: EventSystem.EventType.MOUSE_CLICK_CANVAS
     },
+    {
+      origin: this.drawingState,
+      target: this.drawingState,
+      event: EventSystem.EventType.MOUSE_CLICK_CANVAS
+    },
+    {
+      origin: this.drawingState,
+      target: this.rangingState,
+      event: EventSystem.EventType.KEY_PRESS_ENTER
+    },
+    {
+      origin: this.rangingState,
+      target: this.drawingState,
+      event: EventSystem.EventType.MOUSE_CLICK_CANVAS
+    }
   ];
 
   constructor() {
@@ -44,6 +61,20 @@ export class WallDrawingMachine extends StateMachine {
     // remove the last Wall
     const wall = ViewFactory.GetViewObject(this.lastWallID) as Wall;
     if (wall) wall.RemoveSelf();
+  }
+
+  /**
+   * Get the pivot joint on the last wall.
+   * You may ask what is pivot joint.
+   * Pivot joint is the joint not move with mouse.
+   */
+  GetPivotJoint(): Joint {
+    const lastWall = ViewFactory.GetViewObject(this.lastWallID) as Wall;
+
+    const pivotJointID =
+        lastWall.jointIDs[lastWall.jointIDs.indexOf(this.lastJointID) ^ 1];
+    const pivotJoint = ViewFactory.GetViewObject(pivotJointID) as Joint;
+    return pivotJoint;
   }
 
   private OnPressESC(e: EventSystem.FssEvent) {

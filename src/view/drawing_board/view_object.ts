@@ -2,8 +2,7 @@ import {ViewCanvas} from './canvas';
 import * as ViewFactory from './view_factory';
 
 export const PROPERTY_TYPE_NUMBER = 'number';
-export const PROPERTY_TYPE_WALL_TYPE = 'wall_type';
-export const PROPERTY_TYPE_ROOM_TYPE = 'room_type';
+export const PROPERTY_TYPE_OPTION = 'option';
 
 export interface ViewProperty {
   // tslint:disable-next-line:no-any
@@ -11,12 +10,17 @@ export interface ViewProperty {
   type: string;
 }
 
+export interface OptionProperty extends ViewProperty{
+  // tslint:disable-next-line:no-any
+  options: string[];
+}
+
 export class ExportedProperties {}
 
 export interface WallExportedProperties extends ExportedProperties {
   // id: number;
   width: ViewProperty;
-  type: ViewProperty;
+  type: OptionProperty;
 }
 
 export interface JointExportedProperties extends ExportedProperties {
@@ -29,7 +33,7 @@ export interface AccessoryExportedProperties extends ExportedProperties {
 }
 
 export interface RoomExportedProperties extends ExportedProperties {
-  type: ViewProperty;
+  type: OptionProperty;
 }
 
 export abstract class ViewObject {

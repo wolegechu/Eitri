@@ -4,7 +4,7 @@ import {Point} from '../../utils/index';
 
 import {ViewCanvas} from './canvas';
 import * as ViewFactory from './view_factory';
-import {JointExportedProperties, ViewObject, ExportedProperties} from './view_object';
+import {ExportedProperties, JointExportedProperties, ViewObject} from './view_object';
 import {Wall} from './wall';
 
 const JOINT_RADIUS = 8.0;
@@ -40,8 +40,7 @@ export class Joint extends ViewObject {
     return properties;
   }
 
-  ImportProperties(
-      props:ExportedProperties): void {
+  ImportProperties(props: ExportedProperties): void {
     throw new Error('Method not implemented.');
   }
 

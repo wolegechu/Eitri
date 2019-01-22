@@ -2,7 +2,7 @@ import {fabric} from 'fabric';
 
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
-import {AccessoryExportedProperties, ExportedProperties, PROPERTY_TYPE_ROOM_TYPE, RoomExportedProperties, ViewObject} from './view_object';
+import {AccessoryExportedProperties, ExportedProperties, PROPERTY_TYPE_OPTION, RoomExportedProperties, ViewObject} from './view_object';
 import {Wall} from './wall';
 
 export enum RoomType {
@@ -60,7 +60,11 @@ export class Room extends ViewObject {
 
   ExportProperties(): RoomExportedProperties {
     const properties: RoomExportedProperties = {
-      type: {value: this.type, type: PROPERTY_TYPE_ROOM_TYPE}
+      type: {
+        value: this.type,
+        type: PROPERTY_TYPE_OPTION,
+        options: [RoomType.Bedroom, RoomType.Kitchen, RoomType.LivingRoom, RoomType.Toilet]
+      }
     };
     return properties;
   }
