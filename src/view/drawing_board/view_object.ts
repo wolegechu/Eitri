@@ -17,22 +17,22 @@ export interface OptionProperty extends ViewProperty{
 
 export class ExportedProperties {}
 
-export interface WallExportedProperties extends ExportedProperties {
+export class WallExportedProperties extends ExportedProperties {
   // id: number;
-  width: ViewProperty;
+  length: ViewProperty;
   type: OptionProperty;
 }
 
-export interface JointExportedProperties extends ExportedProperties {
+export class JointExportedProperties extends ExportedProperties {
   x: number;
   y: number;
 }
 
-export interface AccessoryExportedProperties extends ExportedProperties {
+export class AccessoryExportedProperties extends ExportedProperties {
   wallID: number;
 }
 
-export interface RoomExportedProperties extends ExportedProperties {
+export class RoomExportedProperties extends ExportedProperties {
   type: OptionProperty;
 }
 
