@@ -5,7 +5,7 @@ import {Point} from '../../utils/index';
 import {ViewCanvas} from './canvas';
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
-import {AccessoryExportedProperties, ViewObject, ExportedProperties} from './view_object';
+import {AccessoryExportedProperties, ExportedProperties, ViewObject} from './view_object';
 import {Wall} from './wall';
 
 
@@ -44,13 +44,12 @@ export class Accessory extends ViewObject {
   }
 
   ExportProperties(): AccessoryExportedProperties {
-    const properties:
-        AccessoryExportedProperties = {wallID: this.wallID};
+    const properties: AccessoryExportedProperties = {wallID: this.wallID};
     return properties;
   }
 
   ImportProperties(props: ExportedProperties): void {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
   SetPositionAndWall(point: Point, wall: Wall = null) {

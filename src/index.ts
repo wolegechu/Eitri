@@ -1,25 +1,20 @@
+import {RegistCanvasEvent} from './events/event_system';
 import {DrawRectangleMachine} from './state_machine/designer/draw_rectangle/draw_rectangle_machine';
 import {WallDrawingMachine} from './state_machine/designer/draw_wall/draw_wall_machine';
 import {DrawWindowMachine} from './state_machine/designer/draw_window/draw_window_machine';
 import {GenerateRoomMachine} from './state_machine/designer/generate_room/generate_room_machine';
 import {SelectionMachine} from './state_machine/designer/selection/selection_machine';
 import {StateMachine} from './state_machine/state_machine';
+import {SetUIDisplayFunc, UIDisplayFunc} from './view/components';
+import {ViewCanvas} from './view/drawing_board/canvas';
+import {RoomType} from './view/drawing_board/room';
 import * as ViewFactory from './view/drawing_board/view_factory';
-import { ViewCanvas } from './view/drawing_board/canvas';
-import { UIDisplayFunc, SetUIDisplayFunc } from './view/components';
-import { PROPERTY_TYPE_ROOM_TYPE, PROPERTY_TYPE_WALL_TYPE } from './view/drawing_board/view_object';
-import { RoomType } from './view/drawing_board/room';
-import { WallType } from './view/drawing_board/wall';
-import { RegistCanvasEvent } from './events/event_system';
+import {PROPERTY_TYPE_ROOM_TYPE, PROPERTY_TYPE_WALL_TYPE} from './view/drawing_board/view_object';
+import {WallType} from './view/drawing_board/wall';
 
 let machine: StateMachine = null;
 
-function Init(option: {
-  canvasID: string,
-  callback: UIDisplayFunc
-}) {
-  
-  console.log("init");
+function Init(option: {canvasID: string, callback: UIDisplayFunc}) {
   ViewCanvas.GetInstance().Init(option.canvasID);
   machine = new SelectionMachine();
 
@@ -33,7 +28,9 @@ function Init(option: {
  */
 function GetOptions(type: string): string[] {
   if (type === PROPERTY_TYPE_ROOM_TYPE) {
-    return [RoomType.Bedroom, RoomType.Kitchen, RoomType.LivingRoom, RoomType.Toilet];
+    return [
+      RoomType.Bedroom, RoomType.Kitchen, RoomType.LivingRoom, RoomType.Toilet
+    ];
   } else if (type === PROPERTY_TYPE_WALL_TYPE) {
     return [WallType.NORMAL, WallType.MAIN];
   }

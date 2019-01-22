@@ -36,8 +36,8 @@ export class Background extends ViewObject {
     const properties: ExportedProperties = {id: this.id};
     return properties;
   }
-  
+
   ImportProperties(props: ExportedProperties): void {
-      throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 }

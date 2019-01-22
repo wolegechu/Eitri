@@ -15,7 +15,7 @@ enum ViewPriority {
   ROOM,
   WALL,
   JOINT,
-  ACCESSORY 
+  ACCESSORY
 }
 
 
@@ -30,7 +30,7 @@ export class ViewCanvas {
     return ViewCanvas.instance;
   }
 
-  Init(id:string): void {
+  Init(id: string): void {
     this.canvas = new fabric.Canvas(id);
     this.canvas.selection = false;
   }

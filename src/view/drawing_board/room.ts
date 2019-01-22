@@ -1,14 +1,15 @@
 import {fabric} from 'fabric';
+
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
-import {AccessoryExportedProperties, ViewObject, ExportedProperties, RoomExportedProperties, PROPERTY_TYPE_ROOM_TYPE} from './view_object';
+import {AccessoryExportedProperties, ExportedProperties, PROPERTY_TYPE_ROOM_TYPE, RoomExportedProperties, ViewObject} from './view_object';
 import {Wall} from './wall';
 
 export enum RoomType {
-  Bedroom = "卧室",
-  LivingRoom = "客厅",
-  Kitchen = "厨房",
-  Toilet = "厕所",
+  Bedroom = '卧室',
+  LivingRoom = '客厅',
+  Kitchen = '厨房',
+  Toilet = '厕所',
 }
 
 /**
@@ -59,10 +60,7 @@ export class Room extends ViewObject {
 
   ExportProperties(): RoomExportedProperties {
     const properties: RoomExportedProperties = {
-      type: {
-        value: this.type,
-        type: PROPERTY_TYPE_ROOM_TYPE
-      }
+      type: {value: this.type, type: PROPERTY_TYPE_ROOM_TYPE}
     };
     return properties;
   }

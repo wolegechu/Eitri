@@ -1,9 +1,7 @@
 import * as FSS from './index';
 
-console.log("test solution");
-FSS.Init({
-    canvasID: 'c',
-    callback: null});
+console.log('test solution');
+FSS.Init({canvasID: 'c', callback: null});
 
 const buttonDrawWall = document.getElementById('draw_wall');
 const buttonDrawRectangle = document.getElementById('draw_rectangle');

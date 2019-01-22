@@ -5,11 +5,11 @@ import {GetDistanceOfPoint2Point, Point} from '../../utils';
 import {Accessory} from './accessory';
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
-import {ViewObject, WallExportedProperties, PROPERTY_TYPE_NUMBER, PROPERTY_TYPE_WALL_TYPE} from './view_object';
+import {PROPERTY_TYPE_NUMBER, PROPERTY_TYPE_WALL_TYPE, ViewObject, WallExportedProperties} from './view_object';
 
 export enum WallType {
-  NORMAL = "普通墙",
-  MAIN = "承重墙"
+  NORMAL = '普通墙',
+  MAIN = '承重墙'
 }
 
 export class Wall extends ViewObject {
@@ -58,14 +58,8 @@ export class Wall extends ViewObject {
 
   ExportProperties(): WallExportedProperties {
     const properties: WallExportedProperties = {
-      width: {
-        value: this.width,
-        type: PROPERTY_TYPE_NUMBER
-      },
-      type: {
-        value: this.type,
-        type: PROPERTY_TYPE_WALL_TYPE
-      }
+      width: {value: this.width, type: PROPERTY_TYPE_NUMBER},
+      type: {value: this.type, type: PROPERTY_TYPE_WALL_TYPE}
     };
     return properties;
   }

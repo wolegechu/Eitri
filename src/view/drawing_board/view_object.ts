@@ -1,9 +1,9 @@
 import {ViewCanvas} from './canvas';
 import * as ViewFactory from './view_factory';
 
-export const PROPERTY_TYPE_NUMBER = "number";
-export const PROPERTY_TYPE_WALL_TYPE = "wall_type";
-export const PROPERTY_TYPE_ROOM_TYPE = "room_type";
+export const PROPERTY_TYPE_NUMBER = 'number';
+export const PROPERTY_TYPE_WALL_TYPE = 'wall_type';
+export const PROPERTY_TYPE_ROOM_TYPE = 'room_type';
 
 export interface ViewProperty {
   // tslint:disable-next-line:no-any
@@ -11,9 +11,7 @@ export interface ViewProperty {
   type: string;
 }
 
-export class ExportedProperties {
-
-}
+export class ExportedProperties {}
 
 export interface WallExportedProperties extends ExportedProperties {
   // id: number;
