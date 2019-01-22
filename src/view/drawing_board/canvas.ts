@@ -10,18 +10,29 @@ import * as ViewFactory from './view_factory';
 import {ViewObject} from './view_object';
 import {Wall} from './wall';
 
+enum ViewPriority {
+  BACKGROUND = 0,
+  ROOM,
+  WALL,
+  JOINT,
+  ACCESSORY 
+}
+
+
 // Singleton
 export class ViewCanvas {
   canvas: fabric.Canvas;
 
   private static instance = new ViewCanvas();
-  private constructor() {
-    this.canvas = new fabric.Canvas('c');
-    this.canvas.selection = false;
-  }
+  private constructor() {}
 
   static GetInstance(): ViewCanvas {
     return ViewCanvas.instance;
+  }
+
+  Init(id:string): void {
+    this.canvas = new fabric.Canvas(id);
+    this.canvas.selection = false;
   }
 
   Render(): void {
@@ -89,15 +100,15 @@ export class ViewCanvas {
   private GetSortPriority(view: fabric.Object): number {
     const obj = ViewFactory.GetViewObjectWithView(view);
     if (obj instanceof Background) {
-      return 0;
+      return ViewPriority.BACKGROUND;
     } else if (obj instanceof Room) {
-      return 5;
+      return ViewPriority.ROOM;
     } else if (obj instanceof Wall) {
-      return 10;
+      return ViewPriority.WALL;
     } else if (obj instanceof Joint) {
-      return 15;
+      return ViewPriority.JOINT;
     } else if (obj instanceof Accessory) {
-      return 20;
+      return ViewPriority.ACCESSORY;
     } else {
       console.assert(true, 'don\'t have this type');
     }

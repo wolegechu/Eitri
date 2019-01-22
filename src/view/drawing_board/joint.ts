@@ -36,13 +36,16 @@ export class Joint extends ViewObject {
 
   ExportProperties(): JointExportedProperties {
     const properties: JointExportedProperties = {
-      id: this.id,
       x: this.position.x,
       y: this.position.y
     };
     return properties;
   }
 
+  ImportProperties(props: import("/Users/QZQ/FSS/Designer/src/view/drawing_board/view_object").ExportedProperties): void {
+    throw new Error("Method not implemented.");
+  }
+  
   RemoveWallID(id: number) {
     const index = this.wallIDs.indexOf(id);
     if (index !== -1) this.wallIDs.splice(index, 1);

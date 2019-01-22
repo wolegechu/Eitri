@@ -57,59 +57,62 @@ document.onkeyup = (e) => {
  * Get all canvas based  event
  */
 // - mouse click event
-const canvas = ViewCanvas.GetInstance();
-canvas.OnMouseDown((point) => {
-  const type = EventType.MOUSE_CLICK_CANVAS;
 
-  const observers = GetObservers(type);
-  if (!observers) return;
+export function RegistCanvasEvent() {
+  const canvas = ViewCanvas.GetInstance();
+  canvas.OnMouseDown((point) => {
+    const type = EventType.MOUSE_CLICK_CANVAS;
 
-  // create the event
-  const event = new FssEvent();
-  event.type = type;
-  event.position = point;
+    const observers = GetObservers(type);
+    if (!observers) return;
 
-  // pass event to all observers
-  observers.forEach(observer => {
-    observer(event);
+    // create the event
+    const event = new FssEvent();
+    event.type = type;
+    event.position = point;
+
+    // pass event to all observers
+    observers.forEach(observer => {
+      observer(event);
+    });
   });
-});
 
-// - mouse move on canvas event
-canvas.OnMouseMove((point) => {
-  const type = EventType.MOUSE_MOVE_CANVAS;
+  // - mouse move on canvas event
+  canvas.OnMouseMove((point) => {
+    const type = EventType.MOUSE_MOVE_CANVAS;
 
-  const observers = GetObservers(type);
-  if (!observers) return;
+    const observers = GetObservers(type);
+    if (!observers) return;
 
-  // create the event
-  const event = new FssEvent();
-  event.type = type;
-  event.position = point;
+    // create the event
+    const event = new FssEvent();
+    event.type = type;
+    event.position = point;
 
-  // pass event to all observers
-  observers.forEach(observer => {
-    observer(event);
+    // pass event to all observers
+    observers.forEach(observer => {
+      observer(event);
+    });
   });
-});
 
-// - object select event
-canvas.OnObjectSelect((obj) => {
-  const type = EventType.OBJECT_SELECT;
+  // - object select event
+  canvas.OnObjectSelect((obj) => {
+    const type = EventType.OBJECT_SELECT;
 
-  const observers = GetObservers(type);
-  if (!observers) return;
+    const observers = GetObservers(type);
+    if (!observers) return;
 
-  // create the event
-  const event = new FssEvent();
-  event.type = type;
-  event.target = obj;
+    // create the event
+    const event = new FssEvent();
+    event.type = type;
+    event.target = obj;
 
-  // pass event to all observers
-  observers.forEach(observer => {
-    observer(event);
+    // pass event to all observers
+    observers.forEach(observer => {
+      observer(event);
+    });
   });
-});
+}
 
 function GetObservers(type: EventType): Observer[] {
   const observers = observersMap.get(type);

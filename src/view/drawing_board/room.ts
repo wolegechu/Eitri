@@ -1,9 +1,15 @@
 import {fabric} from 'fabric';
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
-import {AccessoryExportedProperties, ViewObject} from './view_object';
+import {AccessoryExportedProperties, ViewObject, ExportedProperties, RoomExportedProperties, PROPERTY_TYPE_ROOM_TYPE} from './view_object';
 import {Wall} from './wall';
 
+export enum RoomType {
+  Bedroom = "卧室",
+  LivingRoom = "客厅",
+  Kitchen = "厨房",
+  Toilet = "厕所",
+}
 
 /**
  * Represent things depend on Wall. Such as Window, Door.
@@ -11,6 +17,7 @@ import {Wall} from './wall';
 export class Room extends ViewObject {
   firstJointID: number;
   wallIDs: number[] = [];
+  type: string = RoomType.Bedroom;
 
   constructor(id: number, walls: Wall[], firstJoint: Joint) {
     super(id);
@@ -50,8 +57,17 @@ export class Room extends ViewObject {
     this.view.perPixelTargetFind = true;
   }
 
-  ExportProperties(): AccessoryExportedProperties {
-    const properties: AccessoryExportedProperties = {id: this.id, wallID: 1};
+  ExportProperties(): RoomExportedProperties {
+    const properties: RoomExportedProperties = {
+      type: {
+        value: this.type,
+        type: PROPERTY_TYPE_ROOM_TYPE
+      }
+    };
     return properties;
+  }
+
+  ImportProperties(props: RoomExportedProperties): void {
+    this.type = props.type.value;
   }
 }
