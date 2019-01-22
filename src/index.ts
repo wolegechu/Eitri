@@ -5,7 +5,6 @@ import {DrawWindowMachine} from './state_machine/designer/draw_window/draw_windo
 import {GenerateRoomMachine} from './state_machine/designer/generate_room/generate_room_machine';
 import {SelectionMachine} from './state_machine/designer/selection/selection_machine';
 import {StateMachine} from './state_machine/state_machine';
-import {SetUIDisplayFunc, UIDisplayFunc} from './view/components';
 import {ViewCanvas} from './view/drawing_board/canvas';
 import {RoomType} from './view/drawing_board/room';
 import * as ViewFactory from './view/drawing_board/view_factory';
@@ -14,11 +13,11 @@ import {WallType} from './view/drawing_board/wall';
 
 let machine: StateMachine = null;
 
-function Init(option: {canvasID: string, callback: UIDisplayFunc}) {
-  ViewCanvas.GetInstance().Init(option.canvasID);
-  machine = new SelectionMachine();
 
-  SetUIDisplayFunc(option.callback);
+function Init(option: {canvasID: string}) {
+  ViewCanvas.GetInstance().Init(option.canvasID);
+  machine = new WallDrawingMachine();
+
   RegistCanvasEvent();
 }
 
