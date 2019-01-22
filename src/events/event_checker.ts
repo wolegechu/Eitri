@@ -8,6 +8,7 @@ export class FssEvent {
   target: ViewObject;
   position: Point;
   shiftDown: boolean;
+  digitNumber: number;
   constructor() {
     this.shiftDown = shiftdown;
   }
@@ -18,7 +19,9 @@ export enum EventType {
   KEY_PRESS_START = 1,
   KEY_PRESS_ANY,
   KEY_PRESS_ESC,
+  KEY_PRESS_ENTER,
   KEY_PRESS_BACKSPACE,
+  KEY_PRESS_NUMBER,
   KEY_PRESS_TOTAL = 1000,
   // END
 
@@ -42,6 +45,8 @@ export let keyPressCheckersMap = new Map<EventType, KeyPressChecker>([
   [EventType.KEY_PRESS_ANY, CheckKeyPressAny],
   [EventType.KEY_PRESS_ESC, CheckKeyPressEsc],
   [EventType.KEY_PRESS_BACKSPACE, CheckKeyPressBackspace],
+  [EventType.KEY_PRESS_NUMBER, CheckKeyPressNumber],
+  [EventType.KEY_PRESS_ENTER, CheckKeyPressEnter]
 ]);
 
 function CheckKeyPressAny(e: KeyboardEvent): FssEvent {
@@ -61,5 +66,21 @@ function CheckKeyPressBackspace(e: KeyboardEvent): FssEvent {
   if ('Backspace' !== e.code) return;
   const event = new FssEvent();
   event.type = EventType.KEY_PRESS_BACKSPACE;
+  return event;
+}
+
+function CheckKeyPressNumber(e: KeyboardEvent): FssEvent {
+  if (-1 === e.code.indexOf('Digit')) return;
+  const digit = Number(e.code.slice(5));
+  const event = new FssEvent();
+  event.type = EventType.KEY_PRESS_NUMBER;
+  event.digitNumber = digit;
+  return event;
+}
+
+function CheckKeyPressEnter(e: KeyboardEvent): FssEvent {
+  if ('Enter' !== e.code) return;
+  const event = new FssEvent();
+  event.type = EventType.KEY_PRESS_ENTER;
   return event;
 }

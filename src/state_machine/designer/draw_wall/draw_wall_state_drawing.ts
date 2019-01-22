@@ -23,14 +23,31 @@ export class DrawingState extends BaseState {
   private funcOnMouseDown = (e: EventSystem.FssEvent) => {
     this.OnMouseDown(e);
   };
+  private funcOnNumberPress = (e: EventSystem.FssEvent) => {
+    this.OnNumberPress(e);
+  };
+  private funcOnEnterPress = (e: EventSystem.FssEvent) => {
+    this.OnEnterPress(e);
+  };
+  private funcOnBackPress = (e: EventSystem.FssEvent) => {
+    this.OnBackPress(e);
+  };
 
   Enter(): void {
     console.debug('State DrawingState: Enter');
+
+    this.machine.lengthInputCache = 0;
 
     EventSystem.AddEventListener(
         EventSystem.EventType.MOUSE_MOVE_CANVAS, this.funcOnMouseMove);
     EventSystem.AddEventListener(
         EventSystem.EventType.MOUSE_CLICK_CANVAS, this.funcOnMouseDown);
+    EventSystem.AddEventListener(
+        EventSystem.EventType.KEY_PRESS_NUMBER, this.funcOnNumberPress);
+    EventSystem.AddEventListener(
+        EventSystem.EventType.KEY_PRESS_ENTER, this.funcOnEnterPress);
+    EventSystem.AddEventListener(
+        EventSystem.EventType.KEY_PRESS_BACKSPACE, this.funcOnBackPress);
   }
 
   Leave(): void {
@@ -40,6 +57,12 @@ export class DrawingState extends BaseState {
         EventSystem.EventType.MOUSE_MOVE_CANVAS, this.funcOnMouseMove);
     EventSystem.RemoveEventListener(
         EventSystem.EventType.MOUSE_CLICK_CANVAS, this.funcOnMouseDown);
+    EventSystem.RemoveEventListener(
+        EventSystem.EventType.KEY_PRESS_NUMBER, this.funcOnNumberPress);
+    EventSystem.RemoveEventListener(
+        EventSystem.EventType.KEY_PRESS_ENTER, this.funcOnEnterPress);
+    EventSystem.RemoveEventListener(
+        EventSystem.EventType.KEY_PRESS_BACKSPACE, this.funcOnBackPress);
   }
 
   /**
@@ -47,14 +70,7 @@ export class DrawingState extends BaseState {
    * @param pos origin mouse position
    */
   private ShiftPosition(pos: Point): Point {
-    const lastWall = ViewFactory.GetViewObject(this.machine.lastWallID) as Wall;
-    // the pivot joint on wall
-    // you may ask what is pivot joint. pivot joint is the joint not move with
-    // mouse.
-    const pivotJointID =
-        lastWall
-            .jointIDs[lastWall.jointIDs.indexOf(this.machine.lastJointID) ^ 1];
-    const pivotJoint = ViewFactory.GetViewObject(pivotJointID) as Joint;
+    const pivotJoint = this.machine.GetPivotJoint();
     const dx = Math.abs(pos.x - pivotJoint.position.x);
     const dy = Math.abs(pos.y - pivotJoint.position.y);
     if (dx > dy) {
@@ -112,5 +128,25 @@ export class DrawingState extends BaseState {
     const newWall = ViewFactory.CreateWall(pos, joint);
     this.machine.lastWallID = newWall.id;
     this.machine.lastJointID = newWall.jointIDs[0];
+    this.machine.Transition(event.type);
+  }
+
+  private OnNumberPress(event: EventSystem.FssEvent): void {
+    let num = this.machine.lengthInputCache;
+    num = num * 10 + event.digitNumber;
+    this.machine.lengthInputCache = num;
+    console.log(this.machine.lengthInputCache);
+  }
+
+  private OnBackPress(event: EventSystem.FssEvent): void {
+    let num = this.machine.lengthInputCache;
+    num = Math.floor(num / 10);
+    this.machine.lengthInputCache = num;
+    console.log(this.machine.lengthInputCache);
+  }
+
+  private OnEnterPress(event: EventSystem.FssEvent): void {
+    if (!this.machine.lengthInputCache) return;
+    this.machine.Transition(event.type);
   }
 }
