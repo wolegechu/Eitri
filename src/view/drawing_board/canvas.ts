@@ -50,7 +50,14 @@ export class ViewCanvas {
 
   OnObjectSelect(callback: (p: ViewObject) => void): void {
     const canvas = this.canvas;
+    canvas.on('selection:updated', (event) => {
+      console.debug('fabric: selection:updated');
+      const obj = ViewFactory.GetViewObjectWithView(event.target);
+      callback(obj);
+    });
+
     canvas.on('selection:created', (event) => {
+      console.debug('fabric: selection:created');
       const obj = ViewFactory.GetViewObjectWithView(event.target);
       callback(obj);
     });

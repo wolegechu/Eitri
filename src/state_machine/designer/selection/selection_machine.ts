@@ -41,11 +41,12 @@ export class SelectionMachine extends StateMachine {
 
   private OnObjectSelect(event: EventSystem.FssEvent): void {
     const target = event.target;
+    console.debug(target);
 
     // filter
     console.debug('luoyuchu');
     if (target instanceof Joint) return;
-    console.debug(target);
+
     this.selectedObject = target;
     UIIndex(target);
   }
