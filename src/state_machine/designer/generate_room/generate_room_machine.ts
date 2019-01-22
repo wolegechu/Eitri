@@ -76,7 +76,7 @@ export class GenerateRoomMachine extends StateMachine {
       }
     }
 
-    // the clockwise test
+    // the big-small test
     if (vertexes[1].id > vertexes[vertexes.length - 2].id) {
       return false;
     }

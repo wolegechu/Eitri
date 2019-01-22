@@ -3,16 +3,21 @@ import {fabric} from 'fabric';
 import {GetDistanceOfPoint2Point, Point} from '../../utils';
 
 import {Accessory} from './accessory';
-import {ViewCanvas} from './canvas';
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
-import {ViewObject, WallExportedProperties} from './view_object';
+import {PROPERTY_TYPE_NUMBER, PROPERTY_TYPE_WALL_TYPE, ViewObject, WallExportedProperties} from './view_object';
+
+export enum WallType {
+  NORMAL = '普通墙',
+  MAIN = '承重墙'
+}
 
 export class Wall extends ViewObject {
   jointIDs: number[] = [];
   accessoryIDs: number[] = [];
-  width: number;
+  width = 10;
   view: fabric.Line;
+  type = WallType.NORMAL;
 
   get length(): number {
     const joint1 = ViewFactory.GetViewObject(this.jointIDs[0]) as Joint;
@@ -21,9 +26,6 @@ export class Wall extends ViewObject {
     const length = GetDistanceOfPoint2Point(joint1.position, joint2.position);
     return length;
   }
-  // type: int;
-  // rooms: ID[];
-  // doors: ID[];
 
   constructor(id: number, point1: Point|Joint, point2: Point|Joint) {
     super(id);
@@ -55,9 +57,16 @@ export class Wall extends ViewObject {
   }
 
   ExportProperties(): WallExportedProperties {
-    const properties:
-        WallExportedProperties = {id: this.id, length: this.length};
+    const properties: WallExportedProperties = {
+      width: {value: this.width, type: PROPERTY_TYPE_NUMBER},
+      type: {value: this.type, type: PROPERTY_TYPE_WALL_TYPE}
+    };
     return properties;
+  }
+
+  ImportProperties(props: WallExportedProperties) {
+    this.width = props.width.value;
+    this.type = props.type.value;
   }
 
   UpdatePosition() {
