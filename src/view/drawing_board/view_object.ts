@@ -32,6 +32,10 @@ export interface RoomExportedProperties extends ExportedProperties {
   type: ViewProperty;
 }
 
+export interface ObjectOptions {
+
+}
+
 export abstract class ViewObject {
   id: number;
   view: fabric.Object;
@@ -39,6 +43,9 @@ export abstract class ViewObject {
   // exposure properties. It's usually used by the UIView.
   abstract ExportProperties(): ExportedProperties;
   abstract ImportProperties(props: ExportedProperties): void;
+  abstract ToJson(): string;
+  abstract Set(option: ObjectOptions): void;
+  abstract UpdateView(): void;
 
   constructor(id: number) {
     this.id = id;

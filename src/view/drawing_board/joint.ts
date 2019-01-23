@@ -4,7 +4,7 @@ import {Point} from '../../utils/index';
 
 import {ViewCanvas} from './canvas';
 import * as ViewFactory from './view_factory';
-import {ExportedProperties, JointExportedProperties, ViewObject} from './view_object';
+import {ExportedProperties, JointExportedProperties, ViewObject, ObjectOptions} from './view_object';
 import {Wall} from './wall';
 
 const JOINT_RADIUS = 8.0;
@@ -44,6 +44,18 @@ export class Joint extends ViewObject {
     throw new Error('Method not implemented.');
   }
 
+  ToJson(): string {
+    throw new Error("Method not implemented.");
+  }
+
+  Set(option: ObjectOptions): void {
+    throw new Error("Method not implemented.");
+  }
+
+  UpdateView(): void {
+    throw new Error("Method not implemented.");
+  }
+  
   RemoveWallID(id: number) {
     const index = this.wallIDs.indexOf(id);
     if (index !== -1) this.wallIDs.splice(index, 1);

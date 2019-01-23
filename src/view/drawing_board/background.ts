@@ -1,7 +1,7 @@
 import {fabric} from 'fabric';
 
 import {ViewCanvas} from './canvas';
-import {ExportedProperties, ViewObject} from './view_object';
+import {ExportedProperties, ViewObject, ObjectOptions} from './view_object';
 
 
 /**
@@ -39,5 +39,17 @@ export class Background extends ViewObject {
 
   ImportProperties(props: ExportedProperties): void {
     throw new Error('Method not implemented.');
+  }
+
+  ToJson(): string {
+    throw new Error("Method not implemented.");
+  }
+
+  Set(option: ObjectOptions): void {
+    throw new Error("Method not implemented.");
+  }
+
+  UpdateView(): void {
+    throw new Error("Method not implemented.");
   }
 }

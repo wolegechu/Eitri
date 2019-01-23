@@ -59,12 +59,11 @@ export class DrawWindowMachine extends StateMachine {
       const newPos = GetClosestPointOnSegment2Point(
           pos, {a: joint1.position, b: joint2.position});
 
-      this.viewWindow.Set({position: newPos, wallID: grabWall.id});
+      this.viewWindow.SetPosition(newPos);
+      this.viewWindow.SetWallID(grabWall.id);
 
     } else {
-      this.viewWindow.Set({
-        position: e.position,
-      });
+      this.viewWindow.SetPosition(e.position);
     }
   }
 
@@ -79,7 +78,8 @@ export class DrawWindowMachine extends StateMachine {
       const newPos = GetClosestPointOnSegment2Point(
           pos, {a: joint1.position, b: joint2.position});
 
-      this.viewWindow.Set({position: newPos, wallID: grabWall.id});
+      this.viewWindow.SetPosition(newPos);
+      this.viewWindow.SetWallID(grabWall.id);
 
       this.finished = true;
     }

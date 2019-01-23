@@ -6,11 +6,11 @@ import {Point} from '../../utils/index';
 import {ViewCanvas} from './canvas';
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
-import {AccessoryExportedProperties, ExportedProperties, ViewObject} from './view_object';
+import {AccessoryExportedProperties, ExportedProperties, ViewObject, ObjectOptions} from './view_object';
 import {Wall} from './wall';
 
 
-interface AccessoryOption {
+interface AccessoryOption extends ObjectOptions {
   wallID?: number;
   imgHandle?: string;
   length?: number;
@@ -53,24 +53,15 @@ export class Accessory extends ViewObject implements AccessoryOption {
   }
 
   Set(option: AccessoryOption) {
-    if (option.wallID && option.wallID !== this.wallID) {
-      this.SetWallID(option.wallID);
-    }
+    if (option.wallID) this.wallID = option.wallID;
     if (option.length) this.length = option.length;
     if (option.position) {
       this.position = new Point(option.position.x, option.position.y);
-      this.PositionUpdatePercent();
     }
     if (option.positionPercent) {
       this.positionPercent = option.positionPercent;
-      this.PercentUpdatePosition();
     }
-    if (option.imgHandle) {
-      this.imgHandle = option.imgHandle;
-      const img =
-          GetImage(ImageHandle[this.imgHandle as keyof typeof ImageHandle]);
-      this.view.setSrc(img.src);
-    }
+    if (option.imgHandle) this.imgHandle = option.imgHandle;
 
     this.UpdateView();
   }
@@ -89,8 +80,13 @@ export class Accessory extends ViewObject implements AccessoryOption {
   }
 
   UpdateView() {
-    this.UpdateViewPosition();
-    this.UpdateViewRotation();
+    this.UpdateViewByPosition();
+    this.UpdateViewByWall();
+    this.UpdateViewByImage();
+    this.UpdateViewByLength();
+    
+    this.view.setCoords();
+    ViewCanvas.GetInstance().Render();
   }
 
   OnWallMove() {
@@ -104,7 +100,13 @@ export class Accessory extends ViewObject implements AccessoryOption {
     if (oldWall) oldWall.RemoveAccessoryID(this.id);
   }
 
-  private SetWallID(wallID: number) {
+  SetPosition(pos: Point) {
+    this.position = pos;
+    this.PositionUpdatePercent();
+    this.UpdateView();
+  }
+
+  SetWallID(wallID: number) {
     // remove the old wall
     const oldWall = ViewFactory.GetViewObject(this.wallID) as Wall;
     if (oldWall) oldWall.RemoveAccessoryID(this.id);
@@ -113,6 +115,8 @@ export class Accessory extends ViewObject implements AccessoryOption {
     this.wallID = wallID;
     const newWall = ViewFactory.GetViewObject(this.wallID) as Wall;
     if (newWall) newWall.AddAccessoryID(this.id);
+
+    this.UpdateView();
   }
 
   /**
@@ -166,20 +170,18 @@ export class Accessory extends ViewObject implements AccessoryOption {
     this.position = aPoint.clone().add(
         wallVec.clone().multiplyScalar(this.positionPercent));
 
-    this.UpdateViewPosition();
+    this.UpdateViewByPosition();
   }
 
-  private UpdateViewPosition() {
+  private UpdateViewByPosition() {
     this.view.set({
       left: this.position.x,
       top: this.position.y,
       scaleY: this.length / this.view.height,
     });
-    this.view.setCoords();
-    ViewCanvas.GetInstance().Render();
   }
 
-  private UpdateViewRotation() {
+  private UpdateViewByWall() {
     const wall = ViewFactory.GetViewObject(this.wallID) as Wall;
     if (!wall) return;
     const joint1 = ViewFactory.GetViewObject(wall.jointIDs[0]) as Joint;
@@ -189,7 +191,20 @@ export class Accessory extends ViewObject implements AccessoryOption {
     const bPoint = joint2.position.clone();
     const vec = bPoint.clone().subtract(aPoint);
     this.view.set({angle: (Math.atan2(vec.y, vec.x) / Math.PI * 180 - 90)});
-    this.view.setCoords();
-    ViewCanvas.GetInstance().Render();
+  }
+
+  private UpdateViewByImage() {
+      const img =
+          GetImage(ImageHandle[this.imgHandle as keyof typeof ImageHandle]);
+    this.view.setSrc(img.src);
+    this.view.set({
+      scaleY: this.length / this.view.height,
+    });
+  }
+
+  private UpdateViewByLength() {
+    this.view.set({
+      scaleY: this.length / this.view.height,
+    });
   }
 }
