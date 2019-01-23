@@ -1,4 +1,5 @@
 import {GRAB_JOINT_DISTANCE, GRAB_WALL_DISTANCE} from '../../CONFIG';
+import {ImageHandle} from '../../ImageManager';
 import {Point} from '../../utils/index';
 import {GetDistanceOfPoint2LineSegment, GetDistanceOfPoint2Point} from '../../utils/math';
 
@@ -38,9 +39,9 @@ export function CreateWall(p1: Point|Joint, p2: Point|Joint): Wall {
   return wall;
 }
 
-export function CreateAccessory(pos: Point, img: HTMLImageElement): Accessory {
+export function CreateAccessory(img: ImageHandle): Accessory {
   const id = GetNewID();
-  const accessory = new Accessory(id, pos, img);
+  const accessory = new Accessory(id, {imgHandle: ImageHandle[img]});
   idObjectMap.set(accessory.id, accessory);
   viewObjectMap.set(accessory.view, accessory);
   ViewCanvas.GetInstance().Add(accessory);

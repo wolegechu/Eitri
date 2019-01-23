@@ -5,7 +5,7 @@ import {GetDistanceOfPoint2Point, Point} from '../../utils';
 import {Accessory} from './accessory';
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
-import {PROPERTY_TYPE_NUMBER, PROPERTY_TYPE_OPTION, ViewObject, WallExportedProperties} from './view_object';
+import {PROPERTY_TYPE_NUMBER, PROPERTY_TYPE_WALL_TYPE, ViewObject, WallExportedProperties, ObjectOptions} from './view_object';
 
 export enum WallType {
   NORMAL = '普通墙',
@@ -70,6 +70,18 @@ export class Wall extends ViewObject {
   ImportProperties(props: WallExportedProperties) {
     //this.length = props.length.value;
     this.type = props.type.value;
+  }
+
+  ToJson(): string {
+    throw new Error("Method not implemented.");
+  }
+
+  Set(option: ObjectOptions): void {
+    throw new Error("Method not implemented.");
+  }
+
+  UpdateView(): void {
+    throw new Error("Method not implemented.");
   }
 
   UpdatePosition() {

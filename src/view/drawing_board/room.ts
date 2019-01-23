@@ -2,7 +2,7 @@ import {fabric} from 'fabric';
 
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
-import {AccessoryExportedProperties, ExportedProperties, PROPERTY_TYPE_OPTION, RoomExportedProperties, ViewObject} from './view_object';
+import {AccessoryExportedProperties, ExportedProperties, PROPERTY_TYPE_ROOM_TYPE, RoomExportedProperties, ViewObject, ObjectOptions} from './view_object';
 import {Wall} from './wall';
 
 export enum RoomType {
@@ -71,5 +71,17 @@ export class Room extends ViewObject {
 
   ImportProperties(props: RoomExportedProperties): void {
     this.type = props.type.value;
+  }
+
+  ToJson(): string {
+    throw new Error("Method not implemented.");
+  }
+
+  Set(option: ObjectOptions): void {
+    throw new Error("Method not implemented.");
+  }
+
+  UpdateView(): void {
+    throw new Error("Method not implemented.");
   }
 }
