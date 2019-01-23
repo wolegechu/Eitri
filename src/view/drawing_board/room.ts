@@ -2,7 +2,7 @@ import {fabric} from 'fabric';
 
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
-import {AccessoryExportedProperties, ExportedProperties, PROPERTY_TYPE_ROOM_TYPE, RoomExportedProperties, ViewObject, ObjectOptions} from './view_object';
+import {RoomExportedProperties, ViewObject, ObjectOptions, PROPERTY_TYPE_OPTION} from './view_object';
 import {Wall} from './wall';
 
 export enum RoomType {

@@ -5,7 +5,7 @@ import {GetDistanceOfPoint2Point, Point} from '../../utils';
 import {Accessory} from './accessory';
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
-import {PROPERTY_TYPE_NUMBER, PROPERTY_TYPE_WALL_TYPE, ViewObject, WallExportedProperties, ObjectOptions} from './view_object';
+import {PROPERTY_TYPE_NUMBER, ViewObject, WallExportedProperties, ObjectOptions, PROPERTY_TYPE_OPTION} from './view_object';
 
 export enum WallType {
   NORMAL = '普通墙',
@@ -128,7 +128,7 @@ export class Wall extends ViewObject {
     } else {
       joint = ViewFactory.CreateJoint(point);
     }
-    joint.wallIDs.push(this.id);
+    joint.AddWallID(this.id);
     this.jointIDs.push(joint.id);
     return joint;
   }

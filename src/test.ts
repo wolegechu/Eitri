@@ -2,6 +2,7 @@ import * as FSS from './index';
 import {Accessory} from './view/drawing_board/accessory';
 import {ViewCanvas} from './view/drawing_board/canvas';
 import * as ViewFactory from './view/drawing_board/view_factory';
+import { Joint } from './view/drawing_board/joint';
 
 console.log('test solution');
 FSS.Init({canvasID: 'c'});
@@ -23,6 +24,31 @@ imageLoader.onchange = (e) => {
 
 const buttonTest = document.getElementById('test');
 buttonTest.onclick = (e) => {
+  // TestAccessory();
+  TestJoint();
+};
+
+/**
+ * try to export and import Joint
+ */
+function TestJoint() {
+  const a = ViewFactory.GetViewObjectsWithType<Joint>(Joint)[0];
+  const json = a.ToJson();
+  a.RemoveSelf();
+  setTimeout(() => {
+    console.log('begin');
+    console.log(json);
+    const data = JSON.parse(json);
+    const b = new Joint(data.id, data);
+    ViewCanvas.GetInstance().Add(b);
+    b.UpdateView();
+  }, 1000);
+}
+
+/**
+ * try to export and import accessory
+ */
+function TestAccessory() {
   const a = ViewFactory.GetViewObjectsWithType<Accessory>(Accessory)[0];
   const json = a.ToJson();
   a.RemoveSelf();
@@ -30,7 +56,7 @@ buttonTest.onclick = (e) => {
     console.log('begin');
     const data = JSON.parse(json);
     const b = new Accessory(data.id, data);
-    b.UpdateView();
     ViewCanvas.GetInstance().Add(b);
-  }, 2);
-};
+    b.UpdateView();
+  }, 1000);
+}

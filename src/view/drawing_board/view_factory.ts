@@ -23,7 +23,7 @@ function GetNewID(): number {
 
 export function CreateJoint(pos: Point): Joint {
   const id = GetNewID();
-  const joint = new Joint(id, pos);
+  const joint = new Joint(id, { _position: pos });
   idObjectMap.set(joint.id, joint);
   viewObjectMap.set(joint.view, joint);
   ViewCanvas.GetInstance().Add(joint);

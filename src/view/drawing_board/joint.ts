@@ -9,18 +9,30 @@ import {Wall} from './wall';
 
 const JOINT_RADIUS = 8.0;
 
+interface JointOption extends ObjectOptions {
+  _wallIDs?: number[];
+  _position?: {x: number, y:number};
+}
+
 export class Joint extends ViewObject {
-  wallIDs: number[] = [];
-  position: Point;
+  private _wallIDs: number[] = [];
+  private _position: Point = new Point(0, 0);
+
+  get wallIDs() {
+    return this._wallIDs;
+  }
+  get position() {
+    return this._position;
+  }
+
   view: fabric.Circle;
 
-  constructor(id: number, pos: Point) {
+  constructor(id: number, option: JointOption) {
     super(id);
 
-    this.position = pos;
     this.view = new fabric.Circle({
-      left: pos.x - JOINT_RADIUS,
-      top: pos.y - JOINT_RADIUS,
+      left: this.position.x - JOINT_RADIUS,
+      top: this.position.y - JOINT_RADIUS,
       strokeWidth: 5,
       radius: JOINT_RADIUS,
       fill: '#B0B0B0',
@@ -32,6 +44,8 @@ export class Joint extends ViewObject {
 
     const canvas = ViewCanvas.GetInstance();
     canvas.OnObjectMove((e) => this.OnObjectMove(e));
+
+    this.Set(option);
   }
 
   ExportProperties(): JointExportedProperties {
@@ -45,15 +59,25 @@ export class Joint extends ViewObject {
   }
 
   ToJson(): string {
-    throw new Error("Method not implemented.");
+    return JSON.stringify(Object.assign({}, this, { view: undefined }));
   }
 
-  Set(option: ObjectOptions): void {
-    throw new Error("Method not implemented.");
+  Set(option: JointOption): void {
+    if (option._position) {
+      const p = option._position;
+      this._position = new Point(p.x, p.y);
+    }
+    if (option._wallIDs) {
+      this._wallIDs = option._wallIDs;
+    } 
+
+    this.UpdateView();
   }
 
   UpdateView(): void {
-    throw new Error("Method not implemented.");
+    this.UpdateViewByPosition();
+    this.view.setCoords();
+    ViewCanvas.GetInstance().Render();
   }
   
   RemoveWallID(id: number) {
@@ -62,9 +86,15 @@ export class Joint extends ViewObject {
     if (0 === this.wallIDs.length) this.RemoveSelf();
   }
 
+  AddWallID(id: number) {
+    const index = this.wallIDs.indexOf(id);
+    if (index === -1) this.wallIDs.push(id);
+  }
+
   SetPosition(point: Point) {
-    this.position = point;
-    this.UpdateViewPosition();
+    this._position = point;
+    this.UpdateWalls();
+    this.UpdateView();
   }
 
   Merge(other: Joint) {
@@ -76,7 +106,7 @@ export class Joint extends ViewObject {
       const index = wall.jointIDs.indexOf(other.id);
       wall.jointIDs[index] = this.id;
     });
-    this.wallIDs = this.wallIDs.concat(other.wallIDs);
+    this._wallIDs = this.wallIDs.concat(other.wallIDs);
     other.RemoveSelf();
 
     // special case: this and other has a common wall.
@@ -91,30 +121,24 @@ export class Joint extends ViewObject {
   private OnObjectMove(e: fabric.IEvent) {
     if (e.target !== this.view) return;
     console.debug('On Joint Move');
-    this.UpdatePosition();
-    this.UpdateWalls();
+    // Update the Position property based on this.view
+    this.SetPosition(new Point(
+      this.view.left + JOINT_RADIUS,
+      this.view.top + JOINT_RADIUS
+    ));
   }
 
   private UpdateWalls() {
     this.wallIDs.forEach(id => {
       const wall = ViewFactory.GetViewObject(id) as Wall;
-      wall.UpdatePosition();
+      if (wall) wall.UpdatePosition();
     });
   }
 
-  // Update the Position property based on this.view
-  private UpdatePosition() {
-    this.position.x = this.view.left + JOINT_RADIUS;
-    this.position.y = this.view.top + JOINT_RADIUS;
-  }
-
-  private UpdateViewPosition() {
+  private UpdateViewByPosition() {
     this.view.set({
       left: this.position.x - JOINT_RADIUS,
       top: this.position.y - JOINT_RADIUS,
     });
-    this.view.setCoords();
-    this.UpdateWalls();
-    ViewCanvas.GetInstance().Render();
   }
 }

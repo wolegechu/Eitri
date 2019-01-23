@@ -14,19 +14,19 @@ interface AccessoryOption extends ObjectOptions {
   wallID?: number;
   imgHandle?: string;
   length?: number;
-  position?: Point;
+  position?: {x:number, y:number};
   positionPercent?: number;
 }
 
 /**
  * Represent things depend on Wall. Such as Window, Door.
  */
-export class Accessory extends ViewObject implements AccessoryOption {
-  wallID = -1;
-  imgHandle: string = ImageHandle[ImageHandle.DOOR];
-  length = 100;  // the length of the accessory
-  position = new Point(0, 0);
-  positionPercent = 0;
+export class Accessory extends ViewObject {
+  private wallID = -1;
+  private imgHandle: string = ImageHandle[ImageHandle.DOOR];
+  private length = 100;  // the length of the accessory
+  private position = new Point(0, 0);
+  private positionPercent = 0;
 
   view: fabric.Image;
 
