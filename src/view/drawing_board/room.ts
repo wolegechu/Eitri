@@ -59,9 +59,13 @@ export class Room extends ViewObject {
   }
 
   ExportProperties(): RoomExportedProperties {
-    const properties: RoomExportedProperties = {
-      type: {value: this.type, type: PROPERTY_TYPE_ROOM_TYPE}
-    };
+    const properties = new RoomExportedProperties();
+    
+    properties.type = {
+        value: this.type,
+        type: PROPERTY_TYPE_OPTION,
+        options: [RoomType.Bedroom, RoomType.Kitchen, RoomType.LivingRoom, RoomType.Toilet]
+      };
     return properties;
   }
 

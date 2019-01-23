@@ -4,7 +4,7 @@ import {ViewCanvas} from './view/drawing_board/canvas';
 import * as ViewFactory from './view/drawing_board/view_factory';
 
 console.log('test solution');
-FSS.Init({canvasID: 'c', callback: null});
+FSS.Init({canvasID: 'c'});
 
 const buttonDrawWall = document.getElementById('draw_wall');
 const buttonDrawRectangle = document.getElementById('draw_rectangle');

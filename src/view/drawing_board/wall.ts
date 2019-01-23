@@ -57,15 +57,18 @@ export class Wall extends ViewObject {
   }
 
   ExportProperties(): WallExportedProperties {
-    const properties: WallExportedProperties = {
-      width: {value: this.width, type: PROPERTY_TYPE_NUMBER},
-      type: {value: this.type, type: PROPERTY_TYPE_WALL_TYPE}
+    const properties = new WallExportedProperties();
+    properties.length = {value: this.length, type: PROPERTY_TYPE_NUMBER};
+    properties.type = {
+        value: this.type,
+        type: PROPERTY_TYPE_OPTION,
+        options: [WallType.MAIN, WallType.NORMAL]
     };
     return properties;
   }
 
   ImportProperties(props: WallExportedProperties) {
-    this.width = props.width.value;
+    //this.length = props.length.value;
     this.type = props.type.value;
   }
 

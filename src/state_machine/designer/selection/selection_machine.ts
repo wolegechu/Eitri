@@ -45,7 +45,6 @@ export class SelectionMachine extends StateMachine {
     console.debug(target);
 
     // filter
-    console.debug('luoyuchu');
     if (target instanceof Joint) return;
     this.selectedObject = target;
     UIIndex(target);
