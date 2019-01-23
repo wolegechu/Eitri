@@ -6,7 +6,7 @@ import {Point} from '../../utils/index';
 import {ViewCanvas} from './canvas';
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
-import {AccessoryExportedProperties, ExportedProperties, ViewObject, ObjectOptions} from './view_object';
+import {AccessoryExportedProperties, ExportedProperties, ObjectOptions, ViewObject} from './view_object';
 import {Wall} from './wall';
 
 
@@ -14,7 +14,7 @@ interface AccessoryOption extends ObjectOptions {
   wallID?: number;
   imgHandle?: string;
   length?: number;
-  position?: {x:number, y:number};
+  position?: {x: number, y: number};
   positionPercent?: number;
 }
 
@@ -50,22 +50,8 @@ export class Accessory extends ViewObject {
     this.view.perPixelTargetFind = true;
 
     ViewCanvas.GetInstance().Add(this);
-    
+
     this.Set(option);
-  }
-
-  Set(option: AccessoryOption) {
-    if (option.wallID) this.wallID = option.wallID;
-    if (option.length) this.length = option.length;
-    if (option.position) {
-      this.position = new Point(option.position.x, option.position.y);
-    }
-    if (option.positionPercent) {
-      this.positionPercent = option.positionPercent;
-    }
-    if (option.imgHandle) this.imgHandle = option.imgHandle;
-
-    this.UpdateView();
   }
 
   ToJson(): string {
@@ -86,7 +72,7 @@ export class Accessory extends ViewObject {
     this.UpdateViewByWall();
     this.UpdateViewByImage();
     this.UpdateViewByLength();
-    
+
     this.view.setCoords();
     ViewCanvas.GetInstance().Render();
   }
@@ -117,6 +103,20 @@ export class Accessory extends ViewObject {
     this.wallID = wallID;
     const newWall = ViewFactory.GetViewObject(this.wallID) as Wall;
     if (newWall) newWall.AddAccessoryID(this.id);
+
+    this.UpdateView();
+  }
+
+  protected Set(option: AccessoryOption) {
+    if (option.wallID) this.wallID = option.wallID;
+    if (option.length) this.length = option.length;
+    if (option.position) {
+      this.position = new Point(option.position.x, option.position.y);
+    }
+    if (option.positionPercent) {
+      this.positionPercent = option.positionPercent;
+    }
+    if (option.imgHandle) this.imgHandle = option.imgHandle;
 
     this.UpdateView();
   }
@@ -196,8 +196,8 @@ export class Accessory extends ViewObject {
   }
 
   private UpdateViewByImage() {
-      const img =
-          GetImage(ImageHandle[this.imgHandle as keyof typeof ImageHandle]);
+    const img =
+        GetImage(ImageHandle[this.imgHandle as keyof typeof ImageHandle]);
     this.view.setSrc(img.src);
     this.view.set({
       scaleY: this.length / this.view.height,

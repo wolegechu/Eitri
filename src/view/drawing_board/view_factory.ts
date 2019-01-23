@@ -23,13 +23,13 @@ function GetNewID(): number {
 
 export function CreateJoint(pos: Point): Joint {
   const id = GetNewID();
-  const joint = new Joint(id, { _position: pos });
+  const joint = new Joint(id, {_position: pos});
   idObjectMap.set(joint.id, joint);
   viewObjectMap.set(joint.view, joint);
   return joint;
 }
 
-export function CreateWall(p1: Point | Joint, p2: Point | Joint): Wall {
+export function CreateWall(p1: Point|Joint, p2: Point|Joint): Wall {
   let joint1, joint2;
   if (p1 instanceof Point) {
     joint1 = CreateJoint(p1);
@@ -39,14 +39,13 @@ export function CreateWall(p1: Point | Joint, p2: Point | Joint): Wall {
 
   if (p2 instanceof Point) {
     joint2 = CreateJoint(p2);
-  }
-  else {
+  } else {
     joint2 = p2;
   }
 
   const id = GetNewID();
-  
-  const wall = new Wall(id, joint1, joint2);
+
+  const wall = new Wall(id, {_jointIDs: [joint1.id, joint2.id]});
   idObjectMap.set(wall.id, wall);
   viewObjectMap.set(wall.view, wall);
   return wall;
@@ -62,10 +61,8 @@ export function CreateAccessory(img: ImageHandle): Accessory {
 
 export function CreateRoom(edges: Wall[], firstVertex: Joint): Room {
   const id = GetNewID();
-  const room = new Room(id, {
-    firstJointID: firstVertex.id,
-    wallIDs: edges.map(v=>v.id)
-  });
+  const room = new Room(
+      id, {firstJointID: firstVertex.id, wallIDs: edges.map(v => v.id)});
   idObjectMap.set(room.id, room);
   viewObjectMap.set(room.view, room);
   return room;

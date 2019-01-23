@@ -4,14 +4,14 @@ import {Point} from '../../utils/index';
 
 import {ViewCanvas} from './canvas';
 import * as ViewFactory from './view_factory';
-import {ExportedProperties, JointExportedProperties, ViewObject, ObjectOptions} from './view_object';
+import {ExportedProperties, JointExportedProperties, ObjectOptions, ViewObject} from './view_object';
 import {Wall} from './wall';
 
 const JOINT_RADIUS = 8.0;
 
 interface JointOption extends ObjectOptions {
   _wallIDs?: number[];
-  _position?: {x: number, y:number};
+  _position?: {x: number, y: number};
 }
 
 
@@ -61,19 +61,7 @@ export class Joint extends ViewObject {
   }
 
   ToJson(): string {
-    return JSON.stringify(Object.assign({}, this, { view: undefined }));
-  }
-
-  Set(option: JointOption): void {
-    if (option._position) {
-      const p = option._position;
-      this._position = new Point(p.x, p.y);
-    }
-    if (option._wallIDs) {
-      this._wallIDs = option._wallIDs;
-    } 
-
-    this.UpdateView();
+    return JSON.stringify(Object.assign({}, this, {view: undefined}));
   }
 
   UpdateView(): void {
@@ -81,7 +69,7 @@ export class Joint extends ViewObject {
     this.view.setCoords();
     ViewCanvas.GetInstance().Render();
   }
-  
+
   RemoveWallID(id: number) {
     const index = this.wallIDs.indexOf(id);
     if (index !== -1) this.wallIDs.splice(index, 1);
@@ -120,20 +108,30 @@ export class Joint extends ViewObject {
     }
   }
 
+  protected Set(option: JointOption): void {
+    if (option._position) {
+      const p = option._position;
+      this._position = new Point(p.x, p.y);
+    }
+    if (option._wallIDs) {
+      this._wallIDs = option._wallIDs;
+    }
+
+    this.UpdateView();
+  }
+
   private OnObjectMove(e: fabric.IEvent) {
     if (e.target !== this.view) return;
     console.debug('On Joint Move');
     // Update the Position property based on this.view
-    this.SetPosition(new Point(
-      this.view.left + JOINT_RADIUS,
-      this.view.top + JOINT_RADIUS
-    ));
+    this.SetPosition(
+        new Point(this.view.left + JOINT_RADIUS, this.view.top + JOINT_RADIUS));
   }
 
   private UpdateWalls() {
     this.wallIDs.forEach(id => {
       const wall = ViewFactory.GetViewObject(id) as Wall;
-      if (wall) wall.UpdatePosition();
+      if (wall) wall.OnJointMove();
     });
   }
 

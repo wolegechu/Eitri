@@ -1,10 +1,10 @@
 import {fabric} from 'fabric';
 
+import {ViewCanvas} from './canvas';
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
-import {RoomExportedProperties, ViewObject, ObjectOptions, PROPERTY_TYPE_OPTION} from './view_object';
+import {ObjectOptions, PROPERTY_TYPE_OPTION, RoomExportedProperties, ViewObject} from './view_object';
 import {Wall} from './wall';
-import { ViewCanvas } from './canvas';
 
 export enum RoomType {
   Bedroom = '卧室',
@@ -30,21 +30,23 @@ export class Room extends ViewObject {
   private type: string = RoomType.Bedroom;
 
   view: fabric.Path;
-    
+
   constructor(id: number, option: RoomOption) {
     super(id);
-    this.NewFabricPath("");
+    this.NewFabricPath('');
     this.Set(option);
   }
 
   ExportProperties(): RoomExportedProperties {
     const properties = new RoomExportedProperties();
-    
+
     properties.type = {
-        value: this.type,
-        type: PROPERTY_TYPE_OPTION,
-        options: [RoomType.Bedroom, RoomType.Kitchen, RoomType.LivingRoom, RoomType.Toilet]
-      };
+      value: this.type,
+      type: PROPERTY_TYPE_OPTION,
+      options: [
+        RoomType.Bedroom, RoomType.Kitchen, RoomType.LivingRoom, RoomType.Toilet
+      ]
+    };
     return properties;
   }
 
@@ -53,21 +55,7 @@ export class Room extends ViewObject {
   }
 
   ToJson(): string {
-    return JSON.stringify(Object.assign({}, this, { view: undefined }));
-  }
-
-  Set(option: RoomOption): void {
-    if (option.firstJointID) {
-      this.firstJointID = option.firstJointID;  
-    }
-    if (option.wallIDs) {
-      this.wallIDs = option.wallIDs;
-    }
-    if (option.type) {
-      this.type = option.type;
-    }
-    
-    this.UpdateView();
+    return JSON.stringify(Object.assign({}, this, {view: undefined}));
   }
 
   UpdateView(): void {
@@ -75,12 +63,12 @@ export class Room extends ViewObject {
     let nextID: number;
     path.push('M');
 
-    let joint = ViewFactory.GetViewObject(this.firstJointID) as Joint; 
+    let joint = ViewFactory.GetViewObject(this.firstJointID) as Joint;
     if (!joint) return;
 
     let index: number;
     for (const wallID of this.wallIDs) {
-      const wall = ViewFactory.GetViewObject(wallID) as Wall; 
+      const wall = ViewFactory.GetViewObject(wallID) as Wall;
       if (!wall) return;
 
       path.push(joint.position.x.toString());
@@ -93,11 +81,25 @@ export class Room extends ViewObject {
       joint = ViewFactory.GetViewObject(nextID) as Joint;
     }
 
-    path[path.length - 1] = 'z';    
+    path[path.length - 1] = 'z';
     this.NewFabricPath(path.join(' '));
 
     this.view.setCoords();
     ViewCanvas.GetInstance().Render();
+  }
+
+  protected Set(option: RoomOption): void {
+    if (option.firstJointID) {
+      this.firstJointID = option.firstJointID;
+    }
+    if (option.wallIDs) {
+      this.wallIDs = option.wallIDs;
+    }
+    if (option.type) {
+      this.type = option.type;
+    }
+
+    this.UpdateView();
   }
 
   private NewFabricPath(path: string) {

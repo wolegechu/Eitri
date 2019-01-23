@@ -10,7 +10,7 @@ export interface ViewProperty {
   type: string;
 }
 
-export interface OptionProperty extends ViewProperty{
+export interface OptionProperty extends ViewProperty {
   // tslint:disable-next-line:no-any
   options: string[];
 }
@@ -36,9 +36,7 @@ export class RoomExportedProperties extends ExportedProperties {
   type: OptionProperty;
 }
 
-export interface ObjectOptions {
-
-}
+export interface ObjectOptions {}
 
 export abstract class ViewObject {
   id: number;
@@ -48,7 +46,7 @@ export abstract class ViewObject {
   abstract ExportProperties(): ExportedProperties;
   abstract ImportProperties(props: ExportedProperties): void;
   abstract ToJson(): string;
-  abstract Set(option: ObjectOptions): void;
+  protected abstract Set(option: ObjectOptions): void;
   abstract UpdateView(): void;
 
   constructor(id: number) {

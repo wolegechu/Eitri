@@ -1,9 +1,10 @@
 import * as FSS from './index';
 import {Accessory} from './view/drawing_board/accessory';
 import {ViewCanvas} from './view/drawing_board/canvas';
+import {Joint} from './view/drawing_board/joint';
+import {Room} from './view/drawing_board/room';
 import * as ViewFactory from './view/drawing_board/view_factory';
-import { Joint } from './view/drawing_board/joint';
-import { Room } from './view/drawing_board/room';
+import {Wall} from './view/drawing_board/wall';
 
 console.log('test solution');
 FSS.Init({canvasID: 'c'});
@@ -27,8 +28,26 @@ const buttonTest = document.getElementById('test');
 buttonTest.onclick = (e) => {
   // TestAccessory();
   // TestJoint();
-  TestRoom();
+  // TestRoom();
+  TestWall();
 };
+
+/**
+ * try to export and import Wall
+ */
+function TestWall() {
+  const a = ViewFactory.GetViewObjectsWithType<Wall>(Wall)[0];
+  const json = a.ToJson();
+  a.RemoveSelf();
+  setTimeout(() => {
+    console.log('begin');
+    console.log(json);
+    const data = JSON.parse(json);
+    const b = new Wall(data.id, data);
+    b.UpdateView();
+  }, 1000);
+}
+
 
 /**
  * try to export and import Room
