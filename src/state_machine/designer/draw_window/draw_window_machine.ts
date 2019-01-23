@@ -1,6 +1,7 @@
 import {ChangeToSelectionMode} from '../../..';
 import {GRAB_WALL_DISTANCE} from '../../../CONFIG';
 import * as EventSystem from '../../../events/index';
+import {ImageHandle} from '../../../ImageManager';
 import {GetClosestPointOnSegment2Point, Point} from '../../../utils';
 import {Accessory} from '../../../view/drawing_board/accessory';
 import {Joint} from '../../../view/drawing_board/joint';
@@ -9,6 +10,7 @@ import {StateMachine} from '../../state_machine';
 
 export class DrawWindowMachine extends StateMachine {
   viewWindow: Accessory;
+  finished = false;
 
   protected transisionTable: [];
 
@@ -18,6 +20,9 @@ export class DrawWindowMachine extends StateMachine {
   private funcOnMouseDown = (e: EventSystem.FssEvent) => {
     this.OnMouseDown(e);
   };
+  private funcOnPressESC = (e: EventSystem.FssEvent) => {
+    this.OnPressESC(e);
+  };
 
   constructor() {
     super();
@@ -26,21 +31,21 @@ export class DrawWindowMachine extends StateMachine {
         EventSystem.EventType.MOUSE_MOVE_CANVAS, this.funcOnMouseMove);
     EventSystem.AddEventListener(
         EventSystem.EventType.MOUSE_CLICK_CANVAS, this.funcOnMouseDown);
+    EventSystem.AddEventListener(
+        EventSystem.EventType.KEY_PRESS_ESC, this.funcOnPressESC);
 
-    const imgSource = require('../../../images/door.png');
-    const imgElement = new Image();
-    imgElement.src = imgSource;
-    imgElement.onload = () => {
-      this.viewWindow =
-          ViewFactory.CreateAccessory(new Point(100, 100), imgElement);
-    };
+    this.viewWindow = ViewFactory.CreateAccessory(ImageHandle.DOOR);
   }
 
   Exit(): void {
+    if (!this.finished) this.viewWindow.RemoveSelf();
+
     EventSystem.RemoveEventListener(
         EventSystem.EventType.MOUSE_MOVE_CANVAS, this.funcOnMouseMove);
     EventSystem.RemoveEventListener(
         EventSystem.EventType.MOUSE_CLICK_CANVAS, this.funcOnMouseDown);
+    EventSystem.RemoveEventListener(
+        EventSystem.EventType.KEY_PRESS_ESC, this.funcOnPressESC);
   }
 
   private OnMouseMove(e: EventSystem.FssEvent) {
@@ -54,9 +59,12 @@ export class DrawWindowMachine extends StateMachine {
       const newPos = GetClosestPointOnSegment2Point(
           pos, {a: joint1.position, b: joint2.position});
 
-      this.viewWindow.SetPositionAndWall(newPos, grabWall);
+      this.viewWindow.Set({position: newPos, wallID: grabWall.id});
+
     } else {
-      this.viewWindow.SetPositionAndWall(e.position);
+      this.viewWindow.Set({
+        position: e.position,
+      });
     }
   }
 
@@ -71,11 +79,15 @@ export class DrawWindowMachine extends StateMachine {
       const newPos = GetClosestPointOnSegment2Point(
           pos, {a: joint1.position, b: joint2.position});
 
-      this.viewWindow.SetPositionAndWall(newPos, grabWall);
-    } else {
-      this.viewWindow.RemoveSelf();
+      this.viewWindow.Set({position: newPos, wallID: grabWall.id});
+
+      this.finished = true;
     }
 
+    ChangeToSelectionMode();
+  }
+
+  private OnPressESC(e: EventSystem.FssEvent) {
     ChangeToSelectionMode();
   }
 }

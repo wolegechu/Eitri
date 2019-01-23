@@ -1,5 +1,6 @@
 import * as EventSystem from '../../../events/index';
 import {UIIndex} from '../../../view/components/index';
+import {Accessory} from '../../../view/drawing_board/accessory';
 import {ViewCanvas} from '../../../view/drawing_board/canvas';
 import {Joint} from '../../../view/drawing_board/joint';
 import {ViewObject} from '../../../view/drawing_board/view_object';
@@ -46,7 +47,6 @@ export class SelectionMachine extends StateMachine {
     // filter
     console.debug('luoyuchu');
     if (target instanceof Joint) return;
-
     this.selectedObject = target;
     UIIndex(target);
   }

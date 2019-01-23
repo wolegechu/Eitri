@@ -1,5 +1,6 @@
 import {fabric} from 'fabric';
 
+import {GetImage, ImageHandle} from '../../ImageManager';
 import {Point} from '../../utils/index';
 
 import {ViewCanvas} from './canvas';
@@ -9,27 +10,36 @@ import {AccessoryExportedProperties, ExportedProperties, ViewObject} from './vie
 import {Wall} from './wall';
 
 
+interface AccessoryOption {
+  wallID?: number;
+  imgHandle?: string;
+  length?: number;
+  position?: Point;
+  positionPercent?: number;
+}
+
 /**
  * Represent things depend on Wall. Such as Window, Door.
  */
-export class Accessory extends ViewObject {
-  wallID: number;
-  length: number;  // the length of the accessory
-  position: Point;
-  positionPercent: number;
+export class Accessory extends ViewObject implements AccessoryOption {
+  wallID = -1;
+  imgHandle: string = ImageHandle[ImageHandle.DOOR];
+  length = 100;  // the length of the accessory
+  position = new Point(0, 0);
+  positionPercent = 0;
+
   view: fabric.Image;
 
-  constructor(id: number, pos: Point, img: HTMLImageElement, length = 100) {
+  constructor(id: number, option: AccessoryOption) {
     super(id);
 
-    this.length = length;
-
-    // this.position = pos;
+    const img =
+        GetImage(ImageHandle[this.imgHandle as keyof typeof ImageHandle]);
     this.view = new fabric.Image(img, {
       originX: 'center',
       originY: 'center',
-      left: pos.x,
-      top: pos.y,
+      left: this.position.x,
+      top: this.position.y,
       scaleX: 0.3,
       scaleY: this.length / img.height,
       lockMovementX: true,
@@ -39,8 +49,34 @@ export class Accessory extends ViewObject {
     this.view.hasControls = this.view.hasBorders = false;
     this.view.perPixelTargetFind = true;
 
-    const canvas = ViewCanvas.GetInstance();
-    canvas.OnObjectMove((e) => this.OnObjectMove(e));
+    this.Set(option);
+  }
+
+  Set(option: AccessoryOption) {
+    if (option.wallID && option.wallID !== this.wallID) {
+      this.SetWallID(option.wallID);
+    }
+    if (option.length) this.length = option.length;
+    if (option.position) {
+      this.position = new Point(option.position.x, option.position.y);
+      this.PositionUpdatePercent();
+    }
+    if (option.positionPercent) {
+      this.positionPercent = option.positionPercent;
+      this.PercentUpdatePosition();
+    }
+    if (option.imgHandle) {
+      this.imgHandle = option.imgHandle;
+      const img =
+          GetImage(ImageHandle[this.imgHandle as keyof typeof ImageHandle]);
+      this.view.setSrc(img.src);
+    }
+
+    this.UpdateView();
+  }
+
+  ToJson(): string {
+    return JSON.stringify(Object.assign({}, this, {view: undefined}));
   }
 
   ExportProperties(): AccessoryExportedProperties {
@@ -52,38 +88,39 @@ export class Accessory extends ViewObject {
     throw new Error('Method not implemented.');
   }
 
-  SetPositionAndWall(point: Point, wall: Wall = null) {
-    this.position = point;
-
-    // remove the old wall
-    if (this.wallID) {
-      const oldWall = ViewFactory.GetViewObject(this.wallID) as Wall;
-      oldWall.RemoveAccessoryID(this.id);
-    }
-
-    // add the new wall
-    if (wall) {
-      this.wallID = wall.id;
-      wall.AddAccessoryID(this.id);
-    }
-
-    this.PositionUpdatePercent();
+  UpdateView() {
     this.UpdateViewPosition();
     this.UpdateViewRotation();
   }
 
   OnWallMove() {
     this.PercentUpdatePosition();
-    this.UpdateViewPosition();
-    this.UpdateViewRotation();
+    this.UpdateView();
+  }
+
+  RemoveSelf() {
+    super.RemoveSelf();
+    const oldWall = ViewFactory.GetViewObject(this.wallID) as Wall;
+    if (oldWall) oldWall.RemoveAccessoryID(this.id);
+  }
+
+  private SetWallID(wallID: number) {
+    // remove the old wall
+    const oldWall = ViewFactory.GetViewObject(this.wallID) as Wall;
+    if (oldWall) oldWall.RemoveAccessoryID(this.id);
+
+    // add the new wall
+    this.wallID = wallID;
+    const newWall = ViewFactory.GetViewObject(this.wallID) as Wall;
+    if (newWall) newWall.AddAccessoryID(this.id);
   }
 
   /**
    * use the absolute position to update the position relative to the wall.
    */
   private PositionUpdatePercent(): number {
-    if (!this.wallID) return;
     const wall = ViewFactory.GetViewObject(this.wallID) as Wall;
+    if (!wall) return;
     const joint1 = ViewFactory.GetViewObject(wall.jointIDs[0]) as Joint;
     const joint2 = ViewFactory.GetViewObject(wall.jointIDs[1]) as Joint;
 
@@ -114,8 +151,8 @@ export class Accessory extends ViewObject {
    * use the position relative to the wall to update the absolute position.
    */
   private PercentUpdatePosition() {
-    if (!this.wallID) return;
     const wall = ViewFactory.GetViewObject(this.wallID) as Wall;
+    if (!wall) return;
     const joint1 = ViewFactory.GetViewObject(wall.jointIDs[0]) as Joint;
     const joint2 = ViewFactory.GetViewObject(wall.jointIDs[1]) as Joint;
 
@@ -132,30 +169,19 @@ export class Accessory extends ViewObject {
     this.UpdateViewPosition();
   }
 
-  private OnObjectMove(e: fabric.IEvent) {
-    if (e.target !== this.view) return;
-    console.debug('On Joint Move');
-    this.UpdatePosition();
-  }
-
-  // Update the Position property based on this.view
-  private UpdatePosition() {
-    this.position.x = this.view.left;
-    this.position.y = this.view.top;
-  }
-
   private UpdateViewPosition() {
     this.view.set({
       left: this.position.x,
       top: this.position.y,
+      scaleY: this.length / this.view.height,
     });
     this.view.setCoords();
     ViewCanvas.GetInstance().Render();
   }
 
   private UpdateViewRotation() {
-    if (!this.wallID) return;
     const wall = ViewFactory.GetViewObject(this.wallID) as Wall;
+    if (!wall) return;
     const joint1 = ViewFactory.GetViewObject(wall.jointIDs[0]) as Joint;
     const joint2 = ViewFactory.GetViewObject(wall.jointIDs[1]) as Joint;
 
