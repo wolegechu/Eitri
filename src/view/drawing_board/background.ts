@@ -11,10 +11,10 @@ export class Background extends ViewObject {
   constructor(id: number, htmlImage: HTMLImageElement) {
     super(id);
 
-    const viewCanvas = ViewCanvas.GetInstance();
+    const canvas = ViewCanvas.GetInstance().canvas;
     const scale = Math.min(
-        viewCanvas.canvas.getWidth() / htmlImage.width,
-        viewCanvas.canvas.getHeight() / htmlImage.height,
+        canvas.getWidth() / htmlImage.width,
+        canvas.getHeight() / htmlImage.height,
     );
     this.view = new fabric.Image(htmlImage, {
       angle: 0,
@@ -29,7 +29,8 @@ export class Background extends ViewObject {
       evented: false
     });
 
-    viewCanvas.canvas.centerObject(this.view);
+    canvas.centerObject(this.view);
+    ViewCanvas.GetInstance().Add(this);
   }
 
   ExportProperties(): ExportedProperties {

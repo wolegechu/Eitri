@@ -79,8 +79,8 @@ export class ViewCanvas {
     this.SortViewObjects();
   }
 
-  Remove(obj: fabric.Object): void {
-    this.canvas.remove(obj);
+  Remove(obj: ViewObject): void {
+    this.canvas.remove(obj.view);
   }
 
   SetAllSelectable(selectable: boolean) {

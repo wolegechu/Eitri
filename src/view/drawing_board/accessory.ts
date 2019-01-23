@@ -49,6 +49,8 @@ export class Accessory extends ViewObject {
     this.view.hasControls = this.view.hasBorders = false;
     this.view.perPixelTargetFind = true;
 
+    ViewCanvas.GetInstance().Add(this);
+    
     this.Set(option);
   }
 

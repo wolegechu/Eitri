@@ -26,16 +26,29 @@ export function CreateJoint(pos: Point): Joint {
   const joint = new Joint(id, { _position: pos });
   idObjectMap.set(joint.id, joint);
   viewObjectMap.set(joint.view, joint);
-  ViewCanvas.GetInstance().Add(joint);
   return joint;
 }
 
-export function CreateWall(p1: Point|Joint, p2: Point|Joint): Wall {
+export function CreateWall(p1: Point | Joint, p2: Point | Joint): Wall {
+  let joint1, joint2;
+  if (p1 instanceof Point) {
+    joint1 = CreateJoint(p1);
+  } else {
+    joint1 = p1;
+  }
+
+  if (p2 instanceof Point) {
+    joint2 = CreateJoint(p2);
+  }
+  else {
+    joint2 = p2;
+  }
+
   const id = GetNewID();
-  const wall = new Wall(id, p1, p2);
+  
+  const wall = new Wall(id, joint1, joint2);
   idObjectMap.set(wall.id, wall);
   viewObjectMap.set(wall.view, wall);
-  ViewCanvas.GetInstance().Add(wall);
   return wall;
 }
 
@@ -44,16 +57,17 @@ export function CreateAccessory(img: ImageHandle): Accessory {
   const accessory = new Accessory(id, {imgHandle: ImageHandle[img]});
   idObjectMap.set(accessory.id, accessory);
   viewObjectMap.set(accessory.view, accessory);
-  ViewCanvas.GetInstance().Add(accessory);
   return accessory;
 }
 
-export function CreateRoom(edges: Wall[], vertex: Joint): Room {
+export function CreateRoom(edges: Wall[], firstVertex: Joint): Room {
   const id = GetNewID();
-  const room = new Room(id, edges, vertex);
+  const room = new Room(id, {
+    firstJointID: firstVertex.id,
+    wallIDs: edges.map(v=>v.id)
+  });
   idObjectMap.set(room.id, room);
   viewObjectMap.set(room.view, room);
-  ViewCanvas.GetInstance().Add(room);
   return room;
 }
 
@@ -62,7 +76,6 @@ export function CreateBackground(htmlImage: HTMLImageElement) {
   const back = new Background(id, htmlImage);
   idObjectMap.set(back.id, back);
   viewObjectMap.set(back.view, back);
-  ViewCanvas.GetInstance().Add(back);
   return back;
 }
 

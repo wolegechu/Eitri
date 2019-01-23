@@ -4,6 +4,7 @@ import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
 import {RoomExportedProperties, ViewObject, ObjectOptions, PROPERTY_TYPE_OPTION} from './view_object';
 import {Wall} from './wall';
+import { ViewCanvas } from './canvas';
 
 export enum RoomType {
   Bedroom = '卧室',
@@ -12,50 +13,28 @@ export enum RoomType {
   Toilet = '厕所',
 }
 
+
+interface RoomOption extends ObjectOptions {
+  firstJointID?: number;
+  wallIDs?: number[];
+  type?: string;
+}
+
+
 /**
  * Represent things depend on Wall. Such as Window, Door.
  */
 export class Room extends ViewObject {
-  firstJointID: number;
-  wallIDs: number[] = [];
-  type: string = RoomType.Bedroom;
+  private firstJointID = -1;
+  private wallIDs: number[] = [];
+  private type: string = RoomType.Bedroom;
 
-  constructor(id: number, walls: Wall[], firstJoint: Joint) {
+  view: fabric.Path;
+    
+  constructor(id: number, option: RoomOption) {
     super(id);
-
-    this.firstJointID = firstJoint.id;
-    walls.forEach(wall => {
-      this.wallIDs.push(wall.id);
-    });
-
-    const path: string[] = [];
-    let nextID: number;
-    path.push('M');
-
-    let joint = firstJoint;
-    let index: number;
-    for (const wall of walls) {
-      path.push(joint.position.x.toString());
-      path.push(joint.position.y.toString());
-      path.push('L');
-
-      index = wall.jointIDs.indexOf(joint.id);
-      console.assert(index !== -1, 'wrong wall, wrong joint');
-      nextID = wall.jointIDs[index ^ 1];
-      joint = ViewFactory.GetViewObject(nextID) as Joint;
-    }
-
-    path[path.length - 1] = 'z';
-
-    this.view = new fabric.Path(path.join(' '), {
-      fill: '#A2875E',
-      stroke: '#A2875E',
-      opacity: 0.1,
-      lockMovementX: true,
-      lockMovementY: true
-    });
-    this.view.hasControls = this.view.hasBorders = false;
-    this.view.perPixelTargetFind = true;
+    this.NewFabricPath("");
+    this.Set(option);
   }
 
   ExportProperties(): RoomExportedProperties {
@@ -74,14 +53,67 @@ export class Room extends ViewObject {
   }
 
   ToJson(): string {
-    throw new Error("Method not implemented.");
+    return JSON.stringify(Object.assign({}, this, { view: undefined }));
   }
 
-  Set(option: ObjectOptions): void {
-    throw new Error("Method not implemented.");
+  Set(option: RoomOption): void {
+    if (option.firstJointID) {
+      this.firstJointID = option.firstJointID;  
+    }
+    if (option.wallIDs) {
+      this.wallIDs = option.wallIDs;
+    }
+    if (option.type) {
+      this.type = option.type;
+    }
+    
+    this.UpdateView();
   }
 
   UpdateView(): void {
-    throw new Error("Method not implemented.");
+    const path: string[] = [];
+    let nextID: number;
+    path.push('M');
+
+    let joint = ViewFactory.GetViewObject(this.firstJointID) as Joint; 
+    if (!joint) return;
+
+    let index: number;
+    for (const wallID of this.wallIDs) {
+      const wall = ViewFactory.GetViewObject(wallID) as Wall; 
+      if (!wall) return;
+
+      path.push(joint.position.x.toString());
+      path.push(joint.position.y.toString());
+      path.push('L');
+
+      index = wall.jointIDs.indexOf(joint.id);
+      console.assert(index !== -1, 'wrong wall, wrong joint');
+      nextID = wall.jointIDs[index ^ 1];
+      joint = ViewFactory.GetViewObject(nextID) as Joint;
+    }
+
+    path[path.length - 1] = 'z';    
+    this.NewFabricPath(path.join(' '));
+
+    this.view.setCoords();
+    ViewCanvas.GetInstance().Render();
+  }
+
+  private NewFabricPath(path: string) {
+    if (this.view) {
+      ViewCanvas.GetInstance().Remove(this);
+    }
+    this.view = new fabric.Path(path, {
+      fill: '#A2875E',
+      stroke: '#A2875E',
+      opacity: 0.1,
+      lockMovementX: true,
+      lockMovementY: true
+    });
+    this.view.hasControls = this.view.hasBorders = false;
+    this.view.perPixelTargetFind = true;
+
+    ViewCanvas.GetInstance().Add(this);
   }
 }

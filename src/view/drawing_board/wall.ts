@@ -6,6 +6,7 @@ import {Accessory} from './accessory';
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
 import {PROPERTY_TYPE_NUMBER, ViewObject, WallExportedProperties, ObjectOptions, PROPERTY_TYPE_OPTION} from './view_object';
+import { ViewCanvas } from './canvas';
 
 export enum WallType {
   NORMAL = '普通墙',
@@ -27,13 +28,18 @@ export class Wall extends ViewObject {
     return length;
   }
 
-  constructor(id: number, point1: Point|Joint, point2: Point|Joint) {
+  constructor(id: number, point1: Joint, point2: Joint) {
     super(id);
 
-    const p1 = this.GetOrCreateJoint(point1).position;
-    const p2 = this.GetOrCreateJoint(point2).position;
+    point1.AddWallID(this.id);
+    point2.AddWallID(this.id);
 
-    // new line
+    this.jointIDs.push(point1.id);
+    this.jointIDs.push(point2.id);
+
+    const p1 = point1.position;
+    const p2 = point2.position;
+
     this.view = new fabric.Line([p1.x, p1.y, p2.x, p2.y], {
       strokeWidth: 9,
       stroke: '#808080',
@@ -43,6 +49,8 @@ export class Wall extends ViewObject {
     });
     this.view.hasControls = this.view.hasBorders = false;
     this.view.perPixelTargetFind = true;
+    
+    ViewCanvas.GetInstance().Add(this);
   }
 
   /**
@@ -128,8 +136,7 @@ export class Wall extends ViewObject {
     } else {
       joint = ViewFactory.CreateJoint(point);
     }
-    joint.AddWallID(this.id);
-    this.jointIDs.push(joint.id);
+
     return joint;
   }
 }

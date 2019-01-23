@@ -56,7 +56,7 @@ export abstract class ViewObject {
   }
 
   RemoveSelf() {
-    ViewCanvas.GetInstance().Remove(this.view);
+    ViewCanvas.GetInstance().Remove(this);
     ViewFactory.RemoveObject(this);
   }
 }

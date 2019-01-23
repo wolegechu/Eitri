@@ -14,6 +14,7 @@ interface JointOption extends ObjectOptions {
   _position?: {x: number, y:number};
 }
 
+
 export class Joint extends ViewObject {
   private _wallIDs: number[] = [];
   private _position: Point = new Point(0, 0);
@@ -43,6 +44,7 @@ export class Joint extends ViewObject {
     this.view.perPixelTargetFind = true;
 
     const canvas = ViewCanvas.GetInstance();
+    canvas.Add(this);
     canvas.OnObjectMove((e) => this.OnObjectMove(e));
 
     this.Set(option);
