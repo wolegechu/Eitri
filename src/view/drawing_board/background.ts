@@ -1,20 +1,22 @@
 import {fabric} from 'fabric';
 
 import {ViewCanvas} from './canvas';
-import {ExportedProperties, ViewObject, ObjectOptions} from './view_object';
+import {ExportedProperties, ObjectOptions, ViewObject} from './view_object';
 
 
 /**
  * The background image.
  */
 export class Background extends ViewObject {
+  static typeName = 'background';
+
   constructor(id: number, htmlImage: HTMLImageElement) {
     super(id);
 
-    const viewCanvas = ViewCanvas.GetInstance();
+    const canvas = ViewCanvas.GetInstance().canvas;
     const scale = Math.min(
-        viewCanvas.canvas.getWidth() / htmlImage.width,
-        viewCanvas.canvas.getHeight() / htmlImage.height,
+        canvas.getWidth() / htmlImage.width,
+        canvas.getHeight() / htmlImage.height,
     );
     this.view = new fabric.Image(htmlImage, {
       angle: 0,
@@ -29,7 +31,8 @@ export class Background extends ViewObject {
       evented: false
     });
 
-    viewCanvas.canvas.centerObject(this.view);
+    canvas.centerObject(this.view);
+    ViewCanvas.GetInstance().Add(this);
   }
 
   ExportProperties(): ExportedProperties {
@@ -41,15 +44,15 @@ export class Background extends ViewObject {
     throw new Error('Method not implemented.');
   }
 
-  ToJson(): string {
-    throw new Error("Method not implemented.");
-  }
-
-  Set(option: ObjectOptions): void {
-    throw new Error("Method not implemented.");
+  ToJson(): ObjectOptions {
+    return {};
   }
 
   UpdateView(): void {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
+  }
+
+  protected Set(option: ObjectOptions): void {
+    throw new Error('Method not implemented.');
   }
 }

@@ -1,14 +1,12 @@
-import {GRAB_JOINT_DISTANCE, GRAB_WALL_DISTANCE} from '../../CONFIG';
 import {ImageHandle} from '../../ImageManager';
 import {Point} from '../../utils/index';
 import {GetDistanceOfPoint2LineSegment, GetDistanceOfPoint2Point} from '../../utils/math';
 
 import {Accessory} from './accessory';
 import {Background} from './background';
-import {ViewCanvas} from './canvas';
 import {Joint} from './joint';
 import {Room} from './room';
-import {ViewObject} from './view_object';
+import {ObjectOptions, ViewObject} from './view_object';
 import {Wall} from './wall';
 
 
@@ -23,19 +21,31 @@ function GetNewID(): number {
 
 export function CreateJoint(pos: Point): Joint {
   const id = GetNewID();
-  const joint = new Joint(id, pos);
+  const joint = new Joint(id, {_position: pos});
   idObjectMap.set(joint.id, joint);
   viewObjectMap.set(joint.view, joint);
-  ViewCanvas.GetInstance().Add(joint);
   return joint;
 }
 
 export function CreateWall(p1: Point|Joint, p2: Point|Joint): Wall {
+  let joint1, joint2;
+  if (p1 instanceof Point) {
+    joint1 = CreateJoint(p1);
+  } else {
+    joint1 = p1;
+  }
+
+  if (p2 instanceof Point) {
+    joint2 = CreateJoint(p2);
+  } else {
+    joint2 = p2;
+  }
+
   const id = GetNewID();
-  const wall = new Wall(id, p1, p2);
+
+  const wall = new Wall(id, {_jointIDs: [joint1.id, joint2.id]});
   idObjectMap.set(wall.id, wall);
   viewObjectMap.set(wall.view, wall);
-  ViewCanvas.GetInstance().Add(wall);
   return wall;
 }
 
@@ -44,16 +54,15 @@ export function CreateAccessory(img: ImageHandle): Accessory {
   const accessory = new Accessory(id, {imgHandle: ImageHandle[img]});
   idObjectMap.set(accessory.id, accessory);
   viewObjectMap.set(accessory.view, accessory);
-  ViewCanvas.GetInstance().Add(accessory);
   return accessory;
 }
 
-export function CreateRoom(edges: Wall[], vertex: Joint): Room {
+export function CreateRoom(edges: Wall[], firstVertex: Joint): Room {
   const id = GetNewID();
-  const room = new Room(id, edges, vertex);
+  const room = new Room(
+      id, {firstJointID: firstVertex.id, wallIDs: edges.map(v => v.id)});
   idObjectMap.set(room.id, room);
   viewObjectMap.set(room.view, room);
-  ViewCanvas.GetInstance().Add(room);
   return room;
 }
 
@@ -62,7 +71,6 @@ export function CreateBackground(htmlImage: HTMLImageElement) {
   const back = new Background(id, htmlImage);
   idObjectMap.set(back.id, back);
   viewObjectMap.set(back.view, back);
-  ViewCanvas.GetInstance().Add(back);
   return back;
 }
 
@@ -149,4 +157,79 @@ export function GetNearestWall(
   }
 
   return nearestWall;
+}
+
+type JsonItemData = {
+  id: number,
+  type: string,
+  content: ObjectOptions
+};
+
+export function ExportToJson(): string {
+  const json: JsonItemData[] = [];
+
+  for (const obj of idObjectMap.values()) {
+    const item = {id: obj.id, type: '', content: obj.ToJson()};
+    if (obj instanceof Accessory) {
+      item.type = Accessory.typeName;
+    } else if (obj instanceof Joint) {
+      item.type = Joint.typeName;
+    } else if (obj instanceof Room) {
+      item.type = Room.typeName;
+    } else if (obj instanceof Wall) {
+      item.type = Wall.typeName;
+    } else if (obj instanceof Background) {
+      continue;
+    } else {
+      console.assert(false, 'object don\'t have rule to json:');
+      console.log(obj);
+    }
+
+    json.push(item);
+  }
+  return JSON.stringify(json);
+}
+
+export function ImportToJson(json: string) {
+  Clear();
+  const data: JsonItemData[] = JSON.parse(json);
+  for (const item of data) {
+    let obj;
+    switch (item.type) {
+      case Accessory.typeName:
+        obj = new Accessory(item.id, item.content);
+        break;
+      case Joint.typeName:
+        obj = new Joint(item.id, item.content);
+        break;
+      case Room.typeName:
+        obj = new Room(item.id, item.content);
+        break;
+      case Wall.typeName:
+        obj = new Wall(item.id, item.content);
+        break;
+      default:
+        console.assert(false, 'unkonw type:' + item.type);
+        console.log(item);
+        break;
+    }
+
+    idObjectMap.set(obj.id, obj);
+    viewObjectMap.set(obj.view, obj);
+  }
+
+  for (const obj of idObjectMap.values()) {
+    obj.UpdateView();
+  }
+}
+
+/**
+ * Clear the canvas. Remove all ViewObjects
+ */
+function Clear(): void {
+  const deleteJobs = [];
+  for (const obj of idObjectMap.values()) {
+    deleteJobs.push(obj);
+  }
+  deleteJobs.forEach(obj => obj.RemoveSelf());
 }

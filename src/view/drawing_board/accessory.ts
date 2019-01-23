@@ -6,7 +6,7 @@ import {Point} from '../../utils/index';
 import {ViewCanvas} from './canvas';
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
-import {AccessoryExportedProperties, ExportedProperties, ViewObject, ObjectOptions} from './view_object';
+import {AccessoryExportedProperties, ExportedProperties, ObjectOptions, ViewObject} from './view_object';
 import {Wall} from './wall';
 
 
@@ -14,19 +14,21 @@ interface AccessoryOption extends ObjectOptions {
   wallID?: number;
   imgHandle?: string;
   length?: number;
-  position?: Point;
+  position?: {x: number, y: number};
   positionPercent?: number;
 }
 
 /**
  * Represent things depend on Wall. Such as Window, Door.
  */
-export class Accessory extends ViewObject implements AccessoryOption {
-  wallID = -1;
-  imgHandle: string = ImageHandle[ImageHandle.DOOR];
-  length = 100;  // the length of the accessory
-  position = new Point(0, 0);
-  positionPercent = 0;
+export class Accessory extends ViewObject {
+  static typeName = 'accessory';
+
+  private wallID = -1;
+  private imgHandle: string = ImageHandle[ImageHandle.DOOR];
+  private length = 100;  // the length of the accessory
+  private position = new Point(0, 0);
+  private positionPercent = 0;
 
   view: fabric.Image;
 
@@ -49,25 +51,13 @@ export class Accessory extends ViewObject implements AccessoryOption {
     this.view.hasControls = this.view.hasBorders = false;
     this.view.perPixelTargetFind = true;
 
+    ViewCanvas.GetInstance().Add(this);
+
     this.Set(option);
   }
 
-  Set(option: AccessoryOption) {
-    if (option.wallID) this.wallID = option.wallID;
-    if (option.length) this.length = option.length;
-    if (option.position) {
-      this.position = new Point(option.position.x, option.position.y);
-    }
-    if (option.positionPercent) {
-      this.positionPercent = option.positionPercent;
-    }
-    if (option.imgHandle) this.imgHandle = option.imgHandle;
-
-    this.UpdateView();
-  }
-
-  ToJson(): string {
-    return JSON.stringify(Object.assign({}, this, {view: undefined}));
+  ToJson(): ObjectOptions {
+    return Object.assign({}, this, {view: undefined});
   }
 
   ExportProperties(): AccessoryExportedProperties {
@@ -84,7 +74,7 @@ export class Accessory extends ViewObject implements AccessoryOption {
     this.UpdateViewByWall();
     this.UpdateViewByImage();
     this.UpdateViewByLength();
-    
+
     this.view.setCoords();
     ViewCanvas.GetInstance().Render();
   }
@@ -115,6 +105,20 @@ export class Accessory extends ViewObject implements AccessoryOption {
     this.wallID = wallID;
     const newWall = ViewFactory.GetViewObject(this.wallID) as Wall;
     if (newWall) newWall.AddAccessoryID(this.id);
+
+    this.UpdateView();
+  }
+
+  protected Set(option: AccessoryOption) {
+    if (option.wallID) this.wallID = option.wallID;
+    if (option.length) this.length = option.length;
+    if (option.position) {
+      this.position = new Point(option.position.x, option.position.y);
+    }
+    if (option.positionPercent) {
+      this.positionPercent = option.positionPercent;
+    }
+    if (option.imgHandle) this.imgHandle = option.imgHandle;
 
     this.UpdateView();
   }
@@ -194,8 +198,8 @@ export class Accessory extends ViewObject implements AccessoryOption {
   }
 
   private UpdateViewByImage() {
-      const img =
-          GetImage(ImageHandle[this.imgHandle as keyof typeof ImageHandle]);
+    const img =
+        GetImage(ImageHandle[this.imgHandle as keyof typeof ImageHandle]);
     this.view.setSrc(img.src);
     this.view.set({
       scaleY: this.length / this.view.height,

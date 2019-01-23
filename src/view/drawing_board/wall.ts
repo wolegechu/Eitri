@@ -3,21 +3,38 @@ import {fabric} from 'fabric';
 import {GetDistanceOfPoint2Point, Point} from '../../utils';
 
 import {Accessory} from './accessory';
+import {ViewCanvas} from './canvas';
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
-import {PROPERTY_TYPE_NUMBER, PROPERTY_TYPE_WALL_TYPE, ViewObject, WallExportedProperties, ObjectOptions} from './view_object';
+import {ObjectOptions, PROPERTY_TYPE_NUMBER, PROPERTY_TYPE_OPTION, ViewObject, WallExportedProperties} from './view_object';
 
 export enum WallType {
   NORMAL = '普通墙',
   MAIN = '承重墙'
 }
 
+
+interface WallOption extends ObjectOptions {
+  _jointIDs?: number[];
+  accessoryIDs?: number[];
+  width?: number;
+  type?: string;
+}
+
+
 export class Wall extends ViewObject {
-  jointIDs: number[] = [];
-  accessoryIDs: number[] = [];
-  width = 10;
+  static typeName = 'wall';
+
+  private _jointIDs: number[] = [];
+  private accessoryIDs: number[] = [];
+  private width = 10;
+  private type: string = WallType.NORMAL;
+
+  get jointIDs() {
+    return this._jointIDs;
+  }
+
   view: fabric.Line;
-  type = WallType.NORMAL;
 
   get length(): number {
     const joint1 = ViewFactory.GetViewObject(this.jointIDs[0]) as Joint;
@@ -27,14 +44,10 @@ export class Wall extends ViewObject {
     return length;
   }
 
-  constructor(id: number, point1: Point|Joint, point2: Point|Joint) {
+  constructor(id: number, option: WallOption) {
     super(id);
 
-    const p1 = this.GetOrCreateJoint(point1).position;
-    const p2 = this.GetOrCreateJoint(point2).position;
-
-    // new line
-    this.view = new fabric.Line([p1.x, p1.y, p2.x, p2.y], {
+    this.view = new fabric.Line([0, 0, 0, 0], {
       strokeWidth: 9,
       stroke: '#808080',
       selectable: false,
@@ -43,6 +56,36 @@ export class Wall extends ViewObject {
     });
     this.view.hasControls = this.view.hasBorders = false;
     this.view.perPixelTargetFind = true;
+    ViewCanvas.GetInstance().Add(this);
+
+    this.Set(option);
+  }
+
+  ExportProperties(): WallExportedProperties {
+    const properties = new WallExportedProperties();
+    properties.length = {value: this.length, type: PROPERTY_TYPE_NUMBER};
+    properties.type = {
+      value: this.type,
+      type: PROPERTY_TYPE_OPTION,
+      options: [WallType.MAIN, WallType.NORMAL]
+    };
+    return properties;
+  }
+
+  ImportProperties(props: WallExportedProperties) {
+    // this.length = props.length.value;
+    this.type = props.type.value;
+  }
+
+  ToJson(): ObjectOptions {
+    return Object.assign({}, this, {view: undefined});
+  }
+
+  UpdateView(): void {
+    this.UpdateViewByJoint();
+
+    this.view.setCoords();
+    ViewCanvas.GetInstance().Render();
   }
 
   /**
@@ -56,37 +99,20 @@ export class Wall extends ViewObject {
     this.RemoveSelf();
   }
 
-  ExportProperties(): WallExportedProperties {
-    const properties = new WallExportedProperties();
-    properties.length = {value: this.length, type: PROPERTY_TYPE_NUMBER};
-    properties.type = {
-        value: this.type,
-        type: PROPERTY_TYPE_OPTION,
-        options: [WallType.MAIN, WallType.NORMAL]
-    };
-    return properties;
+  OnJointMove(): void {
+    this.accessoryIDs.forEach(id => {
+      const obj = ViewFactory.GetViewObject(id) as Accessory;
+      if (obj) obj.OnWallMove();
+    });
+
+    this.UpdateView();
   }
 
-  ImportProperties(props: WallExportedProperties) {
-    //this.length = props.length.value;
-    this.type = props.type.value;
-  }
-
-  ToJson(): string {
-    throw new Error("Method not implemented.");
-  }
-
-  Set(option: ObjectOptions): void {
-    throw new Error("Method not implemented.");
-  }
-
-  UpdateView(): void {
-    throw new Error("Method not implemented.");
-  }
-
-  UpdatePosition() {
+  private UpdateViewByJoint() {
+    if (2 !== this.jointIDs.length) return;
     const joint1 = ViewFactory.GetViewObject(this.jointIDs[0]) as Joint;
     const joint2 = ViewFactory.GetViewObject(this.jointIDs[1]) as Joint;
+    if (!joint1 || !joint2) return;
 
     this.view.set({
       'x1': joint1.position.x,
@@ -94,19 +120,13 @@ export class Wall extends ViewObject {
       'x2': joint2.position.x,
       'y2': joint2.position.y,
     });
-    this.view.setCoords();
-
-    this.accessoryIDs.forEach(id => {
-      const obj = ViewFactory.GetViewObject(id) as Accessory;
-      obj.OnWallMove();
-    });
   }
 
   RemoveSelf() {
     super.RemoveSelf();
     this.jointIDs.forEach(jointID => {
       const joint = ViewFactory.GetViewObject(jointID) as Joint;
-      joint.RemoveWallID(this.id);
+      if (joint) joint.RemoveWallID(this.id);
     });
   }
 
@@ -120,16 +140,20 @@ export class Wall extends ViewObject {
     if (index !== -1) this.accessoryIDs.splice(index, 1);
   }
 
-  private GetOrCreateJoint(point: Point|Joint): Joint {
-    let joint: Joint;
-
-    if (point instanceof Joint) {
-      joint = (point as Joint);
-    } else {
-      joint = ViewFactory.CreateJoint(point);
+  protected Set(option: WallOption): void {
+    if (option._jointIDs) {
+      this._jointIDs = option._jointIDs;
+      this._jointIDs.forEach(id => {
+        const joint = ViewFactory.GetViewObject(id) as Joint;
+        if (joint) joint.AddWallID(this.id);
+      });
     }
-    joint.wallIDs.push(this.id);
-    this.jointIDs.push(joint.id);
-    return joint;
+    if (option.accessoryIDs) {
+      this.accessoryIDs = option.accessoryIDs;
+    }
+    if (option.type) this.type = option.type;
+    if (option.width) this.width = option.width;
+
+    this.UpdateView();
   }
 }
