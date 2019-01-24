@@ -71,7 +71,7 @@ function DownloadJson() {
 function ImportJson(file: Blob) {
   const reader = new FileReader();
   reader.onload = event => {
-    ViewFactory.ImportToJson((event.target as FileReader).result as string);
+    ViewFactory.ImportFromJson((event.target as FileReader).result as string);
   };
 
   reader.readAsText(file);

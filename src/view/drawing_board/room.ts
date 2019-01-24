@@ -26,6 +26,9 @@ interface RoomOption extends ObjectOptions {
  */
 export class Room extends ViewObject {
   static typeName = 'room';
+  get typeName() {
+    return Room.typeName;
+  }
 
   private firstJointID = -1;
   private wallIDs: number[] = [];

@@ -24,6 +24,9 @@ interface WallOption extends ObjectOptions {
 
 export class Wall extends ViewObject {
   static typeName = 'wall';
+  get typeName() {
+    return Wall.typeName;
+  }
 
   private _jointIDs: number[] = [];
   private accessoryIDs: number[] = [];

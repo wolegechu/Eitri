@@ -17,6 +17,9 @@ interface JointOption extends ObjectOptions {
 
 export class Joint extends ViewObject {
   static typeName = 'joint';
+  get typeName() {
+    return Joint.typeName;
+  }
 
   private _wallIDs: number[] = [];
   private _position: Point = new Point(0, 0);
@@ -50,16 +53,6 @@ export class Joint extends ViewObject {
     canvas.OnObjectMove((e) => this.OnObjectMove(e));
 
     this.Set(option);
-  }
-
-  ExportProperties(): JointExportedProperties {
-    const properties:
-        JointExportedProperties = {x: this.position.x, y: this.position.y};
-    return properties;
-  }
-
-  ImportProperties(props: ExportedProperties): void {
-    throw new Error('Method not implemented.');
   }
 
   ToJson(): ObjectOptions {

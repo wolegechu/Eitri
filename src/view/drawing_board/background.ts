@@ -9,6 +9,9 @@ import {ExportedProperties, ObjectOptions, ViewObject} from './view_object';
  */
 export class Background extends ViewObject {
   static typeName = 'background';
+  get typeName() {
+    return Background.typeName;
+  }
 
   constructor(id: number, htmlImage: HTMLImageElement) {
     super(id);
@@ -33,19 +36,6 @@ export class Background extends ViewObject {
 
     canvas.centerObject(this.view);
     ViewCanvas.GetInstance().Add(this);
-  }
-
-  ExportProperties(): ExportedProperties {
-    const properties: ExportedProperties = {id: this.id};
-    return properties;
-  }
-
-  ImportProperties(props: ExportedProperties): void {
-    throw new Error('Method not implemented.');
-  }
-
-  ToJson(): ObjectOptions {
-    return {};
   }
 
   UpdateView(): void {

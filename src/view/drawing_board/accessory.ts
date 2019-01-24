@@ -23,6 +23,9 @@ interface AccessoryOption extends ObjectOptions {
  */
 export class Accessory extends ViewObject {
   static typeName = 'accessory';
+  get typeName() {
+    return Accessory.typeName;
+  }
 
   private wallID = -1;
   private imgHandle: string = ImageHandle[ImageHandle.DOOR];

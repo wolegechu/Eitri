@@ -15,7 +15,7 @@ const viewObjectMap = new Map<fabric.Object, ViewObject>();
 let idCount = 0;
 
 function GetNewID(): number {
-  idCount += 1;
+  while (idObjectMap.has(idCount)) idCount += 1;
   return idCount;
 }
 
@@ -169,51 +169,27 @@ export function ExportToJson(): string {
   const json: JsonItemData[] = [];
 
   for (const obj of idObjectMap.values()) {
-    const item = {id: obj.id, type: '', content: obj.ToJson()};
-    if (obj instanceof Accessory) {
-      item.type = Accessory.typeName;
-    } else if (obj instanceof Joint) {
-      item.type = Joint.typeName;
-    } else if (obj instanceof Room) {
-      item.type = Room.typeName;
-    } else if (obj instanceof Wall) {
-      item.type = Wall.typeName;
-    } else if (obj instanceof Background) {
-      continue;
-    } else {
-      console.assert(false, 'object don\'t have rule to json:');
-      console.log(obj);
-    }
-
-    json.push(item);
+    if (!obj.ToJson) continue;
+    json.push({id: obj.id, type: obj.typeName, content: obj.ToJson()});
   }
   return JSON.stringify(json);
 }
 
-export function ImportToJson(json: string) {
+export function ImportFromJson(json: string) {
+  const constructorMap =
+      new Map<string, {new (id: number, optin: ObjectOptions): ViewObject}>();
+  constructorMap.set(Accessory.typeName, Accessory);
+  constructorMap.set(Background.typeName, Background);
+  constructorMap.set(Joint.typeName, Joint);
+  constructorMap.set(Room.typeName, Room);
+  constructorMap.set(Wall.typeName, Wall);
+
   Clear();
+
   const data: JsonItemData[] = JSON.parse(json);
   for (const item of data) {
-    let obj;
-    switch (item.type) {
-      case Accessory.typeName:
-        obj = new Accessory(item.id, item.content);
-        break;
-      case Joint.typeName:
-        obj = new Joint(item.id, item.content);
-        break;
-      case Room.typeName:
-        obj = new Room(item.id, item.content);
-        break;
-      case Wall.typeName:
-        obj = new Wall(item.id, item.content);
-        break;
-      default:
-        console.assert(false, 'unkonw type:' + item.type);
-        console.log(item);
-        break;
-    }
-
+    const constructor = constructorMap.get(item.type);
+    const obj = new constructor(item.id, item.content);
     idObjectMap.set(obj.id, obj);
     viewObjectMap.set(obj.view, obj);
   }
