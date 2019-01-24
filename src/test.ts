@@ -13,87 +13,30 @@ const buttonDrawWall = document.getElementById('draw_wall');
 const buttonDrawRectangle = document.getElementById('draw_rectangle');
 const buttonDrawWindow = document.getElementById('draw_window');
 const buttonGenerateRoom = document.getElementById('generate_room');
+const buttonExport = document.getElementById('export');
 const imageLoader = document.getElementById('imgLoader');
+const jsonLoader = document.getElementById('jsonLoader');
 
 buttonDrawWall.onclick = FSS.DrawWall;
 buttonDrawRectangle.onclick = FSS.DrawRectangle;
 buttonDrawWindow.onclick = FSS.DrawWindow;
 buttonGenerateRoom.onclick = FSS.GenerateRoom;
+buttonExport.onclick = FSS.DownloadJson;
+
 imageLoader.onchange = (e) => {
   const file = (e.srcElement as HTMLInputElement).files[0];
   FSS.UploadBackground(file);
 };
 
+jsonLoader.onchange = (e) => {
+  const file = (e.srcElement as HTMLInputElement).files[0];
+  FSS.ImportJson(file);
+};
+
 const buttonTest = document.getElementById('test');
-buttonTest.onclick = (e) => {
+buttonTest.onclick = () => {
   // TestAccessory();
   // TestJoint();
   // TestRoom();
-  TestWall();
+  // TestWall();
 };
-
-/**
- * try to export and import Wall
- */
-function TestWall() {
-  const a = ViewFactory.GetViewObjectsWithType<Wall>(Wall)[0];
-  const json = a.ToJson();
-  a.RemoveSelf();
-  setTimeout(() => {
-    console.log('begin');
-    console.log(json);
-    const data = JSON.parse(json);
-    const b = new Wall(data.id, data);
-    b.UpdateView();
-  }, 1000);
-}
-
-
-/**
- * try to export and import Room
- */
-function TestRoom() {
-  const a = ViewFactory.GetViewObjectsWithType<Room>(Room)[0];
-  const json = a.ToJson();
-  a.RemoveSelf();
-  setTimeout(() => {
-    console.log('begin');
-    console.log(json);
-    const data = JSON.parse(json);
-    const b = new Room(data.id, data);
-    b.UpdateView();
-  }, 1000);
-}
-
-/**
- * try to export and import Joint
- */
-function TestJoint() {
-  const a = ViewFactory.GetViewObjectsWithType<Joint>(Joint)[0];
-  const json = a.ToJson();
-  a.RemoveSelf();
-  setTimeout(() => {
-    console.log('begin');
-    console.log(json);
-    const data = JSON.parse(json);
-    const b = new Joint(data.id, data);
-    ViewCanvas.GetInstance().Add(b);
-    b.UpdateView();
-  }, 1000);
-}
-
-/**
- * try to export and import accessory
- */
-function TestAccessory() {
-  const a = ViewFactory.GetViewObjectsWithType<Accessory>(Accessory)[0];
-  const json = a.ToJson();
-  a.RemoveSelf();
-  setTimeout(() => {
-    console.log('begin');
-    const data = JSON.parse(json);
-    const b = new Accessory(data.id, data);
-    ViewCanvas.GetInstance().Add(b);
-    b.UpdateView();
-  }, 1000);
-}

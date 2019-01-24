@@ -56,7 +56,30 @@ function UploadBackground(file: Blob) {
   reader.readAsDataURL(file);
 }
 
+function DownloadJson() {
+  const element = document.createElement('a');
+
+  const blob = new Blob([ViewFactory.ExportToJson()]);
+  element.download = 'a.json';
+
+  element.href = URL.createObjectURL(blob);
+
+  element.click();
+  element.remove();
+}
+
+function ImportJson(file: Blob) {
+  const reader = new FileReader();
+  reader.onload = event => {
+    ViewFactory.ImportToJson((event.target as FileReader).result as string);
+  };
+
+  reader.readAsText(file);
+}
+
 export {
+  ImportJson,
+  DownloadJson,
   UploadBackground,
   ChangeToSelectionMode,
   GenerateRoom,

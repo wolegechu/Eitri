@@ -1,14 +1,12 @@
-import {GRAB_JOINT_DISTANCE, GRAB_WALL_DISTANCE} from '../../CONFIG';
 import {ImageHandle} from '../../ImageManager';
 import {Point} from '../../utils/index';
 import {GetDistanceOfPoint2LineSegment, GetDistanceOfPoint2Point} from '../../utils/math';
 
 import {Accessory} from './accessory';
 import {Background} from './background';
-import {ViewCanvas} from './canvas';
 import {Joint} from './joint';
 import {Room} from './room';
-import {ViewObject} from './view_object';
+import {ObjectOptions, ViewObject} from './view_object';
 import {Wall} from './wall';
 
 
@@ -159,4 +157,79 @@ export function GetNearestWall(
   }
 
   return nearestWall;
+}
+
+type JsonItemData = {
+  id: number,
+  type: string,
+  content: ObjectOptions
+};
+
+export function ExportToJson(): string {
+  const json: JsonItemData[] = [];
+
+  for (const obj of idObjectMap.values()) {
+    const item = {id: obj.id, type: '', content: obj.ToJson()};
+    if (obj instanceof Accessory) {
+      item.type = Accessory.typeName;
+    } else if (obj instanceof Joint) {
+      item.type = Joint.typeName;
+    } else if (obj instanceof Room) {
+      item.type = Room.typeName;
+    } else if (obj instanceof Wall) {
+      item.type = Wall.typeName;
+    } else if (obj instanceof Background) {
+      continue;
+    } else {
+      console.assert(false, 'object don\'t have rule to json:');
+      console.log(obj);
+    }
+
+    json.push(item);
+  }
+  return JSON.stringify(json);
+}
+
+export function ImportToJson(json: string) {
+  Clear();
+  const data: JsonItemData[] = JSON.parse(json);
+  for (const item of data) {
+    let obj;
+    switch (item.type) {
+      case Accessory.typeName:
+        obj = new Accessory(item.id, item.content);
+        break;
+      case Joint.typeName:
+        obj = new Joint(item.id, item.content);
+        break;
+      case Room.typeName:
+        obj = new Room(item.id, item.content);
+        break;
+      case Wall.typeName:
+        obj = new Wall(item.id, item.content);
+        break;
+      default:
+        console.assert(false, 'unkonw type:' + item.type);
+        console.log(item);
+        break;
+    }
+
+    idObjectMap.set(obj.id, obj);
+    viewObjectMap.set(obj.view, obj);
+  }
+
+  for (const obj of idObjectMap.values()) {
+    obj.UpdateView();
+  }
+}
+
+/**
+ * Clear the canvas. Remove all ViewObjects
+ */
+function Clear(): void {
+  const deleteJobs = [];
+  for (const obj of idObjectMap.values()) {
+    deleteJobs.push(obj);
+  }
+  deleteJobs.forEach(obj => obj.RemoveSelf());
 }

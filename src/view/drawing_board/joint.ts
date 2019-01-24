@@ -16,6 +16,8 @@ interface JointOption extends ObjectOptions {
 
 
 export class Joint extends ViewObject {
+  static typeName = 'joint';
+
   private _wallIDs: number[] = [];
   private _position: Point = new Point(0, 0);
 
@@ -60,8 +62,8 @@ export class Joint extends ViewObject {
     throw new Error('Method not implemented.');
   }
 
-  ToJson(): string {
-    return JSON.stringify(Object.assign({}, this, {view: undefined}));
+  ToJson(): ObjectOptions {
+    return Object.assign({}, this, {view: undefined});
   }
 
   UpdateView(): void {

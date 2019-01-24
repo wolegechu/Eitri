@@ -23,6 +23,8 @@ interface WallOption extends ObjectOptions {
 
 
 export class Wall extends ViewObject {
+  static typeName = 'wall';
+
   private _jointIDs: number[] = [];
   private accessoryIDs: number[] = [];
   private width = 10;
@@ -75,8 +77,8 @@ export class Wall extends ViewObject {
     this.type = props.type.value;
   }
 
-  ToJson(): string {
-    return JSON.stringify(Object.assign({}, this, {view: undefined}));
+  ToJson(): ObjectOptions {
+    return Object.assign({}, this, {view: undefined});
   }
 
   UpdateView(): void {
@@ -124,7 +126,7 @@ export class Wall extends ViewObject {
     super.RemoveSelf();
     this.jointIDs.forEach(jointID => {
       const joint = ViewFactory.GetViewObject(jointID) as Joint;
-      joint.RemoveWallID(this.id);
+      if (joint) joint.RemoveWallID(this.id);
     });
   }
 

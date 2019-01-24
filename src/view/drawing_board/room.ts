@@ -25,6 +25,8 @@ interface RoomOption extends ObjectOptions {
  * Represent things depend on Wall. Such as Window, Door.
  */
 export class Room extends ViewObject {
+  static typeName = 'room';
+
   private firstJointID = -1;
   private wallIDs: number[] = [];
   private type: string = RoomType.Bedroom;
@@ -54,8 +56,8 @@ export class Room extends ViewObject {
     this.type = props.type.value;
   }
 
-  ToJson(): string {
-    return JSON.stringify(Object.assign({}, this, {view: undefined}));
+  ToJson(): ObjectOptions {
+    return Object.assign({}, this, {view: undefined});
   }
 
   UpdateView(): void {

@@ -22,6 +22,8 @@ interface AccessoryOption extends ObjectOptions {
  * Represent things depend on Wall. Such as Window, Door.
  */
 export class Accessory extends ViewObject {
+  static typeName = 'accessory';
+
   private wallID = -1;
   private imgHandle: string = ImageHandle[ImageHandle.DOOR];
   private length = 100;  // the length of the accessory
@@ -54,8 +56,8 @@ export class Accessory extends ViewObject {
     this.Set(option);
   }
 
-  ToJson(): string {
-    return JSON.stringify(Object.assign({}, this, {view: undefined}));
+  ToJson(): ObjectOptions {
+    return Object.assign({}, this, {view: undefined});
   }
 
   ExportProperties(): AccessoryExportedProperties {

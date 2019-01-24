@@ -8,6 +8,8 @@ import {ExportedProperties, ObjectOptions, ViewObject} from './view_object';
  * The background image.
  */
 export class Background extends ViewObject {
+  static typeName = 'background';
+
   constructor(id: number, htmlImage: HTMLImageElement) {
     super(id);
 
@@ -42,8 +44,8 @@ export class Background extends ViewObject {
     throw new Error('Method not implemented.');
   }
 
-  ToJson(): string {
-    throw new Error('Method not implemented.');
+  ToJson(): ObjectOptions {
+    return {};
   }
 
   UpdateView(): void {
