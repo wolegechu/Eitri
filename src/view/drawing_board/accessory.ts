@@ -54,8 +54,6 @@ export class Accessory extends ViewObject {
     this.view.hasControls = this.view.hasBorders = false;
     this.view.perPixelTargetFind = true;
 
-    ViewCanvas.GetInstance().Add(this);
-
     this.Set(option);
   }
 
@@ -127,7 +125,7 @@ export class Accessory extends ViewObject {
 
   protected Set(option: AccessoryOption) {
     if (option.wallID) {
-        this.wallID = option.wallID;
+      this.wallID = option.wallID;
     }
     if (option.length) this.length = option.length;
     if (option.position) {
@@ -137,7 +135,7 @@ export class Accessory extends ViewObject {
       this.positionPercent = option.positionPercent;
     }
     if (option.imgHandle) {
-        this.imgHandle = option.imgHandle;
+      this.imgHandle = option.imgHandle;
     }
 
     this.UpdateView();

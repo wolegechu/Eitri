@@ -35,7 +35,6 @@ export class Background extends ViewObject {
     });
 
     canvas.centerObject(this.view);
-    ViewCanvas.GetInstance().Add(this);
   }
 
   UpdateView(): void {
