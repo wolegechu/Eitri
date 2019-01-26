@@ -113,7 +113,9 @@ export class Accessory extends ViewObject {
   }
 
   protected Set(option: AccessoryOption) {
-    if (option.wallID) this.wallID = option.wallID;
+    if (option.wallID) {
+        this.wallID = option.wallID;
+    }
     if (option.length) this.length = option.length;
     if (option.position) {
       this.position = new Point(option.position.x, option.position.y);
