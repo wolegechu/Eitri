@@ -57,7 +57,6 @@ document.onkeyup = (e) => {
  * Get all canvas based  event
  */
 // - mouse click event
-
 export function RegistCanvasEvent() {
   const canvas = ViewCanvas.GetInstance();
   canvas.OnMouseDown((point) => {
@@ -106,6 +105,23 @@ export function RegistCanvasEvent() {
     const event = new FssEvent();
     event.type = type;
     event.target = obj;
+
+    // pass event to all observers
+    observers.forEach(observer => {
+      observer(event);
+    });
+  });
+
+  // - object select clear event
+  canvas.OnSelectClear(() => {
+    const type = EventType.OBJECT_SELECT_CLEAR;
+
+    const observers = GetObservers(type);
+    if (!observers) return;
+
+    // create the event
+    const event = new FssEvent();
+    event.type = type;
 
     // pass event to all observers
     observers.forEach(observer => {

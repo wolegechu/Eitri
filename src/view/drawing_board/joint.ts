@@ -7,7 +7,7 @@ import * as ViewFactory from './view_factory';
 import {ExportedProperties, JointExportedProperties, ObjectOptions, ViewObject} from './view_object';
 import {Wall} from './wall';
 
-const JOINT_RADIUS = 8.0;
+const JOINT_RADIUS = 10;
 
 interface JointOption extends ObjectOptions {
   _wallIDs?: number[];
@@ -37,8 +37,10 @@ export class Joint extends ViewObject {
     super(id);
 
     this.view = new fabric.Circle({
-      left: this.position.x - JOINT_RADIUS,
-      top: this.position.y - JOINT_RADIUS,
+      originX: 'center',
+      originY: 'center',
+      left: this.position.x,
+      top: this.position.y,
       strokeWidth: 5,
       radius: JOINT_RADIUS,
       fill: '#B0B0B0',
@@ -119,8 +121,7 @@ export class Joint extends ViewObject {
     if (e.target !== this.view) return;
     console.debug('On Joint Move');
     // Update the Position property based on this.view
-    this.SetPosition(
-        new Point(this.view.left + JOINT_RADIUS, this.view.top + JOINT_RADIUS));
+    this.SetPosition(new Point(this.view.left, this.view.top));
   }
 
   private UpdateWalls() {
@@ -132,8 +133,8 @@ export class Joint extends ViewObject {
 
   private UpdateViewByPosition() {
     this.view.set({
-      left: this.position.x - JOINT_RADIUS,
-      top: this.position.y - JOINT_RADIUS,
+      left: this.position.x,
+      top: this.position.y,
     });
   }
 }

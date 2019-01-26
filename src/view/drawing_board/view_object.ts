@@ -43,9 +43,14 @@ export abstract class ViewObject {
   id: number;
   view: fabric.Object;
 
+  // ------ used on selectable object ------
   // exposure properties. It's usually used by the UIView.
   ExportProperties?(): ExportedProperties;
   ImportProperties?(props: ExportedProperties): void;
+  OnSelect?(): void;
+  OnUnSelect?(): void;
+  // ---------------------------------------
+
   ToJson?(): ObjectOptions;
   protected abstract Set(option: ObjectOptions): void;
   abstract UpdateView(): void;

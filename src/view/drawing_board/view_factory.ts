@@ -12,7 +12,7 @@ import {Wall} from './wall';
 
 const idObjectMap = new Map<number, ViewObject>();
 const viewObjectMap = new Map<fabric.Object, ViewObject>();
-let idCount = 0;
+let idCount = 1;
 
 function GetNewID(): number {
   while (idObjectMap.has(idCount)) idCount += 1;
@@ -22,8 +22,7 @@ function GetNewID(): number {
 export function CreateJoint(pos: Point): Joint {
   const id = GetNewID();
   const joint = new Joint(id, {_position: pos});
-  idObjectMap.set(joint.id, joint);
-  viewObjectMap.set(joint.view, joint);
+  AddObject(joint);
   return joint;
 }
 
@@ -44,16 +43,14 @@ export function CreateWall(p1: Point|Joint, p2: Point|Joint): Wall {
   const id = GetNewID();
 
   const wall = new Wall(id, {_jointIDs: [joint1.id, joint2.id]});
-  idObjectMap.set(wall.id, wall);
-  viewObjectMap.set(wall.view, wall);
+  AddObject(wall);
   return wall;
 }
 
 export function CreateAccessory(img: ImageHandle): Accessory {
   const id = GetNewID();
   const accessory = new Accessory(id, {imgHandle: ImageHandle[img]});
-  idObjectMap.set(accessory.id, accessory);
-  viewObjectMap.set(accessory.view, accessory);
+  AddObject(accessory);
   return accessory;
 }
 
@@ -61,16 +58,14 @@ export function CreateRoom(edges: Wall[], firstVertex: Joint): Room {
   const id = GetNewID();
   const room = new Room(
       id, {firstJointID: firstVertex.id, wallIDs: edges.map(v => v.id)});
-  idObjectMap.set(room.id, room);
-  viewObjectMap.set(room.view, room);
+  AddObject(room);
   return room;
 }
 
 export function CreateBackground(htmlImage: HTMLImageElement) {
   const id = GetNewID();
   const back = new Background(id, htmlImage);
-  idObjectMap.set(back.id, back);
-  viewObjectMap.set(back.view, back);
+  AddObject(back);
   return back;
 }
 
@@ -101,6 +96,11 @@ export function GetViewObjectsWithType<T>(
 export function RemoveObject(obj: ViewObject) {
   idObjectMap.delete(obj.id);
   viewObjectMap.delete(obj.view);
+}
+
+export function AddObject(obj: ViewObject) {
+  idObjectMap.set(obj.id, obj);
+  viewObjectMap.set(obj.view, obj);
 }
 
 /**
@@ -190,8 +190,7 @@ export function ImportFromJson(json: string) {
   for (const item of data) {
     const constructor = constructorMap.get(item.type);
     const obj = new constructor(item.id, item.content);
-    idObjectMap.set(obj.id, obj);
-    viewObjectMap.set(obj.view, obj);
+    AddObject(obj);
   }
 
   for (const obj of idObjectMap.values()) {
