@@ -123,7 +123,9 @@ export class Accessory extends ViewObject {
     if (option.positionPercent) {
       this.positionPercent = option.positionPercent;
     }
-    if (option.imgHandle) this.imgHandle = option.imgHandle;
+    if (option.imgHandle) {
+        this.imgHandle = option.imgHandle;
+    }
 
     this.UpdateView();
   }
