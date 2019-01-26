@@ -10,8 +10,7 @@ export interface ViewProperty {
   type: string;
 }
 
-export interface OptionProperty extends ViewProperty{
-  // tslint:disable-next-line:no-any
+export interface OptionProperty extends ViewProperty {
   options: string[];
 }
 
@@ -36,19 +35,19 @@ export class RoomExportedProperties extends ExportedProperties {
   type: OptionProperty;
 }
 
-export interface ObjectOptions {
-
-}
+export interface ObjectOptions {}
 
 export abstract class ViewObject {
+  abstract get typeName(): string;
+
   id: number;
   view: fabric.Object;
 
   // exposure properties. It's usually used by the UIView.
-  abstract ExportProperties(): ExportedProperties;
-  abstract ImportProperties(props: ExportedProperties): void;
-  abstract ToJson(): string;
-  abstract Set(option: ObjectOptions): void;
+  ExportProperties?(): ExportedProperties;
+  ImportProperties?(props: ExportedProperties): void;
+  ToJson?(): ObjectOptions;
+  protected abstract Set(option: ObjectOptions): void;
   abstract UpdateView(): void;
 
   constructor(id: number) {
@@ -56,7 +55,7 @@ export abstract class ViewObject {
   }
 
   RemoveSelf() {
-    ViewCanvas.GetInstance().Remove(this.view);
+    ViewCanvas.GetInstance().Remove(this);
     ViewFactory.RemoveObject(this);
   }
 }

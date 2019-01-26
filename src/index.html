@@ -24,7 +24,9 @@
                   <button type="button" class="btn btn-secondary" id='draw_rectangle'>画房间</button>
                   <button type="button" class="btn btn-secondary" id='draw_window'>画窗</button>
                   <button type="button" class="btn btn-secondary" id='generate_room'>生成房间</button>
+                  <button type="button" class="btn btn-secondary" id='export'>导出</button>
                   <button type="button" class="btn btn-secondary" id='test'>测试</button>
+                  
                 </div>
           </div>
           <div class="col">
@@ -32,10 +34,18 @@
                   <div class="input-group">
                       <div class="custom-file">
                         <input type="file" class="custom-file-input" id="imgLoader" aria-describedby="inputGroupFileAddon01">
-                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                        <label class="custom-file-label" for="inputGroupFile01">Choose Image</label>
                       </div>
                   </div>
-                </form>
+              </form>
+              <form id="uploadJson" runat="server">
+                <div class="input-group">
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="jsonLoader" aria-describedby="inputGroupFileAddon01">
+                    <label class="custom-file-label" for="inputGroupFile01">Choose Json</label>
+                  </div>
+                </div>
+              </form>
           </div>
         </div>
       </div>

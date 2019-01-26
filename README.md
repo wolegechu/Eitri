@@ -1,7 +1,6 @@
 
 Todo:
 
-- 导出、导入 json
 - 属性显示
 - 选中时变色
 - 拖动摆放家具
@@ -9,6 +8,9 @@ Todo:
 - 底座设计界面
 - 比例尺
 - 资源加载
+- 清除背景图按钮    
+- 移动顶点时刷新房间？（简单方法：一次刷新所有房间）
+
 
 BUGs:
 
@@ -21,7 +23,7 @@ optimization:
 - exportedProperties 类换到对应元素目录
 - point、vector 改用flatenjs
 - flatten import problem  (`export default Flatten;`)
-
+- 定义、申明分离
 
 Future: 
 

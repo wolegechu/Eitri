@@ -1,14 +1,12 @@
-import {GRAB_JOINT_DISTANCE, GRAB_WALL_DISTANCE} from '../../CONFIG';
 import {ImageHandle} from '../../ImageManager';
 import {Point} from '../../utils/index';
 import {GetDistanceOfPoint2LineSegment, GetDistanceOfPoint2Point} from '../../utils/math';
 
 import {Accessory} from './accessory';
 import {Background} from './background';
-import {ViewCanvas} from './canvas';
 import {Joint} from './joint';
 import {Room} from './room';
-import {ViewObject} from './view_object';
+import {ObjectOptions, ViewObject} from './view_object';
 import {Wall} from './wall';
 
 
@@ -17,25 +15,37 @@ const viewObjectMap = new Map<fabric.Object, ViewObject>();
 let idCount = 0;
 
 function GetNewID(): number {
-  idCount += 1;
+  while (idObjectMap.has(idCount)) idCount += 1;
   return idCount;
 }
 
 export function CreateJoint(pos: Point): Joint {
   const id = GetNewID();
-  const joint = new Joint(id, pos);
+  const joint = new Joint(id, {_position: pos});
   idObjectMap.set(joint.id, joint);
   viewObjectMap.set(joint.view, joint);
-  ViewCanvas.GetInstance().Add(joint);
   return joint;
 }
 
 export function CreateWall(p1: Point|Joint, p2: Point|Joint): Wall {
+  let joint1, joint2;
+  if (p1 instanceof Point) {
+    joint1 = CreateJoint(p1);
+  } else {
+    joint1 = p1;
+  }
+
+  if (p2 instanceof Point) {
+    joint2 = CreateJoint(p2);
+  } else {
+    joint2 = p2;
+  }
+
   const id = GetNewID();
-  const wall = new Wall(id, p1, p2);
+
+  const wall = new Wall(id, {_jointIDs: [joint1.id, joint2.id]});
   idObjectMap.set(wall.id, wall);
   viewObjectMap.set(wall.view, wall);
-  ViewCanvas.GetInstance().Add(wall);
   return wall;
 }
 
@@ -44,16 +54,15 @@ export function CreateAccessory(img: ImageHandle): Accessory {
   const accessory = new Accessory(id, {imgHandle: ImageHandle[img]});
   idObjectMap.set(accessory.id, accessory);
   viewObjectMap.set(accessory.view, accessory);
-  ViewCanvas.GetInstance().Add(accessory);
   return accessory;
 }
 
-export function CreateRoom(edges: Wall[], vertex: Joint): Room {
+export function CreateRoom(edges: Wall[], firstVertex: Joint): Room {
   const id = GetNewID();
-  const room = new Room(id, edges, vertex);
+  const room = new Room(
+      id, {firstJointID: firstVertex.id, wallIDs: edges.map(v => v.id)});
   idObjectMap.set(room.id, room);
   viewObjectMap.set(room.view, room);
-  ViewCanvas.GetInstance().Add(room);
   return room;
 }
 
@@ -62,7 +71,6 @@ export function CreateBackground(htmlImage: HTMLImageElement) {
   const back = new Background(id, htmlImage);
   idObjectMap.set(back.id, back);
   viewObjectMap.set(back.view, back);
-  ViewCanvas.GetInstance().Add(back);
   return back;
 }
 
@@ -149,4 +157,55 @@ export function GetNearestWall(
   }
 
   return nearestWall;
+}
+
+type JsonItemData = {
+  id: number,
+  type: string,
+  content: ObjectOptions
+};
+
+export function ExportToJson(): string {
+  const json: JsonItemData[] = [];
+
+  for (const obj of idObjectMap.values()) {
+    if (!obj.ToJson) continue;
+    json.push({id: obj.id, type: obj.typeName, content: obj.ToJson()});
+  }
+  return JSON.stringify(json);
+}
+
+export function ImportFromJson(json: string) {
+  const constructorMap =
+      new Map<string, {new (id: number, optin: ObjectOptions): ViewObject}>();
+  constructorMap.set(Accessory.typeName, Accessory);
+  constructorMap.set(Background.typeName, Background);
+  constructorMap.set(Joint.typeName, Joint);
+  constructorMap.set(Room.typeName, Room);
+  constructorMap.set(Wall.typeName, Wall);
+
+  Clear();
+
+  const data: JsonItemData[] = JSON.parse(json);
+  for (const item of data) {
+    const constructor = constructorMap.get(item.type);
+    const obj = new constructor(item.id, item.content);
+    idObjectMap.set(obj.id, obj);
+    viewObjectMap.set(obj.view, obj);
+  }
+
+  for (const obj of idObjectMap.values()) {
+    obj.UpdateView();
+  }
+}
+
+/**
+ * Clear the canvas. Remove all ViewObjects
+ */
+function Clear(): void {
+  const deleteJobs = [];
+  for (const obj of idObjectMap.values()) {
+    deleteJobs.push(obj);
+  }
+  deleteJobs.forEach(obj => obj.RemoveSelf());
 }
