@@ -8,6 +8,8 @@ import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
 import {ObjectOptions, PROPERTY_TYPE_NUMBER, PROPERTY_TYPE_OPTION, ViewObject, WallExportedProperties} from './view_object';
 
+const UNSELECTED_COLOR = '#808080';
+
 export enum WallType {
   NORMAL = '普通墙',
   MAIN = '承重墙'
@@ -51,8 +53,10 @@ export class Wall extends ViewObject {
     super(id);
 
     this.view = new fabric.Line([0, 0, 0, 0], {
-      strokeWidth: 9,
-      stroke: '#808080',
+      originX: 'center',
+      originY: 'center',
+      strokeWidth: 19,
+      stroke: UNSELECTED_COLOR,
       selectable: false,
       lockMovementX: true,
       lockMovementY: true,
@@ -82,6 +86,16 @@ export class Wall extends ViewObject {
 
   ToJson(): ObjectOptions {
     return Object.assign({}, this, {view: undefined});
+  }
+
+  OnSelect(): void {
+    this.view.set({stroke: '#A0A0A0'});
+  }
+
+  OnUnSelect(): void {
+    this.view.set({
+      stroke: UNSELECTED_COLOR,
+    });
   }
 
   UpdateView(): void {

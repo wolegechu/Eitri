@@ -32,9 +32,12 @@ export enum EventType {
   MOUSE_TOTAL = 2000,
   // END
 
+  // START
   OBJECT_START = 3001,
   OBJECT_SELECT,
+  OBJECT_SELECT_CLEAR,
   OBJECT_TOTAL = 4000,
+  // END
 }
 
 /*******
