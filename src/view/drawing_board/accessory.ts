@@ -72,6 +72,19 @@ export class Accessory extends ViewObject {
     throw new Error('Method not implemented.');
   }
 
+  OnSelect(): void {
+    console.log(this.view.filters);
+    this.view.filters.push(
+        new fabric.Image.filters.Sepia(),
+    );
+    this.view.applyFilters(null);
+  }
+
+  OnUnSelect(): void {
+    this.view.filters = [];
+    this.view.applyFilters(null);
+  }
+
   UpdateView() {
     this.UpdateViewByPosition();
     this.UpdateViewByWall();

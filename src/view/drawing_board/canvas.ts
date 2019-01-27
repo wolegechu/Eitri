@@ -74,6 +74,14 @@ export class ViewCanvas {
     });
   }
 
+  OnSelectClear(callback: () => void): void {
+    const canvas = this.canvas;
+    canvas.on('selection:cleared', (event) => {
+      console.debug('fabric: selection:cleared');
+      callback();
+    });
+  }
+
   Add(obj: ViewObject): void {
     this.canvas.add(obj.view);
     this.SortViewObjects();

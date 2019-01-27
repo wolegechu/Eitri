@@ -10,21 +10,23 @@ export class SelectionMachine extends StateMachine {
   selectedObject: ViewObject;
   protected transisionTable: [];
 
-  private funcOnObjectSelect =
-      (e: EventSystem.FssEvent) => {
-        this.OnObjectSelect(e);
-      }
-
-  private funcOnPressDelete =
-      (e: EventSystem.FssEvent) => {
-        this.OnPressDelete(e);
-      }
+  private funcOnObjectSelect = (e: EventSystem.FssEvent) => {
+    this.OnObjectSelect(e);
+  };
+  private funcOnSelectClear = (e: EventSystem.FssEvent) => {
+    this.OnSelectClear(e);
+  };
+  private funcOnPressDelete = (e: EventSystem.FssEvent) => {
+    this.OnPressDelete(e);
+  };
 
   constructor() {
     super();
     console.debug('Enter Seletion Mode ');
     const canvas = ViewCanvas.GetInstance();
     canvas.SetAllSelectable(true);
+    EventSystem.AddEventListener(
+        EventSystem.EventType.OBJECT_SELECT_CLEAR, this.funcOnSelectClear);
     EventSystem.AddEventListener(
         EventSystem.EventType.OBJECT_SELECT, this.funcOnObjectSelect);
     EventSystem.AddEventListener(
@@ -34,20 +36,38 @@ export class SelectionMachine extends StateMachine {
   Exit(): void {
     const canvas = ViewCanvas.GetInstance();
     canvas.SetAllSelectable(false);
+
+    if (this.selectedObject && this.selectedObject.OnUnSelect) {
+      this.selectedObject.OnUnSelect();
+    }
+
     EventSystem.RemoveEventListener(
         EventSystem.EventType.OBJECT_SELECT, this.funcOnObjectSelect);
     EventSystem.RemoveEventListener(
         EventSystem.EventType.KEY_PRESS_BACKSPACE, this.funcOnPressDelete);
+    EventSystem.RemoveEventListener(
+        EventSystem.EventType.OBJECT_SELECT_CLEAR, this.funcOnSelectClear);
   }
 
   private OnObjectSelect(event: EventSystem.FssEvent): void {
     const target = event.target;
     console.debug(target);
 
-    // filter
     if (!target.ExportProperties) return;
+    if (this.selectedObject && this.selectedObject.OnUnSelect) {
+      this.selectedObject.OnUnSelect();
+    }
+    if (target.OnSelect) target.OnSelect();
     this.selectedObject = target;
     UIIndex(target);
+  }
+
+  private OnSelectClear(event: EventSystem.FssEvent): void {
+    console.debug('select clear');
+
+    if (this.selectedObject && this.selectedObject.OnUnSelect) {
+      this.selectedObject.OnUnSelect();
+    }
   }
 
   private OnPressDelete(event: EventSystem.FssEvent): void {
