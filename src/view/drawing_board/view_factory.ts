@@ -4,6 +4,7 @@ import {GetDistanceOfPoint2LineSegment, GetDistanceOfPoint2Point} from '../../ut
 
 import {Accessory} from './accessory';
 import {Background} from './background';
+import {ViewCanvas} from './canvas';
 import {Joint} from './joint';
 import {Room} from './room';
 import {ObjectOptions, ViewObject} from './view_object';
@@ -94,13 +95,17 @@ export function GetViewObjectsWithType<T>(
 }
 
 export function RemoveObject(obj: ViewObject) {
+  if (!idObjectMap.has(obj.id)) return;
   idObjectMap.delete(obj.id);
   viewObjectMap.delete(obj.view);
+  ViewCanvas.GetInstance().Remove(obj);
 }
 
 export function AddObject(obj: ViewObject) {
+  if (idObjectMap.has(obj.id)) return;
   idObjectMap.set(obj.id, obj);
   viewObjectMap.set(obj.view, obj);
+  ViewCanvas.GetInstance().Add(obj);
 }
 
 /**

@@ -117,10 +117,9 @@ export class Room extends ViewObject {
   }
 
   private NewFabricPath(path: string) {
-    if (this.view) {
-      ViewCanvas.GetInstance().Remove(this);
-      ViewFactory.RemoveObject(this);
-    }
+    // when change 'view', factory should be reseted.
+    ViewFactory.RemoveObject(this);
+
     this.view = new fabric.Path(path, {
       fill: UNSELECTED_COLOR,
       opacity: 0.4,
@@ -130,7 +129,6 @@ export class Room extends ViewObject {
     this.view.hasControls = this.view.hasBorders = false;
     this.view.perPixelTargetFind = true;
 
-    ViewCanvas.GetInstance().Add(this);
     ViewFactory.AddObject(this);
   }
 }
