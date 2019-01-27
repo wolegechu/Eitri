@@ -198,7 +198,16 @@ export function ImportFromJson(json: string) {
     AddObject(obj);
   }
 
+  // It's realy dangerous to iterate a Map.values() directly.
+  // Because of the modification of the Map may occur in for loop,
+  // which could result in endless loop !!!
+  // So we do like this:
+  const contents = [];
   for (const obj of idObjectMap.values()) {
+    contents.push(obj);
+  }
+
+  for (const obj of contents) {
     obj.UpdateView();
   }
 }

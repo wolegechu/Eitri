@@ -10,7 +10,7 @@ import {Wall} from './wall';
 const JOINT_RADIUS = 10;
 
 interface JointOption extends ObjectOptions {
-  _wallIds?: number[];
+  _wallIDs?: number[];
   _position?: {x: number, y: number};
 }
 
@@ -109,8 +109,8 @@ export class Joint extends ViewObject {
       const p = option._position;
       this._position = new Point(p.x, p.y);
     }
-    if (option._wallIds) {
-      this._wallIDs = option._wallIds;
+    if (option._wallIDs) {
+      this._wallIDs = option._wallIDs;
     }
 
     this.UpdateView();
