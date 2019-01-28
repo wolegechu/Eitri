@@ -45,6 +45,8 @@ export class DrawRectangleMachine extends StateMachine {
         EventSystem.EventType.MOUSE_MOVE_CANVAS, this.funcOnMouseMove);
     EventSystem.RemoveEventListener(
         EventSystem.EventType.MOUSE_CLICK_CANVAS, this.funcOnMouseDown);
+
+    ViewFactory.Resolve();
   }
 
   private OnMouseMove(e: EventSystem.FssEvent) {

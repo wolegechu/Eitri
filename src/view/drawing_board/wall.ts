@@ -115,6 +115,16 @@ export class Wall extends ViewObject {
     this.RemoveSelf();
   }
 
+  Merge(other: Wall) {
+    // make a copy, prevent from resouece competition.
+    const accessoryIds = other.accessoryIDs.map(e => e);
+    accessoryIds.forEach(id => {
+      const obj = ViewFactory.GetViewObject(id) as Accessory;
+      obj.SetWallID(this.id);
+    });
+    other.RemoveSelf();
+  }
+
   OnJointMove(): void {
     this.accessoryIDs.forEach(id => {
       const obj = ViewFactory.GetViewObject(id) as Accessory;
@@ -122,20 +132,6 @@ export class Wall extends ViewObject {
     });
 
     this.UpdateView();
-  }
-
-  private UpdateViewByJoint() {
-    if (2 !== this.jointIDs.length) return;
-    const joint1 = ViewFactory.GetViewObject(this.jointIDs[0]) as Joint;
-    const joint2 = ViewFactory.GetViewObject(this.jointIDs[1]) as Joint;
-    if (!joint1 || !joint2) return;
-
-    this.view.set({
-      'x1': joint1.position.x,
-      'y1': joint1.position.y,
-      'x2': joint2.position.x,
-      'y2': joint2.position.y,
-    });
   }
 
   RemoveSelf() {
@@ -171,5 +167,19 @@ export class Wall extends ViewObject {
     if (option.width) this.width = option.width;
 
     this.UpdateView();
+  }
+
+  private UpdateViewByJoint() {
+    if (2 !== this.jointIDs.length) return;
+    const joint1 = ViewFactory.GetViewObject(this.jointIDs[0]) as Joint;
+    const joint2 = ViewFactory.GetViewObject(this.jointIDs[1]) as Joint;
+    if (!joint1 || !joint2) return;
+
+    this.view.set({
+      'x1': joint1.position.x,
+      'y1': joint1.position.y,
+      'x2': joint2.position.x,
+      'y2': joint2.position.y,
+    });
   }
 }
