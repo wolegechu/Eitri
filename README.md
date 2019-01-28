@@ -1,7 +1,6 @@
 
 Todo:
 
-- 画房间优化(grab joint，grab wall)
 - 画墙壁(shift时，grab wall应仍然保持90)
 - 属性显示
 - 拖动摆放家具
@@ -15,7 +14,6 @@ Todo:
 BUGs:
 
 - 自环 同一个点连点两次出问题
-- 重边 三个点时就会出问题
 
 
 optimization:
