@@ -1,6 +1,8 @@
 
 Todo:
 
+- 画房间优化(grab joint，grab wall)
+- 画墙壁(shift时，grab wall应仍然保持90)
 - 属性显示
 - 拖动摆放家具
 - 自适应布局

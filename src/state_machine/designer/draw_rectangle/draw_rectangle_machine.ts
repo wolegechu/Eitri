@@ -1,9 +1,10 @@
-import {GRAB_JOINT_DISTANCE} from '../../../CONFIG';
+import {GRAB_JOINT_DISTANCE, GRAB_WALL_DISTANCE} from '../../../CONFIG';
 import * as EventSystem from '../../../events/index';
 import {ChangeToSelectionMode} from '../../../index';
-import {GetDistanceOfPoint2Point, Point} from '../../../utils';
+import {GetClosestPointOnSegment2Point, GetDistanceOfPoint2Point, Point} from '../../../utils';
 import {Joint} from '../../../view/drawing_board/joint';
 import * as ViewFactory from '../../../view/drawing_board/view_factory';
+import {Wall} from '../../../view/drawing_board/wall';
 import {StateMachine} from '../../state_machine';
 
 
@@ -13,6 +14,13 @@ export class DrawRectangleMachine extends StateMachine {
   private upRightJoint: Joint;
   private downLeftJoint: Joint;
   private downRightJoint: Joint;
+  private allJoints: Joint[] = [];
+
+  private upWall: Wall;
+  private downWall: Wall;
+  private leftWall: Wall;
+  private rightWall: Wall;
+  private allWalls: Wall[] = [];
 
   protected transisionTable: [];
 
@@ -41,17 +49,16 @@ export class DrawRectangleMachine extends StateMachine {
 
   private OnMouseMove(e: EventSystem.FssEvent) {
     if (this.isIdle) return;
-    let pos = e.position;
+    const pos = e.position;
 
-    // the Joint grab mouse
-    const grabJoint = ViewFactory.GetNearestJoint(
-        pos, [this.downRightJoint], GRAB_JOINT_DISTANCE);
-    if (grabJoint) pos = grabJoint.position;
+    const posUpLeft = this.upLeftJoint.position;
+    const posDownRight = this.CalcGrabPosition(pos);
+    const posDownLeft = this.CalcGrabPosition(new Point(posUpLeft.x, pos.y));
+    const posUpRight = this.CalcGrabPosition(new Point(pos.x, posUpLeft.y));
 
-    const upLeftPos = this.upLeftJoint.position;
-    this.downRightJoint.SetPosition(pos);
-    this.downLeftJoint.SetPosition(new Point(upLeftPos.x, pos.y));
-    this.upRightJoint.SetPosition(new Point(pos.x, upLeftPos.y));
+    this.downRightJoint.SetPosition(posDownRight);
+    this.downLeftJoint.SetPosition(posDownLeft);
+    this.upRightJoint.SetPosition(posUpRight);
   }
 
   private OnMouseDown(e: EventSystem.FssEvent) {
@@ -60,11 +67,21 @@ export class DrawRectangleMachine extends StateMachine {
     if (this.isIdle) {
       this.isIdle = false;
 
-      // the Joint grab mouse
+      // joint & wall try to grab mouse
       const grabJoint =
           ViewFactory.GetNearestJoint(pos, [], GRAB_JOINT_DISTANCE);
+      const grabWall = ViewFactory.GetNearestWall(pos, [], GRAB_WALL_DISTANCE);
       if (grabJoint) {
         this.upLeftJoint = grabJoint;
+      } else if (grabWall) {
+        const joint1 = ViewFactory.GetViewObject(grabWall.jointIDs[0]) as Joint;
+        const joint2 = ViewFactory.GetViewObject(grabWall.jointIDs[1]) as Joint;
+
+        const newPos = GetClosestPointOnSegment2Point(
+            pos, {a: joint1.position, b: joint2.position});
+
+        this.upLeftJoint = ViewFactory.CreateJoint(newPos);
+        grabWall.Split(this.upLeftJoint);
       } else {
         this.upLeftJoint = ViewFactory.CreateJoint(pos);
       }
@@ -72,22 +89,68 @@ export class DrawRectangleMachine extends StateMachine {
       this.upRightJoint = ViewFactory.CreateJoint(pos);
       this.downLeftJoint = ViewFactory.CreateJoint(pos);
       this.downRightJoint = ViewFactory.CreateJoint(pos);
+      this.allJoints = [
+        this.upRightJoint, this.upLeftJoint, this.downLeftJoint,
+        this.downRightJoint
+      ];
 
-      const upWall =
-          ViewFactory.CreateWall(this.upLeftJoint, this.upRightJoint);
-      const downWall =
+      this.upWall = ViewFactory.CreateWall(this.upLeftJoint, this.upRightJoint);
+      this.downWall =
           ViewFactory.CreateWall(this.downLeftJoint, this.downRightJoint);
-      const leftWall =
+      this.leftWall =
           ViewFactory.CreateWall(this.upLeftJoint, this.downLeftJoint);
-      const rightWall =
+      this.rightWall =
           ViewFactory.CreateWall(this.upRightJoint, this.downRightJoint);
-
+      this.allWalls =
+          [this.upWall, this.downWall, this.leftWall, this.rightWall];
     } else {
-      // the Joint grab mouse
-      const grabJoint = ViewFactory.GetNearestJoint(
-          pos, [this.downRightJoint], GRAB_JOINT_DISTANCE);
-      if (grabJoint) this.downRightJoint.Merge(grabJoint);
+      this.TryGrab(this.upRightJoint);
+      this.TryGrab(this.downLeftJoint);
+      this.TryGrab(this.downRightJoint);
       ChangeToSelectionMode();
+    }
+  }
+
+  /**
+   * walls & joints try to grab the 'pos'
+   * return the position after grab.
+   */
+  private CalcGrabPosition(pos: Point): Point {
+    const grabJoint =
+        ViewFactory.GetNearestJoint(pos, this.allJoints, GRAB_JOINT_DISTANCE);
+    const grabWall =
+        ViewFactory.GetNearestWall(pos, this.allWalls, GRAB_WALL_DISTANCE);
+    if (grabJoint) {
+      pos = grabJoint.position;
+    } else if (grabWall) {
+      const joint1 = ViewFactory.GetViewObject(grabWall.jointIDs[0]) as Joint;
+      const joint2 = ViewFactory.GetViewObject(grabWall.jointIDs[1]) as Joint;
+
+      pos = GetClosestPointOnSegment2Point(
+          pos, {a: joint1.position, b: joint2.position});
+    }
+    return pos;
+  }
+
+  /**
+   * walls & joints try to grab the joint.
+   */
+  private TryGrab(joint: Joint): void {
+    const pos = joint.position;
+    const grabJoint =
+        ViewFactory.GetNearestJoint(pos, this.allJoints, GRAB_JOINT_DISTANCE);
+    const grabWall =
+        ViewFactory.GetNearestWall(pos, this.allWalls, GRAB_WALL_DISTANCE);
+    if (grabJoint) {
+      joint.Merge(grabJoint);
+    } else if (grabWall) {
+      const joint1 = ViewFactory.GetViewObject(grabWall.jointIDs[0]) as Joint;
+      const joint2 = ViewFactory.GetViewObject(grabWall.jointIDs[1]) as Joint;
+
+      const newPos = GetClosestPointOnSegment2Point(
+          pos, {a: joint1.position, b: joint2.position});
+      joint.SetPosition(newPos);
+      grabWall.Split(joint);
     }
   }
 }
