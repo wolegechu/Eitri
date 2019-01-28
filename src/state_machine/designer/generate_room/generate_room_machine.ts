@@ -1,7 +1,6 @@
 import Flatten from 'flatten-js';
 
 import {ChangeToSelectionMode} from '../../..';
-import {PolygonIsClockWise} from '../../../utils/math';
 import {Joint} from '../../../view/drawing_board/joint';
 import {Room} from '../../../view/drawing_board/room';
 import * as ViewFactory from '../../../view/drawing_board/view_factory';

@@ -164,6 +164,90 @@ export function GetNearestWall(
   return nearestWall;
 }
 
+function IsDuplicateWall(a: Wall, b: Wall): boolean {
+  const idsA = a.jointIDs;
+  const idsB = b.jointIDs;
+  if (idsA[0] === idsB[0] && idsA[1] === idsB[1]) {
+    return true;
+  }
+  if (idsA[0] === idsB[1] && idsA[1] === idsB[0]) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * return remove success or not.
+ */
+function TryRemoveDuplicateWall(): boolean {
+  const walls = GetViewObjectsWithType<Wall>(Wall);
+  for (let i = 0; i < walls.length; ++i) {
+    const wallA = walls[i];
+    for (let j = i + 1; j < walls.length; ++j) {
+      const wallB = walls[j];
+      if (IsDuplicateWall(wallA, wallB)) {
+        wallA.Merge(wallB);
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function RemoveDuplicateWall() {
+  while (TryRemoveDuplicateWall()) {
+    // blank
+  }
+}
+
+function IsJointOnWall(wall: Wall, joint: Joint) {
+  const jointA = GetViewObject(wall.jointIDs[0]) as Joint;
+  const jointB = GetViewObject(wall.jointIDs[1]) as Joint;
+  const distance = GetDistanceOfPoint2LineSegment(
+      joint.position, {p1: jointA.position, p2: jointB.position});
+  return distance < 0.1;
+}
+
+/**
+ * return split success or not.
+ */
+function TrySplitWall(): boolean {
+  const walls = GetViewObjectsWithType<Wall>(Wall);
+  for (let i = 0; i < walls.length; ++i) {
+    const wall = walls[i];
+    const joints = GetViewObjectsWithType<Joint>(Joint);
+    for (let j = 0; j < joints.length; ++j) {
+      const joint = joints[j];
+      if (wall.jointIDs[0] === joint.id || wall.jointIDs[1] === joint.id) {
+        continue;
+      }
+
+      if (IsJointOnWall(wall, joint)) {
+        wall.Split(joint);
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function SplitPointOnWall() {
+  while (TrySplitWall()) {
+    // blank
+  }
+}
+
+/**
+ * Sometimes, in geometry, a joint is on a wall.
+ * But in code logic, the joint is nothing to do with the wall.
+ * It's caused by the drawing behaviour of users.
+ * Problems like this are so many, which resolved here.
+ */
+export function Resolve() {
+  SplitPointOnWall();
+  RemoveDuplicateWall();
+}
+
 type JsonItemData = {
   id: number,
   type: string,

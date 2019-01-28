@@ -61,6 +61,8 @@ export class WallDrawingMachine extends StateMachine {
     // remove the last Wall
     const wall = ViewFactory.GetViewObject(this.lastWallID) as Wall;
     if (wall) wall.RemoveSelf();
+
+    ViewFactory.Resolve();
   }
 
   /**
