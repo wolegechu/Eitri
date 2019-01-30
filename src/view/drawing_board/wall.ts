@@ -163,7 +163,7 @@ export class Wall extends ViewObject {
     if (option.accessoryIDs !== undefined) {
       this.accessoryIDs = option.accessoryIDs;
     }
-    if (option.type !== undefined) { 
+    if (option.type !== undefined) {
       this.type = option.type;
     }
     if (option.width !== undefined) {

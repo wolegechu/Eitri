@@ -1,13 +1,14 @@
+import * as XLSX from 'xlsx';
+
+import {ImageHandle} from './ImageManager';
 import * as FSS from './index';
 import {Accessory} from './view/drawing_board/accessory';
 import {ViewCanvas} from './view/drawing_board/canvas';
+import {Group} from './view/drawing_board/group';
 import {Joint} from './view/drawing_board/joint';
 import {Room} from './view/drawing_board/room';
 import * as ViewFactory from './view/drawing_board/view_factory';
 import {Wall} from './view/drawing_board/wall';
-import * as XLSX from 'xlsx';
-import { Group } from './view/drawing_board/group';
-import { ImageHandle } from './ImageManager';
 
 
 console.log('test solution');
@@ -40,7 +41,7 @@ jsonLoader.onchange = (e) => {
 const buttonTest = document.getElementById('test');
 buttonTest.onclick = () => {
   const group = new Group(1001, {
-    position: { x: 100, y: 100 },
+    position: {x: 100, y: 100},
     rotation: 90,
     aWidth: 100,
     bHeight: 100,
@@ -48,19 +49,19 @@ buttonTest.onclick = () => {
     furnitures: [
       {
         imgHandle: ImageHandle[ImageHandle.BED],
-        x: "0",
-        y: "0",
-        w: "50",
-        h: "50",
+        x: '0',
+        y: '0',
+        w: '50',
+        h: '50',
         r: 0,
         p: false
       },
       {
         imgHandle: ImageHandle[ImageHandle.DOOR],
-        x: "50",
-        y: "50",
-        w: "50",
-        h: "50",
+        x: '50',
+        y: '50',
+        w: '50',
+        h: '50',
         r: 0,
         p: false
       }
@@ -73,4 +74,3 @@ buttonTest.onclick = () => {
   // const workbook = XLSX.read(file, { type: "base64" });
   // console.log(workbook);
 };
-
