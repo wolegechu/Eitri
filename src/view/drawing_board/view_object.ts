@@ -31,6 +31,10 @@ export class AccessoryExportedProperties extends ExportedProperties {
   wallID: number;
 }
 
+export class FurnitureExportedProperties extends ExportedProperties {
+  
+}
+
 export class RoomExportedProperties extends ExportedProperties {
   type: OptionProperty;
 }

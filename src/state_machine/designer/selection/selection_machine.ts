@@ -1,8 +1,6 @@
 import * as EventSystem from '../../../events/index';
 import {UIIndex} from '../../../view/components/index';
-import {Accessory} from '../../../view/drawing_board/accessory';
 import {ViewCanvas} from '../../../view/drawing_board/canvas';
-import {Joint} from '../../../view/drawing_board/joint';
 import {ViewObject} from '../../../view/drawing_board/view_object';
 import {StateMachine} from '../../state_machine';
 
@@ -14,10 +12,10 @@ export class SelectionMachine extends StateMachine {
     this.OnObjectSelect(e);
   };
   private funcOnSelectClear = (e: EventSystem.FssEvent) => {
-    this.OnSelectClear(e);
+    this.OnSelectClear();
   };
   private funcOnPressDelete = (e: EventSystem.FssEvent) => {
-    this.OnPressDelete(e);
+    this.OnPressDelete();
   };
 
   constructor() {
@@ -62,7 +60,7 @@ export class SelectionMachine extends StateMachine {
     UIIndex(target);
   }
 
-  private OnSelectClear(event: EventSystem.FssEvent): void {
+  private OnSelectClear(): void {
     console.debug('select clear');
 
     if (this.selectedObject && this.selectedObject.OnUnSelect) {
@@ -70,7 +68,7 @@ export class SelectionMachine extends StateMachine {
     }
   }
 
-  private OnPressDelete(event: EventSystem.FssEvent): void {
+  private OnPressDelete(): void {
     if (this.selectedObject) {
       this.selectedObject.RemoveSelf();
       this.selectedObject = null;

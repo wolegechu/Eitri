@@ -84,7 +84,8 @@ export class DrawingState extends BaseState {
     console.debug('drawing state mouse move');
     const joint = ViewFactory.GetViewObject(this.machine.lastJointID) as Joint;
     const wall = ViewFactory.GetViewObject(this.machine.lastWallID) as Wall;
-    const pos = event.position;
+    let pos = event.position;
+    if (event.shiftDown) pos = this.ShiftPosition(pos);
 
     const grabJoint =
         ViewFactory.GetNearestJoint(pos, [joint], GRAB_JOINT_DISTANCE);
@@ -102,9 +103,7 @@ export class DrawingState extends BaseState {
       joint.SetPosition(newPos);
 
     } else {
-      let newPos = pos;
-      if (event.shiftDown) newPos = this.ShiftPosition(pos);
-      joint.SetPosition(newPos);
+      joint.SetPosition(pos);
     }
   }
 

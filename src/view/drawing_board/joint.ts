@@ -4,7 +4,7 @@ import {Point} from '../../utils/index';
 
 import {ViewCanvas} from './canvas';
 import * as ViewFactory from './view_factory';
-import {ExportedProperties, JointExportedProperties, ObjectOptions, ViewObject} from './view_object';
+import {ObjectOptions, ViewObject} from './view_object';
 import {Wall} from './wall';
 
 const JOINT_RADIUS = 10;
@@ -105,11 +105,11 @@ export class Joint extends ViewObject {
   }
 
   protected Set(option: JointOption): void {
-    if (option._position) {
+    if (option._position !== undefined) {
       const p = option._position;
       this._position = new Point(p.x, p.y);
     }
-    if (option._wallIDs) {
+    if (option._wallIDs !== undefined) {
       this._wallIDs = option._wallIDs;
     }
 

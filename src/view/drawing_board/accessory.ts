@@ -124,17 +124,19 @@ export class Accessory extends ViewObject {
   }
 
   protected Set(option: AccessoryOption) {
-    if (option.wallID) {
+    if (option.wallID !== undefined) {
       this.wallID = option.wallID;
     }
-    if (option.length) this.length = option.length;
-    if (option.position) {
+    if (option.length !== undefined) {
+      this.length = option.length;
+    }
+    if (option.position !== undefined) {
       this.position = new Point(option.position.x, option.position.y);
     }
-    if (option.positionPercent) {
+    if (option.positionPercent !== undefined) {
       this.positionPercent = option.positionPercent;
     }
-    if (option.imgHandle) {
+    if (option.imgHandle !== undefined) {
       this.imgHandle = option.imgHandle;
     }
 
