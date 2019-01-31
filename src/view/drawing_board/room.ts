@@ -4,7 +4,6 @@ import {ViewCanvas} from './canvas';
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
 import {ObjectOptions, PROPERTY_TYPE_OPTION, RoomExportedProperties, ViewObject} from './view_object';
-import {Wall} from './wall';
 
 const UNSELECTED_COLOR = '#A2875E';
 
@@ -17,8 +16,7 @@ export enum RoomType {
 
 
 interface RoomOption extends ObjectOptions {
-  firstJointID?: number;
-  wallIDs?: number[];
+  jointIDs?: number[];
   type?: string;
 }
 
@@ -31,8 +29,7 @@ export class Room extends ViewObject {
     return Room.typeName;
   }
 
-  private firstJointID = -1;
-  private wallIDs: number[] = [];
+  private jointIDs: number[] = [];
   private type: string = RoomType.Bedroom;
 
   view: fabric.Path;
@@ -74,25 +71,15 @@ export class Room extends ViewObject {
 
   UpdateView(): void {
     const path: string[] = [];
-    let nextID: number;
     path.push('M');
 
-    let joint = ViewFactory.GetViewObject(this.firstJointID) as Joint;
-    if (!joint) return;
-
-    let index: number;
-    for (const wallID of this.wallIDs) {
-      const wall = ViewFactory.GetViewObject(wallID) as Wall;
-      if (!wall) return;
+    for (const jointID of this.jointIDs) {
+      const joint = ViewFactory.GetViewObject(jointID) as Joint;
+      if (!joint) return;
 
       path.push(joint.position.x.toString());
       path.push(joint.position.y.toString());
       path.push('L');
-
-      index = wall.jointIDs.indexOf(joint.id);
-      console.assert(index !== -1, 'wrong wall, wrong joint');
-      nextID = wall.jointIDs[index ^ 1];
-      joint = ViewFactory.GetViewObject(nextID) as Joint;
     }
 
     path[path.length - 1] = 'z';
@@ -103,11 +90,8 @@ export class Room extends ViewObject {
   }
 
   protected Set(option: RoomOption): void {
-    if (option.firstJointID !== undefined) {
-      this.firstJointID = option.firstJointID;
-    }
-    if (option.wallIDs !== undefined) {
-      this.wallIDs = option.wallIDs;
+    if (option.jointIDs !== undefined) {
+      this.jointIDs = option.jointIDs;
     }
     if (option.type !== undefined) {
       this.type = option.type;
