@@ -47,7 +47,7 @@ export class GenerateRoomMachine extends StateMachine {
         vertexes.push(v2);
         if (this.CheckRoomLegal(vertexes, edges)) {
           // generate room
-          ViewFactory.CreateRoom(edges, vertexes[0]);
+          ViewFactory.CreateRoom(vertexes.slice(0, vertexes.length-1));
         }
         edges.pop();
         vertexes.pop();
