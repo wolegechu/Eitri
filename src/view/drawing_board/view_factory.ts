@@ -55,10 +55,9 @@ export function CreateAccessory(img: ImageHandle): Accessory {
   return accessory;
 }
 
-export function CreateRoom(edges: Wall[], firstVertex: Joint): Room {
+export function CreateRoom(vertexes: Joint[]): Room {
   const id = GetNewID();
-  const room = new Room(
-      id, {firstJointID: firstVertex.id, wallIDs: edges.map(v => v.id)});
+  const room = new Room(id, {jointIDs: vertexes.map(v => v.id)});
   AddObject(room);
   return room;
 }
