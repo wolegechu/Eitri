@@ -153,19 +153,22 @@ export class Wall extends ViewObject {
   }
 
   protected Set(option: WallOption): void {
-    if (option._jointIDs) {
+    if (option._jointIDs !== undefined) {
       this._jointIDs = option._jointIDs;
       this._jointIDs.forEach(id => {
         const joint = ViewFactory.GetViewObject(id) as Joint;
         if (joint) joint.AddWallID(this.id);
       });
     }
-    if (option.accessoryIDs) {
+    if (option.accessoryIDs !== undefined) {
       this.accessoryIDs = option.accessoryIDs;
     }
-    if (option.type) this.type = option.type;
-    if (option.width) this.width = option.width;
-
+    if (option.type !== undefined) {
+      this.type = option.type;
+    }
+    if (option.width !== undefined) {
+      this.width = option.width;
+    }
     this.UpdateView();
   }
 

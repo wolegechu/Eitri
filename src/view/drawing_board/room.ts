@@ -103,13 +103,13 @@ export class Room extends ViewObject {
   }
 
   protected Set(option: RoomOption): void {
-    if (option.firstJointID) {
+    if (option.firstJointID !== undefined) {
       this.firstJointID = option.firstJointID;
     }
-    if (option.wallIDs) {
+    if (option.wallIDs !== undefined) {
       this.wallIDs = option.wallIDs;
     }
-    if (option.type) {
+    if (option.type !== undefined) {
       this.type = option.type;
     }
 

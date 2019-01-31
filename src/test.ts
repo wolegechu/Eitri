@@ -1,10 +1,15 @@
+import * as XLSX from 'xlsx';
+
+import {ImageHandle} from './ImageManager';
 import * as FSS from './index';
 import {Accessory} from './view/drawing_board/accessory';
 import {ViewCanvas} from './view/drawing_board/canvas';
+import {Group} from './view/drawing_board/group';
 import {Joint} from './view/drawing_board/joint';
 import {Room} from './view/drawing_board/room';
 import * as ViewFactory from './view/drawing_board/view_factory';
 import {Wall} from './view/drawing_board/wall';
+
 
 console.log('test solution');
 FSS.Init({canvasID: 'c'});
@@ -35,8 +40,37 @@ jsonLoader.onchange = (e) => {
 
 const buttonTest = document.getElementById('test');
 buttonTest.onclick = () => {
-  // TestAccessory();
-  // TestJoint();
-  // TestRoom();
-  // TestWall();
+  const group = new Group(1001, {
+    position: {x: 100, y: 100},
+    rotation: 90,
+    aWidth: 100,
+    bHeight: 100,
+    flip: true,
+    furnitures: [
+      {
+        imgHandle: ImageHandle[ImageHandle.BED],
+        x: '0',
+        y: '0',
+        w: '50',
+        h: '50',
+        r: 0,
+        p: false
+      },
+      {
+        imgHandle: ImageHandle[ImageHandle.DOOR],
+        x: '50',
+        y: '50',
+        w: '50',
+        h: '50',
+        r: 0,
+        p: false
+      }
+    ]
+  });
+
+  ViewCanvas.GetInstance().Add(group);
+
+  // const file = require('./images/test.xlsx');
+  // const workbook = XLSX.read(file, { type: "base64" });
+  // console.log(workbook);
 };

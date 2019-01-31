@@ -10,6 +10,10 @@ module.exports = {
         test: /\.(gif|jpg|png|woff|svg|eot|ttf)\??.*$/,
         loader: 'url-loader?limit=8192&name=images/[hash:8].[name].[ext]'
       },
+      {
+        test: /\.(xlsx)\??.*$/,
+        loader: 'url-loader?name=excels/[hash:8].[name].[ext]'
+      },
     ]
   },
   resolve: {extensions: ['.tsx', '.ts', '.js'], modules: ['node_modules']},
