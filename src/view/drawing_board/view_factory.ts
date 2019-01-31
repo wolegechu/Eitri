@@ -57,8 +57,7 @@ export function CreateAccessory(img: ImageHandle): Accessory {
 
 export function CreateRoom(vertexes: Joint[]): Room {
   const id = GetNewID();
-  const room = new Room(
-    id, { jointIDs: vertexes.map(v => v.id)});
+  const room = new Room(id, {jointIDs: vertexes.map(v => v.id)});
   AddObject(room);
   return room;
 }
