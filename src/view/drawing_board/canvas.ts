@@ -98,6 +98,11 @@ export class ViewCanvas {
     });
   }
 
+  ToSVG(): string {
+    const svg = this.canvas.toSVG(null);
+    return svg;
+  }
+
   private SortViewObjects() {
     this.canvas._objects.sort((a, b) => {
       return this.GetSortPriority(a) - this.GetSortPriority(b);

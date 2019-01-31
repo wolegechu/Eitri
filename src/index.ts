@@ -77,7 +77,20 @@ function ImportJson(file: Blob) {
   reader.readAsText(file);
 }
 
+function DownloadSVG() {
+  const element = document.createElement('a');
+
+  const blob = new Blob([ViewCanvas.GetInstance().ToSVG()]);
+  element.download = 'a.svg';
+
+  element.href = URL.createObjectURL(blob);
+
+  element.click();
+  element.remove();
+}
+
 export {
+  DownloadSVG,
   ImportJson,
   DownloadJson,
   UploadBackground,
