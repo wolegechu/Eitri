@@ -152,7 +152,6 @@ export class ViewCanvas {
       const evt = opt.e as MouseEvent;
       if (evt.altKey === true) {
         this.isDragging = true;
-        this.selection = false;
         this.lastPosX = evt.clientX;
         this.lastPosY = evt.clientY;
       }
@@ -169,7 +168,6 @@ export class ViewCanvas {
     });
     canvas.on('mouse:up', function (opt) {
       this.isDragging = false;
-      this.selection = true;
     });
   }
 }
