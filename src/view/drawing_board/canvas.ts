@@ -32,7 +32,11 @@ export class ViewCanvas {
 
   Init(id: string): void {
     this.canvas = new fabric.Canvas(id);
-    this.canvas.selection = false;
+    const canvas = this.canvas;
+    canvas.selection = false;
+
+    this.EnableZoom();
+    this.EnableDrag();
   }
 
   Render(): void {
@@ -125,5 +129,45 @@ export class ViewCanvas {
     } else {
       console.assert(true, 'don\'t have this type');
     }
+  }
+
+  private EnableZoom() {
+    const canvas = this.canvas;
+    canvas.on('mouse:wheel', opt => {
+      const optWheel = opt.e as WheelEvent;
+      const delta = optWheel.deltaY;
+      let zoom = canvas.getZoom();
+      zoom = zoom - delta / 200;
+      if (zoom > 2) zoom = 2;
+      if (zoom < 0.05) zoom = 0.1;
+      canvas.zoomToPoint(new fabric.Point(optWheel.offsetX, optWheel.offsetY), zoom);
+      opt.e.preventDefault();
+      opt.e.stopPropagation();
+    });
+  }
+
+  private EnableDrag() {
+    const canvas = this.canvas;
+    canvas.on('mouse:down', function (opt) {
+      const evt = opt.e as MouseEvent;
+      if (evt.altKey === true) {
+        this.isDragging = true;
+        this.lastPosX = evt.clientX;
+        this.lastPosY = evt.clientY;
+      }
+    });
+    canvas.on('mouse:move', function (opt) {
+      if (this.isDragging) {
+        const e = opt.e as MouseEvent;
+        this.viewportTransform[4] += e.clientX - this.lastPosX;
+        this.viewportTransform[5] += e.clientY - this.lastPosY;
+        this.requestRenderAll();
+        this.lastPosX = e.clientX;
+        this.lastPosY = e.clientY;
+      }
+    });
+    canvas.on('mouse:up', function (opt) {
+      this.isDragging = false;
+    });
   }
 }
