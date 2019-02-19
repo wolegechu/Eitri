@@ -1,14 +1,8 @@
 import * as XLSX from 'xlsx';
 
-import {ImageHandle} from './ImageManager';
+import {Fill} from './furniture_filler/furniture_filler';
 import * as FSS from './index';
-import {Accessory} from './view/drawing_board/accessory';
-import {ViewCanvas} from './view/drawing_board/canvas';
-import {Group} from './view/drawing_board/group';
-import {Joint} from './view/drawing_board/joint';
-import {Room} from './view/drawing_board/room';
 import * as ViewFactory from './view/drawing_board/view_factory';
-import {Wall} from './view/drawing_board/wall';
 
 
 console.log('test solution');
@@ -40,35 +34,15 @@ jsonLoader.onchange = (e) => {
 
 const buttonTest = document.getElementById('test');
 buttonTest.onclick = () => {
-  const group = new Group(1001, {
-    position: {x: 100, y: 100},
-    rotation: 90,
-    aWidth: 100,
-    bHeight: 100,
-    flip: true,
-    furnitures: [
-      {
-        imgHandle: ImageHandle[ImageHandle.BED],
-        x: '0',
-        y: '0',
-        w: '50',
-        h: '50',
-        r: 0,
-        p: false
-      },
-      {
-        imgHandle: ImageHandle[ImageHandle.DOOR],
-        x: '50',
-        y: '50',
-        w: '50',
-        h: '50',
-        r: 0,
-        p: false
-      }
-    ]
-  });
+  const p1 = ViewFactory.CreatePedestal();
+  Object.assign(
+      p1, {x: 100, y: 200, width: 150, height: 250, rotation: 0, flip: false});
 
-  ViewCanvas.GetInstance().Add(group);
+  const p2 = ViewFactory.CreatePedestal();
+  Object.assign(
+      p2, {x: 500, y: 200, width: 150, height: 250, rotation: 0, flip: true});
+  Fill();
+
 
   // const file = require('./images/test.xlsx');
   // const workbook = XLSX.read(file, { type: "base64" });
