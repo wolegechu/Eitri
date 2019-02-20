@@ -1,6 +1,7 @@
 import {ImageHandle} from '../ImageManager';
-import {Pedestal} from '../view/drawing_board/pedestal';
-import * as ViewFactory from '../view/drawing_board/view_factory';
+import {Pedestal} from '../view/canvas_components/pedestal';
+import * as ViewFactory from '../view/canvas_components/view_factory';
+
 
 export function Fill() {
   const pedestlas = ViewFactory.GetViewObjectsWithType<Pedestal>(Pedestal);

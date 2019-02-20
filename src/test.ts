@@ -2,7 +2,7 @@ import * as XLSX from 'xlsx';
 
 import {Fill} from './furniture_filler/furniture_filler';
 import * as FSS from './index';
-import * as ViewFactory from './view/drawing_board/view_factory';
+import * as ViewFactory from './view/canvas_components/view_factory';
 
 
 console.log('test solution');

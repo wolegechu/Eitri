@@ -1,10 +1,10 @@
 import Flatten from 'flatten-js';
 
 import {ChangeToSelectionMode} from '../../..';
-import {Joint} from '../../../view/drawing_board/joint';
-import {Room} from '../../../view/drawing_board/room';
-import * as ViewFactory from '../../../view/drawing_board/view_factory';
-import {Wall} from '../../../view/drawing_board/wall';
+import {Joint} from '../../../view/canvas_components/joint';
+import {Room} from '../../../view/canvas_components/room';
+import * as ViewFactory from '../../../view/canvas_components/view_factory';
+import {Wall} from '../../../view/canvas_components/wall';
 import {StateMachine} from '../../state_machine';
 
 

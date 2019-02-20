@@ -3,9 +3,9 @@ import {GRAB_WALL_DISTANCE} from '../../../CONFIG';
 import * as EventSystem from '../../../events/index';
 import {ImageHandle} from '../../../ImageManager';
 import {GetClosestPointOnSegment2Point, Point} from '../../../utils';
-import {Accessory} from '../../../view/drawing_board/accessory';
-import {Joint} from '../../../view/drawing_board/joint';
-import * as ViewFactory from '../../../view/drawing_board/view_factory';
+import {Accessory} from '../../../view/canvas_components/accessory';
+import {Joint} from '../../../view/canvas_components/joint';
+import * as ViewFactory from '../../../view/canvas_components/view_factory';
 import {StateMachine} from '../../state_machine';
 
 export class DrawWindowMachine extends StateMachine {

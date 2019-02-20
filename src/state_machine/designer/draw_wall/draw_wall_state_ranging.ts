@@ -1,8 +1,8 @@
 import * as EventSystem from '../../../events/index';
 import {Point} from '../../../utils';
-import {Joint} from '../../../view/drawing_board/joint';
-import * as ViewFactory from '../../../view/drawing_board/view_factory';
-import {Wall} from '../../../view/drawing_board/wall';
+import {Joint} from '../../../view/canvas_components/joint';
+import * as ViewFactory from '../../../view/canvas_components/view_factory';
+import {Wall} from '../../../view/canvas_components/wall';
 import {BaseState} from '../../state_machine';
 
 import {WallDrawingMachine} from './draw_wall_machine';

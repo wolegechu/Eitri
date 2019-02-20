@@ -20,7 +20,7 @@ Todo:
 BUGs:
 
 - 自环 同一个点连点两次出问题
-
+- 导入后不能选中物体
 
 optimization:
 

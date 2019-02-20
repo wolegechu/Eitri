@@ -1,8 +1,8 @@
 import * as EventSystem from '../../../events/index';
 import {ChangeToSelectionMode} from '../../../index';
-import {Joint} from '../../../view/drawing_board/joint';
-import * as ViewFactory from '../../../view/drawing_board/view_factory';
-import {Wall} from '../../../view/drawing_board/wall';
+import {Joint} from '../../../view/canvas_components/joint';
+import * as ViewFactory from '../../../view/canvas_components/view_factory';
+import {Wall} from '../../../view/canvas_components/wall';
 import {StateMachine} from '../../state_machine';
 
 import {DrawingState} from './draw_wall_state_drawing';
