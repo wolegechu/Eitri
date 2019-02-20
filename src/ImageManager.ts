@@ -1,5 +1,6 @@
 
 export enum ImageHandle {
+  GRID,
   DOOR,
   BED,
 }
@@ -20,4 +21,10 @@ export function GetImage(h: ImageHandle): HTMLImageElement {
   const img = new Image();
   img.src = require('./images/bed.png');
   imageMap.set(ImageHandle.BED, img);
+}
+
+{
+  const img = new Image();
+  img.src = require('./images/grid.png');
+  imageMap.set(ImageHandle.GRID, img);
 }
