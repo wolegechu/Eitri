@@ -1,5 +1,5 @@
-import {ViewObject, WallExportedProperties} from '../drawing_board/view_object';
-import {RoomExportedProperties} from '../drawing_board/view_object';
+import {ViewObject, WallExportedProperties} from '../canvas_components/view_object';
+import {RoomExportedProperties} from '../canvas_components/view_object';
 
 export function UIIndex(viewObject: ViewObject): void {
   const propertiesDict = viewObject.ExportProperties();

@@ -12,7 +12,7 @@ type FurnitureParameter = {
   p: boolean;
 };
 
-interface GroupOption extends ObjectOptions {
+export interface FurnitureGroupOption extends ObjectOptions {
   position: {x: number, y: number};
   rotation: number;
   aWidth: number;   // a
@@ -21,11 +21,13 @@ interface GroupOption extends ObjectOptions {
   furnitures: FurnitureParameter[];
 }
 
-
-export class Group extends ViewObject {
+/**
+ * A group of furnitures, used to fill in the pedestal.
+ */
+export class FurnitureGroup extends ViewObject {
   static typeName = 'group';
   get typeName() {
-    return Group.typeName;
+    return FurnitureGroup.typeName;
   }
 
   private position: Point = new Point(0, 0);
@@ -37,7 +39,7 @@ export class Group extends ViewObject {
 
   view: fabric.Group;
 
-  constructor(id: number, option: GroupOption) {
+  constructor(id: number, option: FurnitureGroupOption) {
     super(id);
 
     // add a rectangle first to make the origin top left
@@ -47,25 +49,7 @@ export class Group extends ViewObject {
       stroke: '#FF0000',
       fill: '#00000000',
     });
-    const circle = new fabric.Circle({
-      top: option.bHeight,
-      left: option.aWidth,
-      originX: 'center',
-      originY: 'center',
-      stroke: '#FF0000',
-      fill: '#FF0000',
-      radius: 50
-    });
-    const circle2 = new fabric.Circle({
-      top: 0,
-      left: 0,
-      originX: 'center',
-      originY: 'center',
-      stroke: '#000000',
-      fill: '#000000',
-      radius: 50
-    });
-    this.view = new fabric.Group([rect, circle, circle2], {
+    this.view = new fabric.Group([rect], {
       left: this.position.x,
       top: this.position.y,
       angle: this.rotation,
@@ -96,7 +80,7 @@ export class Group extends ViewObject {
   }
 
 
-  protected Set(option: GroupOption): void {
+  protected Set(option: FurnitureGroupOption): void {
     if (option.bHeight !== undefined) {
       this.bHeight = option.bHeight;
     }
@@ -122,35 +106,25 @@ export class Group extends ViewObject {
     // when change 'view', factory should be reseted.
     ViewFactory.RemoveObject(this);
 
+    // the border of the room
     const rect = new fabric.Rect({
       height: this.bHeight,
       width: this.aWidth,
       stroke: '#FF0000',
       fill: '#00000000',
     });
-    const circle = new fabric.Circle({
-      top: this.bHeight,
-      left: this.aWidth,
-      originX: 'center',
-      originY: 'center',
-      stroke: '#FF0000',
-      fill: '#FF0000',
-      radius: 50
-    });
-    const circle2 = new fabric.Circle({
-      top: 0,
-      left: 0,
-      originX: 'center',
-      originY: 'center',
-      stroke: '#000000',
-      fill: '#000000',
-      radius: 50
-    });
+
     const objs: fabric.Object[] = [rect];
     this.furnitures.forEach(params => {
       console.log('furniture');
       const img =
           GetImage(ImageHandle[params.imgHandle as keyof typeof ImageHandle]);
+
+      const a = this.aWidth;
+      const b = this.bHeight;
+      const w = eval(params.w);
+      const h = eval(params.h);
+
       const obj = new fabric.Image(img, {
         left: eval(params.x),
         top: eval(params.y),
@@ -164,6 +138,7 @@ export class Group extends ViewObject {
       obj.perPixelTargetFind = true;
       objs.push(obj);
     });
+
     this.view = new fabric.Group(objs, {
       left: this.position.x,
       top: this.position.y,

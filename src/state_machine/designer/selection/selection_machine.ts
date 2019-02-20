@@ -1,7 +1,7 @@
 import * as EventSystem from '../../../events/index';
-import {UIIndex} from '../../../view/components/index';
-import {ViewCanvas} from '../../../view/drawing_board/canvas';
-import {ViewObject} from '../../../view/drawing_board/view_object';
+import {ViewCanvas} from '../../../view/canvas_components/canvas';
+import {ViewObject} from '../../../view/canvas_components/view_object';
+import {UIIndex} from '../../../view/html_components/index';
 import {StateMachine} from '../../state_machine';
 
 export class SelectionMachine extends StateMachine {

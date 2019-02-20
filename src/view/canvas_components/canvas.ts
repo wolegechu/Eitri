@@ -140,7 +140,8 @@ export class ViewCanvas {
       zoom = zoom - delta / 200;
       if (zoom > 2) zoom = 2;
       if (zoom < 0.05) zoom = 0.1;
-      canvas.zoomToPoint(new fabric.Point(optWheel.offsetX, optWheel.offsetY), zoom);
+      canvas.zoomToPoint(
+          new fabric.Point(optWheel.offsetX, optWheel.offsetY), zoom);
       opt.e.preventDefault();
       opt.e.stopPropagation();
     });
@@ -148,7 +149,7 @@ export class ViewCanvas {
 
   private EnableDrag() {
     const canvas = this.canvas;
-    canvas.on('mouse:down', function (opt) {
+    canvas.on('mouse:down', function(opt) {
       const evt = opt.e as MouseEvent;
       if (evt.altKey === true) {
         this.isDragging = true;
@@ -156,7 +157,7 @@ export class ViewCanvas {
         this.lastPosY = evt.clientY;
       }
     });
-    canvas.on('mouse:move', function (opt) {
+    canvas.on('mouse:move', function(opt) {
       if (this.isDragging) {
         const e = opt.e as MouseEvent;
         this.viewportTransform[4] += e.clientX - this.lastPosX;
@@ -166,7 +167,7 @@ export class ViewCanvas {
         this.lastPosY = e.clientY;
       }
     });
-    canvas.on('mouse:up', function (opt) {
+    canvas.on('mouse:up', function(opt) {
       this.isDragging = false;
     });
   }

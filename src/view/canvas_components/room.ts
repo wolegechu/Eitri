@@ -1,5 +1,4 @@
 import {fabric} from 'fabric';
-
 import {ViewCanvas} from './canvas';
 import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
@@ -21,7 +20,7 @@ interface RoomOption extends ObjectOptions {
 }
 
 /**
- * Represent things depend on Wall. Such as Window, Door.
+ * Room: a Wall surrounded polygon without any Wall inside.
  */
 export class Room extends ViewObject {
   static typeName = 'room';
@@ -29,7 +28,7 @@ export class Room extends ViewObject {
     return Room.typeName;
   }
 
-  private jointIDs: number[] = [];
+  jointIDs: number[] = [];
   private type: string = RoomType.Bedroom;
 
   view: fabric.Path;

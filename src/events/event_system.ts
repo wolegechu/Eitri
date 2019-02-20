@@ -1,4 +1,4 @@
-import {ViewCanvas} from '../view/drawing_board/canvas';
+import {ViewCanvas} from '../view/canvas_components/canvas';
 
 import {EventType, FssEvent, keyPressCheckersMap} from './event_checker';
 

@@ -5,7 +5,9 @@ import {GetDistanceOfPoint2LineSegment, GetDistanceOfPoint2Point} from '../../ut
 import {Accessory} from './accessory';
 import {Background} from './background';
 import {ViewCanvas} from './canvas';
+import {FurnitureGroup, FurnitureGroupOption} from './furniture_group';
 import {Joint} from './joint';
+import {Pedestal} from './pedestal';
 import {Room} from './room';
 import {ObjectOptions, ViewObject} from './view_object';
 import {Wall} from './wall';
@@ -60,6 +62,20 @@ export function CreateRoom(vertexes: Joint[]): Room {
   const room = new Room(id, {jointIDs: vertexes.map(v => v.id)});
   AddObject(room);
   return room;
+}
+
+export function CreatePedestal(): Pedestal {
+  const id = GetNewID();
+  const obj = new Pedestal(id, {});
+  AddObject(obj);
+  return obj;
+}
+
+export function CreateFurnitureGroup(option: FurnitureGroupOption) {
+  const id = GetNewID();
+  const obj = new FurnitureGroup(id, option);
+  AddObject(obj);
+  return obj;
 }
 
 export function CreateBackground(htmlImage: HTMLImageElement) {

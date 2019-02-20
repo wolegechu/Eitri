@@ -1,5 +1,5 @@
 import {Point} from '../utils/index';
-import {ViewObject} from '../view/drawing_board/view_object';
+import {ViewObject} from '../view/canvas_components/view_object';
 
 import {shiftdown} from './event_system';
 
