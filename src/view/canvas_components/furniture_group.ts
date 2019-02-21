@@ -3,7 +3,7 @@ import {fabric} from 'fabric';
 import {GetImage} from '../../image_manager';
 import {Point} from '../../utils/index';
 
-import {CanvasManager} from './canvas';
+import {CanvasManager} from './canvas_manager';
 import {RenderOrderConfig} from './render_order_config';
 import * as ViewFactory from './view_factory';
 import {FurnitureExportedProperties, ObjectOptions, ViewObject} from './view_object';

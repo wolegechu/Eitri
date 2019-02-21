@@ -1,4 +1,4 @@
-import {CanvasManager} from '../view/canvas_components/canvas';
+import {CanvasManager} from '../view/canvas_components/canvas_manager';
 
 import {EventType, FssEvent, keyPressCheckersMap} from './event_checker';
 

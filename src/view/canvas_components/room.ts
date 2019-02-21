@@ -1,6 +1,6 @@
 import {fabric} from 'fabric';
 
-import {CanvasManager} from './canvas';
+import {CanvasManager} from './canvas_manager';
 import {Joint} from './joint';
 import {RenderOrderConfig} from './render_order_config';
 import * as ViewFactory from './view_factory';

@@ -8,7 +8,6 @@ import * as ViewFactory from './view_factory';
 import {ViewObject} from './view_object';
 
 
-// Singleton
 export class CanvasManager {
   private static canvas: fabric.Canvas;
   private static renderOrderMap = new Map<fabric.Object, number>();

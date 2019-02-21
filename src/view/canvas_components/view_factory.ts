@@ -3,7 +3,7 @@ import {GetDistanceOfPoint2LineSegment, GetDistanceOfPoint2Point} from '../../ut
 
 import {Accessory} from './accessory';
 import {Background} from './background';
-import {CanvasManager} from './canvas';
+import {CanvasManager} from './canvas_manager';
 import {FurnitureGroup, FurnitureGroupOption} from './furniture_group';
 import {Joint} from './joint';
 import {Pedestal} from './pedestal';

@@ -5,7 +5,7 @@ import {DrawWindowMachine} from './state_machine/designer/draw_window/draw_windo
 import {GenerateRoomMachine} from './state_machine/designer/generate_room/generate_room_machine';
 import {SelectionMachine} from './state_machine/designer/selection/selection_machine';
 import {StateMachine} from './state_machine/state_machine';
-import {CanvasManager} from './view/canvas_components/canvas';
+import {CanvasManager} from './view/canvas_components/canvas_manager';
 import * as ViewFactory from './view/canvas_components/view_factory';
 
 let machine: StateMachine = null;
