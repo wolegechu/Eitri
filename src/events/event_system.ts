@@ -1,4 +1,4 @@
-import {ViewCanvas} from '../view/canvas_components/canvas';
+import {CanvasManager} from '../view/canvas_components/canvas';
 
 import {EventType, FssEvent, keyPressCheckersMap} from './event_checker';
 
@@ -58,8 +58,7 @@ document.onkeyup = (e) => {
  */
 // - mouse click event
 export function RegistCanvasEvent() {
-  const canvas = ViewCanvas.GetInstance();
-  canvas.OnMouseDown((point) => {
+  CanvasManager.OnMouseDown((point) => {
     const type = EventType.MOUSE_CLICK_CANVAS;
 
     const observers = GetObservers(type);
@@ -77,7 +76,7 @@ export function RegistCanvasEvent() {
   });
 
   // - mouse move on canvas event
-  canvas.OnMouseMove((point) => {
+  CanvasManager.OnMouseMove((point) => {
     const type = EventType.MOUSE_MOVE_CANVAS;
 
     const observers = GetObservers(type);
@@ -95,7 +94,7 @@ export function RegistCanvasEvent() {
   });
 
   // - object select event
-  canvas.OnObjectSelect((obj) => {
+  CanvasManager.OnObjectSelect((obj) => {
     const type = EventType.OBJECT_SELECT;
 
     const observers = GetObservers(type);
@@ -113,7 +112,7 @@ export function RegistCanvasEvent() {
   });
 
   // - object select clear event
-  canvas.OnSelectClear(() => {
+  CanvasManager.OnSelectClear(() => {
     const type = EventType.OBJECT_SELECT_CLEAR;
 
     const observers = GetObservers(type);

@@ -3,7 +3,8 @@ import {fabric} from 'fabric';
 import {GetImage} from '../../image_manager';
 import {Point} from '../../utils/index';
 
-import {ViewCanvas} from './canvas';
+import {CanvasManager} from './canvas';
+import {RenderOrderConfig} from './render_order_config';
 import * as ViewFactory from './view_factory';
 import {FurnitureExportedProperties, ObjectOptions, ViewObject} from './view_object';
 
@@ -25,9 +26,12 @@ export interface FurnitureGroupOption extends ObjectOptions {
  * A group of furnitures, used to fill in the pedestal.
  */
 export class FurnitureGroup extends ViewObject {
-  static typeName = 'group';
+  static typeName = 'furnitureGroup';
   get typeName() {
     return FurnitureGroup.typeName;
+  }
+  get renderOrder() {
+    return RenderOrderConfig.FURNITURE_GROUP;
   }
 
   private position: Point = new Point(0, 0);

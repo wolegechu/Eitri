@@ -1,6 +1,8 @@
 import {fabric} from 'fabric';
-import {ViewCanvas} from './canvas';
+
+import {CanvasManager} from './canvas';
 import {Joint} from './joint';
+import {RenderOrderConfig} from './render_order_config';
 import * as ViewFactory from './view_factory';
 import {ObjectOptions, PROPERTY_TYPE_OPTION, RoomExportedProperties, ViewObject} from './view_object';
 
@@ -26,6 +28,9 @@ export class Room extends ViewObject {
   static typeName = 'room';
   get typeName() {
     return Room.typeName;
+  }
+  get renderOrder() {
+    return RenderOrderConfig.ROOM;
   }
 
   jointIDs: number[] = [];
@@ -85,7 +90,7 @@ export class Room extends ViewObject {
     this.NewFabricPath(path.join(' '));
 
     this.view.setCoords();
-    ViewCanvas.GetInstance().Render();
+    CanvasManager.Render();
   }
 
   protected Set(option: RoomOption): void {

@@ -1,5 +1,6 @@
 import {fabric} from 'fabric';
 
+import {RenderOrderConfig} from './render_order_config';
 import {ObjectOptions, ViewObject} from './view_object';
 
 interface PedestalOption extends ObjectOptions {
@@ -19,6 +20,9 @@ export class Pedestal extends ViewObject {
   static typeName = 'pedestal';
   get typeName() {
     return Pedestal.typeName;
+  }
+  get renderOrder() {
+    return RenderOrderConfig.PEDESTAL;
   }
 
   foundation = 'default';

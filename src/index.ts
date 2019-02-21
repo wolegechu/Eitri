@@ -5,14 +5,14 @@ import {DrawWindowMachine} from './state_machine/designer/draw_window/draw_windo
 import {GenerateRoomMachine} from './state_machine/designer/generate_room/generate_room_machine';
 import {SelectionMachine} from './state_machine/designer/selection/selection_machine';
 import {StateMachine} from './state_machine/state_machine';
-import {ViewCanvas} from './view/canvas_components/canvas';
+import {CanvasManager} from './view/canvas_components/canvas';
 import * as ViewFactory from './view/canvas_components/view_factory';
 
 let machine: StateMachine = null;
 
 
 function Init(option: {canvasID: string}) {
-  ViewCanvas.GetInstance().Init(option.canvasID);
+  CanvasManager.Init(option.canvasID);
   machine = new WallDrawingMachine();
 
   RegistCanvasEvent();
@@ -80,7 +80,7 @@ function ImportJson(file: Blob) {
 function DownloadSVG() {
   const element = document.createElement('a');
 
-  const blob = new Blob([ViewCanvas.GetInstance().ToSVG()]);
+  const blob = new Blob([CanvasManager.ToSVG()]);
   element.download = 'a.svg';
 
   element.href = URL.createObjectURL(blob);

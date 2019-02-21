@@ -3,7 +3,8 @@ import {fabric} from 'fabric';
 import {GetImage} from '../../image_manager';
 import {Point} from '../../utils/index';
 
-import {ViewCanvas} from './canvas';
+import {CanvasManager} from './canvas';
+import {RenderOrderConfig} from './render_order_config';
 import {FurnitureExportedProperties, ObjectOptions, ViewObject} from './view_object';
 
 
@@ -21,6 +22,9 @@ export class Furniture extends ViewObject {
   static typeName = 'furniture';
   get typeName() {
     return Furniture.typeName;
+  }
+  get renderOrder() {
+    return RenderOrderConfig.FURNITURE_GROUP;
   }
 
   private imgHandle = 'bed';
@@ -70,7 +74,7 @@ export class Furniture extends ViewObject {
 
     this.UpdateViewByImage();
     this.view.setCoords();
-    ViewCanvas.GetInstance().Render();
+    CanvasManager.Render();
   }
 
   protected Set(option: FurnitureOption): void {

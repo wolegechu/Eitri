@@ -1,5 +1,5 @@
 import * as EventSystem from '../../../events/index';
-import {ViewCanvas} from '../../../view/canvas_components/canvas';
+import {CanvasManager} from '../../../view/canvas_components/canvas';
 import {ViewObject} from '../../../view/canvas_components/view_object';
 import {UIIndex} from '../../../view/html_components/index';
 import {StateMachine} from '../../state_machine';
@@ -21,8 +21,7 @@ export class SelectionMachine extends StateMachine {
   constructor() {
     super();
     console.debug('Enter Seletion Mode ');
-    const canvas = ViewCanvas.GetInstance();
-    canvas.SetAllSelectable(true);
+    CanvasManager.SetAllSelectable(true);
     EventSystem.AddEventListener(
         EventSystem.EventType.OBJECT_SELECT_CLEAR, this.funcOnSelectClear);
     EventSystem.AddEventListener(
@@ -32,8 +31,7 @@ export class SelectionMachine extends StateMachine {
   }
 
   Exit(): void {
-    const canvas = ViewCanvas.GetInstance();
-    canvas.SetAllSelectable(false);
+    CanvasManager.SetAllSelectable(false);
 
     if (this.selectedObject && this.selectedObject.OnUnSelect) {
       this.selectedObject.OnUnSelect();

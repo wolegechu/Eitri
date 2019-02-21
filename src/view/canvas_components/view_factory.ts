@@ -3,7 +3,7 @@ import {GetDistanceOfPoint2LineSegment, GetDistanceOfPoint2Point} from '../../ut
 
 import {Accessory} from './accessory';
 import {Background} from './background';
-import {ViewCanvas} from './canvas';
+import {CanvasManager} from './canvas';
 import {FurnitureGroup, FurnitureGroupOption} from './furniture_group';
 import {Joint} from './joint';
 import {Pedestal} from './pedestal';
@@ -112,14 +112,14 @@ export function RemoveObject(obj: ViewObject) {
   if (!idObjectMap.has(obj.id)) return;
   idObjectMap.delete(obj.id);
   viewObjectMap.delete(obj.view);
-  ViewCanvas.GetInstance().Remove(obj);
+  CanvasManager.Remove(obj.view);
 }
 
 export function AddObject(obj: ViewObject) {
   if (idObjectMap.has(obj.id)) return;
   idObjectMap.set(obj.id, obj);
   viewObjectMap.set(obj.view, obj);
-  ViewCanvas.GetInstance().Add(obj);
+  CanvasManager.Add(obj.view, obj.renderOrder);
 }
 
 /**

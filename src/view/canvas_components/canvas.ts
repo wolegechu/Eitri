@@ -3,36 +3,27 @@ import {fabric} from 'fabric';
 import {GetImage} from '../../image_manager';
 import {Point} from '../../utils/index';
 
-import {Accessory} from './accessory';
-import {Background} from './background';
-import {Joint} from './joint';
-import {Room} from './room';
+import {RenderOrderConfig} from './render_order_config';
 import * as ViewFactory from './view_factory';
 import {ViewObject} from './view_object';
-import {Wall} from './wall';
-
-enum ViewPriority {
-  BACKGROUND = 0,
-  ROOM,
-  WALL,
-  JOINT,
-  ACCESSORY,
-  Default
-}
 
 
 // Singleton
-export class ViewCanvas {
-  canvas: fabric.Canvas;
+export class CanvasManager {
+  private static canvas: fabric.Canvas;
+  private static renderOrderMap = new Map<fabric.Object, number>();
 
-  private static instance = new ViewCanvas();
+  private static instance = new CanvasManager();
   private constructor() {}
 
-  static GetInstance(): ViewCanvas {
-    return ViewCanvas.instance;
+  static get width() {
+    return this.canvas.getWidth();
+  }
+  static get height() {
+    return this.canvas.getHeight();
   }
 
-  Init(id: string): void {
+  static Init(id: string): void {
     this.canvas = new fabric.Canvas(id);
     const canvas = this.canvas;
     canvas.selection = false;
@@ -42,11 +33,11 @@ export class ViewCanvas {
     this.EnableDrag();
   }
 
-  Render(): void {
+  static Render(): void {
     this.canvas.requestRenderAll();
   }
 
-  OnMouseDown(callback: (p: Point) => void): void {
+  static OnMouseDown(callback: (p: Point) => void): void {
     const canvas = this.canvas;
     canvas.on('mouse:down', (event) => {
       const pos = canvas.getPointer(event.e);
@@ -54,11 +45,11 @@ export class ViewCanvas {
     });
   }
 
-  OnObjectMove(callback: (e: fabric.IEvent) => void): void {
+  static OnObjectMove(callback: (e: fabric.IEvent) => void): void {
     this.canvas.on('object:moving', callback);
   }
 
-  OnMouseMove(callback: (p: Point) => void): void {
+  static OnMouseMove(callback: (p: Point) => void): void {
     const canvas = this.canvas;
     canvas.on('mouse:move', (event) => {
       const pos = canvas.getPointer(event.e);
@@ -66,7 +57,7 @@ export class ViewCanvas {
     });
   }
 
-  OnObjectSelect(callback: (p: ViewObject) => void): void {
+  static OnObjectSelect(callback: (p: ViewObject) => void): void {
     const canvas = this.canvas;
     canvas.on('selection:updated', (event) => {
       console.debug('fabric: selection:updated');
@@ -81,7 +72,7 @@ export class ViewCanvas {
     });
   }
 
-  OnSelectClear(callback: () => void): void {
+  static OnSelectClear(callback: () => void): void {
     const canvas = this.canvas;
     canvas.on('selection:cleared', (event) => {
       console.debug('fabric: selection:cleared');
@@ -89,52 +80,38 @@ export class ViewCanvas {
     });
   }
 
-  Add(obj: ViewObject): void {
-    this.canvas.add(obj.view);
+  static Add(obj: fabric.Object, renderOrder: number): void {
+    this.canvas.add(obj);
+    this.renderOrderMap.set(obj, renderOrder);
     this.SortViewObjects();
   }
 
-  Remove(obj: ViewObject): void {
-    this.canvas.remove(obj.view);
+  static Remove(obj: fabric.Object): void {
+    this.canvas.remove(obj);
   }
 
-  SetAllSelectable(selectable: boolean) {
+  static SetAllSelectable(selectable: boolean) {
     const objs = this.canvas.getObjects();
     objs.forEach(obj => {
       obj.selectable = selectable;
     });
   }
 
-  ToSVG(): string {
+  static ToSVG(): string {
     const svg = this.canvas.toSVG(null);
     return svg;
   }
 
-  private SortViewObjects() {
+  private static SortViewObjects() {
     this.canvas._objects.sort((a, b) => {
-      return this.GetSortPriority(a) - this.GetSortPriority(b);
+      const orderA = this.renderOrderMap.get(a);
+      const orderB = this.renderOrderMap.get(b);
+      return orderA - orderB;
     });
     this.canvas.requestRenderAll();
   }
 
-  private GetSortPriority(view: fabric.Object): number {
-    const obj = ViewFactory.GetViewObjectWithView(view);
-    if (obj instanceof Background) {
-      return ViewPriority.BACKGROUND;
-    } else if (obj instanceof Room) {
-      return ViewPriority.ROOM;
-    } else if (obj instanceof Wall) {
-      return ViewPriority.WALL;
-    } else if (obj instanceof Joint) {
-      return ViewPriority.JOINT;
-    } else if (obj instanceof Accessory) {
-      return ViewPriority.ACCESSORY;
-    } else {
-      return ViewPriority.Default;
-    }
-  }
-
-  private AddGrid() {
+  private static AddGrid() {
     const img = GetImage('grid');
     // TODO: 'onload' should be removed after we can pre-load all assets.
     img.onload = () => {
@@ -145,11 +122,11 @@ export class ViewCanvas {
         top: this.canvas.getHeight() / 2,
         evented: false,
       });
-      this.canvas.add(obj);
+      this.Add(obj, RenderOrderConfig.GRID);
     };
   }
 
-  private EnableZoom() {
+  private static EnableZoom() {
     const canvas = this.canvas;
     canvas.on('mouse:wheel', opt => {
       const optWheel = opt.e as WheelEvent;
@@ -165,7 +142,7 @@ export class ViewCanvas {
     });
   }
 
-  private EnableDrag() {
+  private static EnableDrag() {
     const canvas = this.canvas;
     canvas.on('mouse:down', function(opt) {
       const evt = opt.e as MouseEvent;
