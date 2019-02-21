@@ -1,6 +1,6 @@
 import {fabric} from 'fabric';
 
-import {GetImage} from '../../ImageManager';
+import {GetImage} from '../../image_manager';
 import {Point} from '../../utils/index';
 
 import {ViewCanvas} from './canvas';
