@@ -1,4 +1,3 @@
-import {ImageHandle} from '../../ImageManager';
 import {Point} from '../../utils/index';
 import {GetDistanceOfPoint2LineSegment, GetDistanceOfPoint2Point} from '../../utils/math';
 
@@ -50,9 +49,9 @@ export function CreateWall(p1: Point|Joint, p2: Point|Joint): Wall {
   return wall;
 }
 
-export function CreateAccessory(img: ImageHandle): Accessory {
+export function CreateAccessory(img: string): Accessory {
   const id = GetNewID();
-  const accessory = new Accessory(id, {imgHandle: ImageHandle[img]});
+  const accessory = new Accessory(id, {imgHandle: img});
   AddObject(accessory);
   return accessory;
 }

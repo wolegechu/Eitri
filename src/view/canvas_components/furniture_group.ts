@@ -1,6 +1,6 @@
 import {fabric} from 'fabric';
 
-import {GetImage, ImageHandle} from '../../ImageManager';
+import {GetImage} from '../../ImageManager';
 import {Point} from '../../utils/index';
 
 import {ViewCanvas} from './canvas';
@@ -117,8 +117,7 @@ export class FurnitureGroup extends ViewObject {
     const objs: fabric.Object[] = [rect];
     this.furnitures.forEach(params => {
       console.log('furniture');
-      const img =
-          GetImage(ImageHandle[params.imgHandle as keyof typeof ImageHandle]);
+      const img = GetImage(params.imgHandle);
 
       const a = this.aWidth;
       const b = this.bHeight;

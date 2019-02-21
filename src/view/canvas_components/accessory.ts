@@ -1,6 +1,6 @@
 import {fabric} from 'fabric';
 
-import {GetImage, ImageHandle} from '../../ImageManager';
+import {GetImage} from '../../ImageManager';
 import {Point} from '../../utils/index';
 
 import {ViewCanvas} from './canvas';
@@ -28,7 +28,7 @@ export class Accessory extends ViewObject {
   }
 
   private wallID = -1;
-  private imgHandle: string = ImageHandle[ImageHandle.DOOR];
+  private imgHandle = 'door';
   private length = 100;  // the length of the accessory
   private position = new Point(0, 0);
   private positionPercent = 0;
@@ -38,8 +38,7 @@ export class Accessory extends ViewObject {
   constructor(id: number, option: AccessoryOption) {
     super(id);
 
-    const img =
-        GetImage(ImageHandle[this.imgHandle as keyof typeof ImageHandle]);
+    const img = GetImage(this.imgHandle);
     this.view = new fabric.Image(img, {
       originX: 'center',
       originY: 'center',
@@ -218,8 +217,7 @@ export class Accessory extends ViewObject {
   }
 
   private UpdateViewByImage() {
-    const img =
-        GetImage(ImageHandle[this.imgHandle as keyof typeof ImageHandle]);
+    const img = GetImage(this.imgHandle);
     this.view.setSrc(img.src);
     this.view.set({
       scaleY: this.length / this.view.height,
