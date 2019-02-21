@@ -1,6 +1,6 @@
 import {fabric} from 'fabric';
 
-import {GetImage, ImageHandle} from '../../ImageManager';
+import {GetImage} from '../../image_manager';
 import {Point} from '../../utils/index';
 
 import {Accessory} from './accessory';
@@ -16,7 +16,8 @@ enum ViewPriority {
   ROOM,
   WALL,
   JOINT,
-  ACCESSORY
+  ACCESSORY,
+  Default
 }
 
 
@@ -129,12 +130,12 @@ export class ViewCanvas {
     } else if (obj instanceof Accessory) {
       return ViewPriority.ACCESSORY;
     } else {
-      console.assert(true, 'don\'t have this type');
+      return ViewPriority.Default;
     }
   }
 
   private AddGrid() {
-    const img = GetImage(ImageHandle.GRID);
+    const img = GetImage('grid');
     // TODO: 'onload' should be removed after we can pre-load all assets.
     img.onload = () => {
       const obj = new fabric.Image(img, {

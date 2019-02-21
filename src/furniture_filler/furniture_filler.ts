@@ -1,4 +1,3 @@
-import {ImageHandle} from '../ImageManager';
 import {Pedestal} from '../view/canvas_components/pedestal';
 import * as ViewFactory from '../view/canvas_components/view_factory';
 
@@ -47,7 +46,7 @@ export function Fill() {
       flip: pFlip,
       furnitures: [
         {
-          imgHandle: ImageHandle[ImageHandle.BED],
+          imgHandle: 'bed',
           x: '0',
           y: 'b-h',
           w: 'a-10',
@@ -56,7 +55,7 @@ export function Fill() {
           p: false
         },
         {
-          imgHandle: ImageHandle[ImageHandle.DOOR],
+          imgHandle: 'door',
           x: '50',
           y: '50',
           w: '50',

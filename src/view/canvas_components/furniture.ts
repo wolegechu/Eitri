@@ -1,6 +1,6 @@
 import {fabric} from 'fabric';
 
-import {GetImage, ImageHandle} from '../../ImageManager';
+import {GetImage} from '../../image_manager';
 import {Point} from '../../utils/index';
 
 import {ViewCanvas} from './canvas';
@@ -23,7 +23,7 @@ export class Furniture extends ViewObject {
     return Furniture.typeName;
   }
 
-  private imgHandle: string = ImageHandle[ImageHandle.BED];
+  private imgHandle = 'bed';
   private position: Point = new Point(0, 0);
   private rotation = 0;
   private width = 100;
@@ -35,8 +35,7 @@ export class Furniture extends ViewObject {
   constructor(id: number, option: FurnitureOption) {
     super(id);
 
-    const img =
-        GetImage(ImageHandle[this.imgHandle as keyof typeof ImageHandle]);
+    const img = GetImage(this.imgHandle);
     this.view = new fabric.Image(img, {
       left: this.position.x,
       top: this.position.y,
@@ -97,8 +96,7 @@ export class Furniture extends ViewObject {
   }
 
   private UpdateViewByImage() {
-    const img =
-        GetImage(ImageHandle[this.imgHandle as keyof typeof ImageHandle]);
+    const img = GetImage(this.imgHandle);
     this.view.setSrc(img.src);
     this.view.set({
       scaleX: this.width / img.width,

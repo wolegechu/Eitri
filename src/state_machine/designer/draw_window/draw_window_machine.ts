@@ -1,7 +1,6 @@
 import {ChangeToSelectionMode} from '../../..';
 import {GRAB_WALL_DISTANCE} from '../../../CONFIG';
 import * as EventSystem from '../../../events/index';
-import {ImageHandle} from '../../../ImageManager';
 import {GetClosestPointOnSegment2Point, Point} from '../../../utils';
 import {Accessory} from '../../../view/canvas_components/accessory';
 import {Joint} from '../../../view/canvas_components/joint';
@@ -34,7 +33,7 @@ export class DrawWindowMachine extends StateMachine {
     EventSystem.AddEventListener(
         EventSystem.EventType.KEY_PRESS_ESC, this.funcOnPressESC);
 
-    this.viewWindow = ViewFactory.CreateAccessory(ImageHandle.DOOR);
+    this.viewWindow = ViewFactory.CreateAccessory('door');
   }
 
   Exit(): void {
