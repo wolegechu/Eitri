@@ -24,7 +24,7 @@ export class Background extends ViewObject {
     this.view = new fabric.Image(htmlImage, {
       angle: 0,
       padding: 10,
-      opacity: 0.3,
+      opacity: 0.5,
       lockMovementX: true,
       lockMovementY: true,
       hasControls: false,

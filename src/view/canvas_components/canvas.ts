@@ -1,5 +1,6 @@
 import {fabric} from 'fabric';
 
+import {GetImage, ImageHandle} from '../../ImageManager';
 import {Point} from '../../utils/index';
 
 import {Accessory} from './accessory';
@@ -35,6 +36,7 @@ export class ViewCanvas {
     const canvas = this.canvas;
     canvas.selection = false;
 
+    this.AddGrid();
     this.EnableZoom();
     this.EnableDrag();
   }
@@ -131,6 +133,21 @@ export class ViewCanvas {
     }
   }
 
+  private AddGrid() {
+    const img = GetImage(ImageHandle.GRID);
+    // TODO: 'onload' should be removed after we can pre-load all assets.
+    img.onload = () => {
+      const obj = new fabric.Image(img, {
+        originX: 'center',
+        originY: 'center',
+        left: this.canvas.getWidth() / 2,
+        top: this.canvas.getHeight() / 2,
+        evented: false,
+      });
+      this.canvas.add(obj);
+    };
+  }
+
   private EnableZoom() {
     const canvas = this.canvas;
     canvas.on('mouse:wheel', opt => {
@@ -138,8 +155,8 @@ export class ViewCanvas {
       const delta = optWheel.deltaY;
       let zoom = canvas.getZoom();
       zoom = zoom - delta / 200;
-      if (zoom > 2) zoom = 2;
-      if (zoom < 0.05) zoom = 0.1;
+      if (zoom > 1.5) zoom = 1.5;
+      if (zoom < 0.2) zoom = 0.2;
       canvas.zoomToPoint(
           new fabric.Point(optWheel.offsetX, optWheel.offsetY), zoom);
       opt.e.preventDefault();
