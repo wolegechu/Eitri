@@ -12,7 +12,7 @@ import {StateMachine} from '../../state_machine';
 export class RulerMachine extends StateMachine {
   private rulerLeft: fabric.Image;
   private rulerRight: fabric.Image;
-  private text: fabric.Text;
+  private rulerLengthText: fabric.Text;
 
   private rulerLength = 100;
   private inputLengthCache = 0;
@@ -67,7 +67,7 @@ export class RulerMachine extends StateMachine {
       hasControls: false
     });
 
-    this.text = new fabric.Text('1000', {
+    this.rulerLengthText = new fabric.Text('1000', {
       originX: 'center',
       originY: 'center',
       left: CanvasManager.width / 2 + this.rulerLength / 2,
@@ -79,7 +79,7 @@ export class RulerMachine extends StateMachine {
     const TOP_RENDER = 10000;
     CanvasManager.Add(this.rulerLeft, TOP_RENDER);
     CanvasManager.Add(this.rulerRight, TOP_RENDER);
-    CanvasManager.Add(this.text, TOP_RENDER);
+    CanvasManager.Add(this.rulerLengthText, TOP_RENDER);
 
     CanvasManager.OnObjectMove((e) => this.OnRulerLeftMove(e));
 
@@ -98,7 +98,7 @@ export class RulerMachine extends StateMachine {
 
     CanvasManager.Remove(this.rulerLeft);
     CanvasManager.Remove(this.rulerRight);
-    CanvasManager.Remove(this.text);
+    CanvasManager.Remove(this.rulerLengthText);
   }
 
   private OnRulerRightMove(e: fabric.IEvent) {
@@ -108,11 +108,11 @@ export class RulerMachine extends StateMachine {
     this.rulerRight.set({top: this.rulerLeft.top});
     this.rulerRight.setCoords();
 
-    this.text.set({
+    this.rulerLengthText.set({
       left: this.rulerLeft.left + this.rulerLength / 2,
       top: this.rulerLeft.top
     });
-    this.text.setCoords();
+    this.rulerLengthText.setCoords();
     CanvasManager.Render();
   }
 
@@ -125,11 +125,11 @@ export class RulerMachine extends StateMachine {
     });
     this.rulerRight.setCoords();
 
-    this.text.set({
+    this.rulerLengthText.set({
       left: this.rulerLeft.left + this.rulerLength / 2,
       top: this.rulerLeft.top
     });
-    this.text.setCoords();
+    this.rulerLengthText.setCoords();
 
     CanvasManager.Render();
   }
@@ -139,7 +139,7 @@ export class RulerMachine extends StateMachine {
     let num = this.inputLengthCache;
     num = num * 10 + event.digitNumber;
     this.inputLengthCache = num;
-    this.text.text = num.toString();
+    this.rulerLengthText.text = num.toString();
     CanvasManager.Render();
   }
 
@@ -147,7 +147,7 @@ export class RulerMachine extends StateMachine {
     let num = this.inputLengthCache;
     num = Math.floor(num / 10);
     this.inputLengthCache = num;
-    this.text.text = num.toString();
+    this.rulerLengthText.text = num.toString();
     CanvasManager.Render();
   }
 
