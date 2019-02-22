@@ -1,6 +1,6 @@
 import {fabric} from 'fabric';
 
-import {RenderOrderConfig} from './render_order_config';
+import {RenderOrderConfig} from '../../config/render_order_config';
 import {ObjectOptions, ViewObject} from './view_object';
 
 interface PedestalOption extends ObjectOptions {

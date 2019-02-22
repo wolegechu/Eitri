@@ -5,7 +5,7 @@ import {GetDistanceOfPoint2Point, Point} from '../../utils';
 import {Accessory} from './accessory';
 import {CanvasManager} from './canvas_manager';
 import {Joint} from './joint';
-import {RenderOrderConfig} from './render_order_config';
+import {RenderOrderConfig} from '../../config/render_order_config';
 import * as ViewFactory from './view_factory';
 import {ObjectOptions, PROPERTY_TYPE_NUMBER, PROPERTY_TYPE_OPTION, ViewObject, WallExportedProperties} from './view_object';
 
