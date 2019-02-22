@@ -3,6 +3,7 @@ import {DrawRectangleMachine} from './state_machine/designer/draw_rectangle/draw
 import {WallDrawingMachine} from './state_machine/designer/draw_wall/draw_wall_machine';
 import {DrawWindowMachine} from './state_machine/designer/draw_window/draw_window_machine';
 import {GenerateRoomMachine} from './state_machine/designer/generate_room/generate_room_machine';
+import {RulerMachine} from './state_machine/designer/ruler/ruler_machine';
 import {SelectionMachine} from './state_machine/designer/selection/selection_machine';
 import {StateMachine} from './state_machine/state_machine';
 import {CanvasManager} from './view/canvas_components/canvas_manager';
@@ -106,4 +107,3 @@ export {
 };
 
 import './test';
-import {RulerMachine} from './state_machine/designer/ruler/ruler_machine';
