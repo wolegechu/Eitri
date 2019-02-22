@@ -52,6 +52,9 @@ function UploadBackground(file: Blob) {
     imgObj.onload = () => {
       ViewFactory.CreateBackground(imgObj);
     };
+
+    machine.Exit();
+    machine = new RulerMachine();
   };
   reader.readAsDataURL(file);
 }
@@ -103,3 +106,4 @@ export {
 };
 
 import './test';
+import {RulerMachine} from './state_machine/designer/ruler/ruler_machine';

@@ -1,10 +1,10 @@
 import {fabric} from 'fabric';
 
+import {RenderOrderConfig} from '../../config/render_order_config';
 import {GetImage} from '../../image_manager';
 import {Point} from '../../utils/index';
 
 import {CanvasManager} from './canvas_manager';
-import {RenderOrderConfig} from '../../config/render_order_config';
 import {FurnitureExportedProperties, ObjectOptions, ViewObject} from './view_object';
 
 
