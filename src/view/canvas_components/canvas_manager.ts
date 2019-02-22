@@ -12,7 +12,6 @@ export class CanvasManager {
   private static canvas: fabric.Canvas;
   private static renderOrderMap = new Map<fabric.Object, number>();
 
-  private static instance = new CanvasManager();
   private constructor() {}
 
   static get width() {
