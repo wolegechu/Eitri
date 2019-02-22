@@ -1,4 +1,4 @@
-import {ViewCanvas} from './canvas';
+import {CanvasManager} from './canvas_manager';
 import * as ViewFactory from './view_factory';
 
 export const PROPERTY_TYPE_NUMBER = 'number';
@@ -41,6 +41,7 @@ export interface ObjectOptions {}
 
 export abstract class ViewObject {
   abstract get typeName(): string;
+  abstract get renderOrder(): number;
 
   id: number;
   view: fabric.Object;

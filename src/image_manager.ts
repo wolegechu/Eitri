@@ -1,4 +1,4 @@
-import { imageLib } from "./images/image_config";
+import {imageLib} from './images/image_config';
 
 const imageMap = new Map<string, HTMLImageElement>();
 

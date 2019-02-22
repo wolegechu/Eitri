@@ -1,4 +1,4 @@
-import {GRAB_JOINT_DISTANCE, GRAB_WALL_DISTANCE} from '../../../CONFIG';
+import {GRAB_JOINT_DISTANCE, GRAB_WALL_DISTANCE} from '../../../config/CONFIG';
 import * as EventSystem from '../../../events/index';
 import {Point} from '../../../utils';
 import {GetClosestPointOnSegment2Point, GetDistanceOfPoint2Point} from '../../../utils/math';

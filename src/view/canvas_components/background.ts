@@ -1,6 +1,7 @@
 import {fabric} from 'fabric';
 
-import {ViewCanvas} from './canvas';
+import {CanvasManager} from './canvas_manager';
+import {RenderOrderConfig} from '../../config/render_order_config';
 import {ExportedProperties, ObjectOptions, ViewObject} from './view_object';
 
 
@@ -12,17 +13,21 @@ export class Background extends ViewObject {
   get typeName() {
     return Background.typeName;
   }
+  get renderOrder() {
+    return RenderOrderConfig.BACKGROUND;
+  }
 
   constructor(id: number, htmlImage: HTMLImageElement) {
     super(id);
 
-    const canvas = ViewCanvas.GetInstance().canvas;
     const scale = Math.min(
-        canvas.getWidth() / htmlImage.width,
-        canvas.getHeight() / htmlImage.height,
+        CanvasManager.width / htmlImage.width,
+        CanvasManager.height / htmlImage.height,
     );
     this.view = new fabric.Image(htmlImage, {
       angle: 0,
+      left: 0,
+      top: 0,
       padding: 10,
       opacity: 0.5,
       lockMovementX: true,
@@ -33,8 +38,6 @@ export class Background extends ViewObject {
       scaleY: scale,
       evented: false
     });
-
-    canvas.centerObject(this.view);
   }
 
   UpdateView(): void {

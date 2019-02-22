@@ -2,7 +2,8 @@ import {fabric} from 'fabric';
 
 import {Point} from '../../utils/index';
 
-import {ViewCanvas} from './canvas';
+import {CanvasManager} from './canvas_manager';
+import {RenderOrderConfig} from '../../config/render_order_config';
 import * as ViewFactory from './view_factory';
 import {ObjectOptions, ViewObject} from './view_object';
 import {Wall} from './wall';
@@ -19,6 +20,9 @@ export class Joint extends ViewObject {
   static typeName = 'joint';
   get typeName() {
     return Joint.typeName;
+  }
+  get renderOrder() {
+    return RenderOrderConfig.JOINT;
   }
 
   private _wallIDs: number[] = [];
@@ -50,8 +54,7 @@ export class Joint extends ViewObject {
     this.view.hasControls = this.view.hasBorders = false;
     this.view.perPixelTargetFind = true;
 
-    const canvas = ViewCanvas.GetInstance();
-    canvas.OnObjectMove((e) => this.OnObjectMove(e));
+    CanvasManager.OnObjectMove((e) => this.OnObjectMove(e));
 
     this.Set(option);
   }
@@ -63,7 +66,7 @@ export class Joint extends ViewObject {
   UpdateView(): void {
     this.UpdateViewByPosition();
     this.view.setCoords();
-    ViewCanvas.GetInstance().Render();
+    CanvasManager.Render();
   }
 
   RemoveWallID(id: number) {

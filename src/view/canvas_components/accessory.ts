@@ -3,8 +3,9 @@ import {fabric} from 'fabric';
 import {GetImage} from '../../image_manager';
 import {Point} from '../../utils/index';
 
-import {ViewCanvas} from './canvas';
+import {CanvasManager} from './canvas_manager';
 import {Joint} from './joint';
+import {RenderOrderConfig} from '../../config/render_order_config';
 import * as ViewFactory from './view_factory';
 import {AccessoryExportedProperties, ExportedProperties, ObjectOptions, ViewObject} from './view_object';
 import {Wall} from './wall';
@@ -25,6 +26,9 @@ export class Accessory extends ViewObject {
   static typeName = 'accessory';
   get typeName() {
     return Accessory.typeName;
+  }
+  get renderOrder() {
+    return RenderOrderConfig.ACCESSORY;
   }
 
   private wallID = -1;
@@ -89,7 +93,7 @@ export class Accessory extends ViewObject {
     this.UpdateViewByLength();
 
     this.view.setCoords();
-    ViewCanvas.GetInstance().Render();
+    CanvasManager.Render();
   }
 
   OnWallMove() {
