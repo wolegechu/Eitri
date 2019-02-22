@@ -1,8 +1,9 @@
 import {fabric} from 'fabric';
 
-import {CanvasManager} from './canvas_manager';
 import {RenderOrderConfig} from '../../config/render_order_config';
-import {ExportedProperties, ObjectOptions, ViewObject} from './view_object';
+
+import {CanvasManager} from './canvas_manager';
+import {ObjectOptions, ViewObject} from './view_object';
 
 
 /**
@@ -17,10 +18,15 @@ export class Background extends ViewObject {
     return RenderOrderConfig.BACKGROUND;
   }
 
+  private _scale: number;
+  get scale() {
+    return this._scale;
+  }
+
   constructor(id: number, htmlImage: HTMLImageElement) {
     super(id);
 
-    const scale = Math.min(
+    this._scale = Math.min(
         CanvasManager.width / htmlImage.width,
         CanvasManager.height / htmlImage.height,
     );
@@ -34,14 +40,24 @@ export class Background extends ViewObject {
       lockMovementY: true,
       hasControls: false,
       hasBorders: false,
-      scaleX: scale,
-      scaleY: scale,
-      evented: false
+      scaleX: this._scale,
+      scaleY: this._scale,
+      evented: false,
     });
   }
 
   UpdateView(): void {
-    throw new Error('Method not implemented.');
+    this.view.set({
+      scaleX: this._scale,
+      scaleY: this._scale,
+    });
+    this.view.setCoords();
+    CanvasManager.Render();
+  }
+
+  SetScale(scale: number): void {
+    this._scale = scale;
+    this.UpdateView();
   }
 
   protected Set(option: ObjectOptions): void {
