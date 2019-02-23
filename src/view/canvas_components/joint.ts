@@ -99,12 +99,17 @@ export class Joint extends ViewObject {
     other.RemoveSelf();
 
     // special case: this and other has a common wall.
+    const wallsToRemove = [];
     for (let i = this.wallIDs.length - 1; i >= 0; --i) {
       const wall = ViewFactory.GetViewObject(this.wallIDs[i]) as Wall;
+      if (!wall) continue;
       if (wall.jointIDs[0] === wall.jointIDs[1]) {
-        wall.RemoveSelf();
+        wallsToRemove.push(wall);
       }
     }
+    wallsToRemove.forEach(o => {
+      o.RemoveSelf();
+    });
   }
 
   protected Set(option: JointOption): void {
