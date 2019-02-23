@@ -1,4 +1,4 @@
-import * as EventSystem from '../../events/index';
+import * as EventSystem from '../../event_system';
 import {BaseState, StateMachine} from '../state_machine';
 
 import {TestStateA} from './test_state';

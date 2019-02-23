@@ -1,4 +1,4 @@
-import {RegistCanvasEvent} from './events/event_system';
+import * as EventSystem from './event_system';
 import {DrawRectangleMachine} from './state_machine/designer/draw_rectangle/draw_rectangle_machine';
 import {WallDrawingMachine} from './state_machine/designer/draw_wall/draw_wall_machine';
 import {DrawWindowMachine} from './state_machine/designer/draw_window/draw_window_machine';
@@ -16,7 +16,7 @@ function Init(option: {canvasID: string}) {
   CanvasManager.Init(option.canvasID);
   machine = new WallDrawingMachine();
 
-  RegistCanvasEvent();
+  EventSystem.RegistCanvasEvent();
 }
 
 function DrawWall() {

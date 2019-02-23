@@ -1,6 +1,6 @@
 import {ChangeToSelectionMode} from '../../..';
 import {GRAB_WALL_DISTANCE} from '../../../config/CONFIG';
-import * as EventSystem from '../../../events/index';
+import * as EventSystem from '../../../event_system';
 import {GetClosestPointOnSegment2Point, Point} from '../../../utils';
 import {Accessory} from '../../../view/canvas_components/accessory';
 import {Joint} from '../../../view/canvas_components/joint';

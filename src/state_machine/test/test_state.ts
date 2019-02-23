@@ -1,4 +1,4 @@
-import * as EventSystem from '../../events/index';
+import * as EventSystem from '../../event_system';
 import {BaseState} from '../state_machine';
 
 export class TestStateA extends BaseState {

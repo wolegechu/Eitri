@@ -1,6 +1,7 @@
 import {CanvasManager} from '../view/canvas_components/canvas_manager';
 
-import {EventType, FssEvent, keyPressCheckersMap} from './event_checker';
+import {EventType, FssEvent} from '.';
+import {keyPressCheckersMap} from './key_perss_checkers';
 
 
 type Observer = (e: FssEvent) => void;
