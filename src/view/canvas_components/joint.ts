@@ -109,8 +109,6 @@ export class Joint extends ViewObject {
     }
     wallsToRemove.forEach(o => {
       o.RemoveSelf();
-      o.RemoveSelf();
-      console.log("haha");
     });
   }
 
