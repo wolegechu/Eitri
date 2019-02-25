@@ -1,3 +1,5 @@
+You can find the detail here: [Document](https://github.com/fss-ai/Eitri/wiki)
+
 
 Todo:
 
