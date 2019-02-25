@@ -112,17 +112,14 @@ export class CanvasManager {
 
   private static AddGrid() {
     const img = GetImage('grid');
-    // TODO: 'onload' should be removed after we can pre-load all assets.
-    img.onload = () => {
-      const obj = new fabric.Image(img, {
-        originX: 'center',
-        originY: 'center',
-        left: this.canvas.getWidth() / 2,
-        top: this.canvas.getHeight() / 2,
-        evented: false,
-      });
-      this.Add(obj, RenderOrderConfig.GRID);
-    };
+    const obj = new fabric.Image(img, {
+      originX: 'center',
+      originY: 'center',
+      left: this.canvas.getWidth() / 2,
+      top: this.canvas.getHeight() / 2,
+      evented: false,
+    });
+    this.Add(obj, RenderOrderConfig.GRID);
   }
 
   private static EnableZoom() {

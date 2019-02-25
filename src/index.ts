@@ -1,4 +1,5 @@
 import * as EventSystem from './event_system';
+import {LoadImages} from './image_manager';
 import {DrawRectangleMachine} from './state_machine/designer/draw_rectangle/draw_rectangle_machine';
 import {WallDrawingMachine} from './state_machine/designer/draw_wall/draw_wall_machine';
 import {DrawWindowMachine} from './state_machine/designer/draw_window/draw_window_machine';
@@ -12,7 +13,8 @@ import * as ViewFactory from './view/canvas_components/view_factory';
 let machine: StateMachine = null;
 
 
-function Init(option: {canvasID: string}) {
+async function Init(option: {canvasID: string}) {
+  await LoadImages();
   CanvasManager.Init(option.canvasID);
   machine = new WallDrawingMachine();
 
