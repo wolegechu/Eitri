@@ -1,4 +1,4 @@
-You can find the detail here: [Document](https://github.com/fss-ai/Eitri/wiki)
+You can find the details here: [Document](https://github.com/fss-ai/Eitri/wiki)
 
 
 Todo:
