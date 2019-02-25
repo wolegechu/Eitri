@@ -1,4 +1,4 @@
-import * as EventSystem from '../../../events/index';
+import * as EventSystem from '../../../event_system';
 import {CanvasManager} from '../../../view/canvas_components/canvas_manager';
 import {ViewObject} from '../../../view/canvas_components/view_object';
 import {UIIndex} from '../../../view/html_components/index';

@@ -1,4 +1,4 @@
-import * as EventSystem from '../../../events/index';
+import * as EventSystem from '../../../event_system';
 import {Point} from '../../../utils';
 import {Joint} from '../../../view/canvas_components/joint';
 import * as ViewFactory from '../../../view/canvas_components/view_factory';

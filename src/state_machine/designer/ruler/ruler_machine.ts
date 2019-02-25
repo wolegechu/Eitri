@@ -2,7 +2,7 @@ import {fabric} from 'fabric';
 
 import {ChangeToSelectionMode} from '../../..';
 import {GLOBAL_SCALE} from '../../../config/CONFIG';
-import * as EventSystem from '../../../events/index';
+import * as EventSystem from '../../../event_system';
 import {GetImage} from '../../../image_manager';
 import {Background} from '../../../view/canvas_components/background';
 import {CanvasManager} from '../../../view/canvas_components/canvas_manager';

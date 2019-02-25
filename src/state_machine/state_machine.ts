@@ -1,4 +1,4 @@
-import * as EventSystem from '../events/index';
+import * as EventSystem from '../event_system';
 
 
 export abstract class BaseState {
