@@ -1,4 +1,6 @@
-import {EventType, FssEvent} from '.';
+import {EventType} from './event_types';
+import {FssEvent} from './fss_event';
+
 
 /*******
  * All Key Press Event Checker

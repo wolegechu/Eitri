@@ -14,7 +14,9 @@ describe('event system', () => {
   });
 
   test('RemoveEventListener', () => {
-    EventSystem.RemoveEventListener(EventSystem.EventType.KEY_PRESS_ANY, observer);
+    EventSystem.AddEventListener(EventSystem.EventType.KEY_PRESS_ANY, observer);
+    EventSystem.RemoveEventListener(
+        EventSystem.EventType.KEY_PRESS_ANY, observer);
     const event = document.createEvent('KeyboardEvent');
     event.initEvent('keydown');
     document.dispatchEvent(event);

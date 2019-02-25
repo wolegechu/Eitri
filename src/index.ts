@@ -16,7 +16,7 @@ function Init(option: {canvasID: string}) {
   CanvasManager.Init(option.canvasID);
   machine = new WallDrawingMachine();
 
-  EventSystem.RegistCanvasEvent();
+  EventSystem.RegisterCanvasEvent();
 }
 
 function DrawWall() {

@@ -1,6 +1,7 @@
 import {CanvasManager} from '../view/canvas_components/canvas_manager';
 
-import {EventType, FssEvent} from '.';
+import {EventType} from './event_types';
+import {FssEvent} from './fss_event';
 import {keyPressCheckersMap} from './key_perss_checkers';
 
 
@@ -58,7 +59,7 @@ document.onkeyup = (e) => {
  * Get all canvas based  event
  */
 // - mouse click event
-export function RegistCanvasEvent() {
+export function RegisterCanvasEvent() {
   CanvasManager.OnMouseDown((point) => {
     const type = EventType.MOUSE_CLICK_CANVAS;
 
