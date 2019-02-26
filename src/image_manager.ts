@@ -2,11 +2,32 @@ import {imageLib} from './images/image_config';
 
 const imageMap = new Map<string, HTMLImageElement>();
 
-Object.keys(imageLib).forEach(key => {
-  const img = new Image();
-  img.src = imageLib[key];
-  imageMap.set(key, img);
-});
+export async function LoadImages() {
+  return new Promise((resolve) => {
+    let count = 0;
+    const onLoad = () => {
+      count += 1;
+      if (count === Object.keys(imageLib).length) {
+        resolve();
+      }
+    };
+
+    Object.keys(imageLib).forEach(key => {
+      const img = new Image();
+      img.onload = onLoad;
+      img.onerror = () => {
+        console.error('image load fail: ' + imageLib[key]);
+        count += 1;
+        if (count === Object.keys(imageLib).length) {
+          resolve();
+        }
+      };
+      img.src = imageLib[key];
+      imageMap.set(key, img);
+    });
+  });
+}
+
 
 export function GetImage(key: string): HTMLImageElement {
   return imageMap.get(key);
