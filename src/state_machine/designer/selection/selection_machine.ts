@@ -6,7 +6,6 @@ import {StateMachine} from '../../state_machine';
 
 export class SelectionMachine extends StateMachine {
   selectedObject: ViewObject;
-  protected transisionTable: [];
 
   private funcOnObjectSelect = (e: EventSystem.FssEvent) => {
     this.OnObjectSelect(e);

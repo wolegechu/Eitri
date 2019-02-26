@@ -11,8 +11,6 @@ export class DrawWindowMachine extends StateMachine {
   viewWindow: Accessory;
   finished = false;
 
-  protected transisionTable: [];
-
   private funcOnMouseMove = (e: EventSystem.FssEvent) => {
     this.OnMouseMove(e);
   };
