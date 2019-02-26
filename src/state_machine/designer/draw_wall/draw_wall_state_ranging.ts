@@ -6,34 +6,32 @@ import {Wall} from '../../../view/canvas_components/wall';
 import {BaseState} from '../../state_machine';
 
 import {WallDrawingMachine} from './draw_wall_machine';
+import {WallDrawingState} from './draw_wall_state_drawing';
 
 /**
  * Use a certain length to ranging the wall
  */
-export class RangingState extends BaseState {
+export class WallRangingState extends BaseState {
   machine: WallDrawingMachine;
 
-  private funcOnMouseMove = (e: EventSystem.FssEvent) => {
-    this.OnMouseMove(e);
-  };
-  private funcOnMouseDown = (e: EventSystem.FssEvent) => {
-    this.OnMouseDown(e);
-  };
+  protected eventTable = [
+    {
+      event: EventSystem.EventType.MOUSE_CLICK_CANVAS,
+      func: (e: EventSystem.FssEvent) => this.OnMouseDown(e)
+    },
+    {
+      event: EventSystem.EventType.MOUSE_MOVE_CANVAS,
+      func: (e: EventSystem.FssEvent) => this.OnMouseMove(e)
+    },
+  ];
 
   Enter(): void {
     console.debug('State RangingState: Enter');
-
-    EventSystem.AddEventListener(
-        EventSystem.EventType.MOUSE_MOVE_CANVAS, this.funcOnMouseMove);
-    EventSystem.AddEventListener(
-        EventSystem.EventType.MOUSE_CLICK_CANVAS, this.funcOnMouseDown);
+    super.Enter();
   }
 
   Leave(): void {
-    EventSystem.RemoveEventListener(
-        EventSystem.EventType.MOUSE_MOVE_CANVAS, this.funcOnMouseMove);
-    EventSystem.RemoveEventListener(
-        EventSystem.EventType.MOUSE_CLICK_CANVAS, this.funcOnMouseDown);
+    super.Leave();
   }
 
   private OnMouseMove(event: EventSystem.FssEvent): void {
@@ -60,7 +58,7 @@ export class RangingState extends BaseState {
     const newWall = ViewFactory.CreateWall(pos, joint);
     this.machine.lastWallID = newWall.id;
     this.machine.lastJointID = newWall.jointIDs[0];
-    this.machine.Transition(event.type);
+    this.machine.Transition(new WallDrawingState(this.machine));
   }
 
   private ShiftPosition(pos: Point): Point {

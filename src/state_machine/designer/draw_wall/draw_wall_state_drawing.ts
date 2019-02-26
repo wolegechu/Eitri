@@ -8,61 +8,49 @@ import {Wall} from '../../../view/canvas_components/wall';
 import {BaseState} from '../../state_machine';
 
 import {WallDrawingMachine} from './draw_wall_machine';
+import {WallRangingState} from './draw_wall_state_ranging';
 
 
 /*****
  * when Mouse Move: update the Wall, follow the mouse
  * when Click: crate a new Wall
  */
-export class DrawingState extends BaseState {
+export class WallDrawingState extends BaseState {
   machine: WallDrawingMachine;
 
-  private funcOnMouseMove = (e: EventSystem.FssEvent) => {
-    this.OnMouseMove(e);
-  };
-  private funcOnMouseDown = (e: EventSystem.FssEvent) => {
-    this.OnMouseDown(e);
-  };
-  private funcOnNumberPress = (e: EventSystem.FssEvent) => {
-    this.OnNumberPress(e);
-  };
-  private funcOnEnterPress = (e: EventSystem.FssEvent) => {
-    this.OnEnterPress(e);
-  };
-  private funcOnBackPress = (e: EventSystem.FssEvent) => {
-    this.OnBackPress(e);
-  };
+  protected eventTable = [
+    {
+      event: EventSystem.EventType.MOUSE_MOVE_CANVAS,
+      func: (e: EventSystem.FssEvent) => this.OnMouseMove(e)
+    },
+    {
+      event: EventSystem.EventType.MOUSE_CLICK_CANVAS,
+      func: (e: EventSystem.FssEvent) => this.OnMouseDown(e)
+    },
+    {
+      event: EventSystem.EventType.KEY_PRESS_NUMBER,
+      func: (e: EventSystem.FssEvent) => this.OnNumberPress(e)
+    },
+    {
+      event: EventSystem.EventType.KEY_PRESS_ENTER,
+      func: (e: EventSystem.FssEvent) => this.OnEnterPress(e)
+    },
+    {
+      event: EventSystem.EventType.KEY_PRESS_BACKSPACE,
+      func: (e: EventSystem.FssEvent) => this.OnBackPress(e)
+    },
+  ];
+
 
   Enter(): void {
     console.debug('State DrawingState: Enter');
-
+    super.Enter();
     this.machine.lengthInputCache = 0;
-
-    EventSystem.AddEventListener(
-        EventSystem.EventType.MOUSE_MOVE_CANVAS, this.funcOnMouseMove);
-    EventSystem.AddEventListener(
-        EventSystem.EventType.MOUSE_CLICK_CANVAS, this.funcOnMouseDown);
-    EventSystem.AddEventListener(
-        EventSystem.EventType.KEY_PRESS_NUMBER, this.funcOnNumberPress);
-    EventSystem.AddEventListener(
-        EventSystem.EventType.KEY_PRESS_ENTER, this.funcOnEnterPress);
-    EventSystem.AddEventListener(
-        EventSystem.EventType.KEY_PRESS_BACKSPACE, this.funcOnBackPress);
   }
 
   Leave(): void {
     console.debug('State DrawingState: Leave');
-
-    EventSystem.RemoveEventListener(
-        EventSystem.EventType.MOUSE_MOVE_CANVAS, this.funcOnMouseMove);
-    EventSystem.RemoveEventListener(
-        EventSystem.EventType.MOUSE_CLICK_CANVAS, this.funcOnMouseDown);
-    EventSystem.RemoveEventListener(
-        EventSystem.EventType.KEY_PRESS_NUMBER, this.funcOnNumberPress);
-    EventSystem.RemoveEventListener(
-        EventSystem.EventType.KEY_PRESS_ENTER, this.funcOnEnterPress);
-    EventSystem.RemoveEventListener(
-        EventSystem.EventType.KEY_PRESS_BACKSPACE, this.funcOnBackPress);
+    super.Leave();
   }
 
   /**
@@ -127,7 +115,7 @@ export class DrawingState extends BaseState {
     const newWall = ViewFactory.CreateWall(pos, joint);
     this.machine.lastWallID = newWall.id;
     this.machine.lastJointID = newWall.jointIDs[0];
-    this.machine.Transition(event.type);
+    this.machine.Transition(new WallDrawingState(this.machine));
   }
 
   private OnNumberPress(event: EventSystem.FssEvent): void {
@@ -146,6 +134,6 @@ export class DrawingState extends BaseState {
 
   private OnEnterPress(event: EventSystem.FssEvent): void {
     if (!this.machine.lengthInputCache) return;
-    this.machine.Transition(event.type);
+    this.machine.Transition(new WallRangingState(this.machine));
   }
 }

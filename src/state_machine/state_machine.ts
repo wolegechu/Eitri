@@ -3,45 +3,45 @@ import * as EventSystem from '../event_system';
 
 export abstract class BaseState {
   machine: StateMachine;
-  // name: string
+
+  protected eventTable: Array<
+      {event: EventSystem.EventType, func: (e: EventSystem.FssEvent) => void}> =
+      [];
 
   constructor(m: StateMachine) {
     this.machine = m;
   }
-  abstract Enter(): void;
-  abstract Leave(): void;
+
+  Enter(): void {
+    this.eventTable.forEach(data => {
+      EventSystem.AddEventListener(data.event, data.func);
+    });
+  }
+
+  Leave(): void {
+    this.eventTable.forEach(data => {
+      EventSystem.RemoveEventListener(data.event, data.func);
+    });
+  }
 }
 
-type TransitionTable = Array<
-    {origin: BaseState; target: BaseState; event: EventSystem.EventType;}>;
-
 export abstract class StateMachine {
-  protected abstract transisionTable: TransitionTable;
   protected state: BaseState;
 
-  constructor() {}
+  constructor() { }
+  
+  abstract Exit(): void;
+  
+  Transition(newState: BaseState): void {
+    this.state.Leave();
+    newState.Enter();
+    this.state = newState;
+  }
 
-  InitState(s: BaseState): void {
+  protected InitState(s: BaseState): void {
     s.Enter();
     this.state = s;
   }
 
-  abstract Exit(): void;
-
-  Transition(event: EventSystem.EventType): void {
-    const table = this.transisionTable;
-    const result = table.filter(e => {
-      return e.event === event && e.origin === this.state;
-    });
-
-    console.assert(
-        result.length <= 1, 'WTF! More than one transition discovered !');
-    if (result.length === 1) {
-      this.state.Leave();
-
-      const target = result[0].target;
-      target.Enter();
-      this.state = target;
-    }
-  }
+  
 }

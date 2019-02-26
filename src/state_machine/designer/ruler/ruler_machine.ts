@@ -17,8 +17,6 @@ export class RulerMachine extends StateMachine {
   private rulerLength = 100;
   private inputLengthCache = 0;
 
-  protected transisionTable: [];
-
   private funcOnPressESC = (e: EventSystem.FssEvent) => {
     this.OnPressESC(e);
   };

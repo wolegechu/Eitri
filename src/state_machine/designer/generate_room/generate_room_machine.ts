@@ -9,8 +9,6 @@ import {StateMachine} from '../../state_machine';
 
 
 export class GenerateRoomMachine extends StateMachine {
-  protected transisionTable: [];
-
   constructor() {
     super();
     console.debug('Enter Generate Room Mode');

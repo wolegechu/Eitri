@@ -4,50 +4,20 @@ import {Joint} from '../../../view/canvas_components/joint';
 import * as ViewFactory from '../../../view/canvas_components/view_factory';
 import {Wall} from '../../../view/canvas_components/wall';
 import {StateMachine} from '../../state_machine';
-
-import {DrawingState} from './draw_wall_state_drawing';
-import {IdleState} from './draw_wall_state_idle';
-import {RangingState} from './draw_wall_state_ranging';
+import {WallIdleState} from './draw_wall_state_idle';
 
 export class WallDrawingMachine extends StateMachine {
   lastWallID: number;
   lastJointID: number;
   lengthInputCache: number;
 
-  idleState: IdleState = new IdleState(this);
-  drawingState: DrawingState = new DrawingState(this);
-  rangingState: RangingState = new RangingState(this);
-
   funcOnPressESC = (e: EventSystem.FssEvent) => {
     this.OnPressESC(e);
   };
 
-  protected transisionTable = [
-    {
-      origin: this.idleState,
-      target: this.drawingState,
-      event: EventSystem.EventType.MOUSE_CLICK_CANVAS
-    },
-    {
-      origin: this.drawingState,
-      target: this.drawingState,
-      event: EventSystem.EventType.MOUSE_CLICK_CANVAS
-    },
-    {
-      origin: this.drawingState,
-      target: this.rangingState,
-      event: EventSystem.EventType.KEY_PRESS_ENTER
-    },
-    {
-      origin: this.rangingState,
-      target: this.drawingState,
-      event: EventSystem.EventType.MOUSE_CLICK_CANVAS
-    }
-  ];
-
   constructor() {
     super();
-    this.InitState(this.idleState);
+    this.InitState(new WallIdleState(this));
 
     EventSystem.AddEventListener(
         EventSystem.EventType.KEY_PRESS_ESC, this.funcOnPressESC);
