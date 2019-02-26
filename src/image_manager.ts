@@ -15,7 +15,13 @@ export async function LoadImages() {
     Object.keys(imageLib).forEach(key => {
       const img = new Image();
       img.onload = onLoad;
-      img.onerror = onLoad;
+      img.onerror = () => {
+        console.error('image load fail: ' + imageLib[key]);
+        count += 1;
+        if (count === Object.keys(imageLib).length) {
+          resolve();
+        }
+      };
       img.src = imageLib[key];
       imageMap.set(key, img);
     });
