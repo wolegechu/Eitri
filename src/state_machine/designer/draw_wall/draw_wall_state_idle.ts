@@ -1,6 +1,7 @@
+import Flatten from 'flatten-js';
+
 import {GRAB_JOINT_DISTANCE, GRAB_WALL_DISTANCE} from '../../../config/CONFIG';
 import * as EventSystem from '../../../event_system';
-import {GetClosestPointOnSegment2Point, GetDistanceOfPoint2Point} from '../../../utils/math';
 import {Joint} from '../../../view/canvas_components/joint';
 import * as ViewFactory from '../../../view/canvas_components/view_factory';
 import {Wall} from '../../../view/canvas_components/wall';
@@ -43,8 +44,8 @@ export class WallIdleState extends BaseState {
       const joint1 = ViewFactory.GetViewObject(grabWall.jointIDs[0]) as Joint;
       const joint2 = ViewFactory.GetViewObject(grabWall.jointIDs[1]) as Joint;
 
-      const newPos = GetClosestPointOnSegment2Point(
-          pos, {ps: joint1.position, pe: joint2.position});
+      const segment = new Flatten.Segment(joint1.position, joint2.position);
+      const newPos = pos.distanceTo(segment)[1].end;
 
       wall = ViewFactory.CreateWall(newPos, pos);
       const cutJoint = ViewFactory.GetViewObject(wall.jointIDs[0]) as Joint;

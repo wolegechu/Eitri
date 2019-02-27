@@ -1,7 +1,8 @@
+import Flatten from 'flatten-js';
+
 import {ChangeToSelectionMode} from '../../..';
 import {GRAB_WALL_DISTANCE} from '../../../config/CONFIG';
 import * as EventSystem from '../../../event_system';
-import {GetClosestPointOnSegment2Point, Point} from '../../../utils';
 import {Accessory} from '../../../view/canvas_components/accessory';
 import {Joint} from '../../../view/canvas_components/joint';
 import * as ViewFactory from '../../../view/canvas_components/view_factory';
@@ -53,8 +54,8 @@ export class DrawWindowMachine extends StateMachine {
       const joint1 = ViewFactory.GetViewObject(grabWall.jointIDs[0]) as Joint;
       const joint2 = ViewFactory.GetViewObject(grabWall.jointIDs[1]) as Joint;
 
-      const newPos = GetClosestPointOnSegment2Point(
-          pos, {ps: joint1.position, pe: joint2.position});
+      const segment = new Flatten.Segment(joint1.position, joint2.position);
+      const newPos = pos.distanceTo(segment)[1].end;
 
       this.viewWindow.SetPosition(newPos);
       this.viewWindow.SetWallID(grabWall.id);
@@ -72,8 +73,8 @@ export class DrawWindowMachine extends StateMachine {
       const joint1 = ViewFactory.GetViewObject(grabWall.jointIDs[0]) as Joint;
       const joint2 = ViewFactory.GetViewObject(grabWall.jointIDs[1]) as Joint;
 
-      const newPos = GetClosestPointOnSegment2Point(
-          pos, {ps: joint1.position, pe: joint2.position});
+      const segment = new Flatten.Segment(joint1.position, joint2.position);
+      const newPos = pos.distanceTo(segment)[1].end;
 
       this.viewWindow.SetPosition(newPos);
       this.viewWindow.SetWallID(grabWall.id);
