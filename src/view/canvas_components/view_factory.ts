@@ -1,5 +1,6 @@
+import Flatten from 'flatten-js';
+
 import {Point} from '../../utils/index';
-import {GetDistanceOfPoint2LineSegment, GetDistanceOfPoint2Point} from '../../utils/math';
 
 import {Accessory} from './accessory';
 import {Background} from './background';
@@ -139,7 +140,7 @@ export function GetNearestJoint(
     if (!(obj instanceof Joint)) continue;
     if (-1 !== exception.indexOf(obj)) continue;
 
-    const dis = GetDistanceOfPoint2Point(obj.position, pos);
+    const dis = obj.position.distanceTo(pos)[0];
     if (dis <= min) {
       min = dis;
       nearestJoint = obj;
@@ -168,7 +169,8 @@ export function GetNearestWall(
 
     const p1 = (GetViewObject(obj.jointIDs[0]) as Joint).position;
     const p2 = (GetViewObject(obj.jointIDs[1]) as Joint).position;
-    const dis = GetDistanceOfPoint2LineSegment(pos, {ps: p1, pe: p2});
+    const segment = new Flatten.Segment(p1, p2);
+    const dis = pos.distanceTo(segment)[0];
     if (dis <= min) {
       min = dis;
       nearestWall = obj;
@@ -217,8 +219,8 @@ function RemoveDuplicateWall() {
 function IsJointOnWall(wall: Wall, joint: Joint) {
   const jointA = GetViewObject(wall.jointIDs[0]) as Joint;
   const jointB = GetViewObject(wall.jointIDs[1]) as Joint;
-  const distance = GetDistanceOfPoint2LineSegment(
-      joint.position, {ps: jointA.position, pe: jointB.position});
+  const segment = new Flatten.Segment(jointA.position, jointB.position);
+  const distance = joint.position.distanceTo(segment)[0];
   return distance < 0.1;
 }
 

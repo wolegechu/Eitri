@@ -1,7 +1,7 @@
 import {fabric} from 'fabric';
 
 import {RenderOrderConfig} from '../../config/render_order_config';
-import {GetDistanceOfPoint2Point, Point} from '../../utils';
+import {Point} from '../../utils';
 
 import {Accessory} from './accessory';
 import {CanvasManager} from './canvas_manager';
@@ -49,7 +49,7 @@ export class Wall extends ViewObject {
     const joint1 = ViewFactory.GetViewObject(this.jointIDs[0]) as Joint;
     const joint2 = ViewFactory.GetViewObject(this.jointIDs[1]) as Joint;
 
-    const length = GetDistanceOfPoint2Point(joint1.position, joint2.position);
+    const length = joint1.position.distanceTo(joint2.position)[0];
     return length;
   }
 
