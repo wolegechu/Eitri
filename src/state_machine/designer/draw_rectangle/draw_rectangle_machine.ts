@@ -40,10 +40,8 @@ export class DrawRectangleMachine extends StateMachine {
   }
 
   SetJointAndCreateWall(
-    upLeftJoint: Joint,
-    upRightJoint: Joint,
-    downLeftJoint: Joint,
-    downRightJoint: Joint) {
+      upLeftJoint: Joint, upRightJoint: Joint, downLeftJoint: Joint,
+      downRightJoint: Joint) {
     this.upLeftJoint = upLeftJoint;
     this.upRightJoint = upRightJoint;
     this.downLeftJoint = downLeftJoint;

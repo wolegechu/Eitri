@@ -66,7 +66,7 @@ export class RectDrawingState extends BaseState {
       const joint2 = ViewFactory.GetViewObject(grabWall.jointIDs[1]) as Joint;
 
       const newPos = GetClosestPointOnSegment2Point(
-          pos, {a: joint1.position, b: joint2.position});
+          pos, {ps: joint1.position, pe: joint2.position});
       joint.SetPosition(newPos);
       grabWall.Split(joint);
     }
@@ -88,7 +88,7 @@ export class RectDrawingState extends BaseState {
       const joint2 = ViewFactory.GetViewObject(grabWall.jointIDs[1]) as Joint;
 
       pos = GetClosestPointOnSegment2Point(
-          pos, {a: joint1.position, b: joint2.position});
+          pos, {ps: joint1.position, pe: joint2.position});
     }
     return pos;
   }

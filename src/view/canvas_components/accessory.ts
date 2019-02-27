@@ -1,4 +1,5 @@
 import {fabric} from 'fabric';
+import Flatten from 'flatten-js';
 
 import {RenderOrderConfig} from '../../config/render_order_config';
 import {GetImage} from '../../image_manager';
@@ -155,18 +156,17 @@ export class Accessory extends ViewObject {
     const joint1 = ViewFactory.GetViewObject(wall.jointIDs[0]) as Joint;
     const joint2 = ViewFactory.GetViewObject(wall.jointIDs[1]) as Joint;
 
-    const aPoint = joint1.position.clone();
-    const bPoint = joint2.position.clone();
-    const normVec = bPoint.clone().subtract(aPoint).norm();  // a->b
-    aPoint.add(normVec.clone().multiplyScalar(this.length / 2));
-    bPoint.subtract(normVec.clone().multiplyScalar(this.length / 2));
+    const segAB = new Flatten.Vector(joint1.position, joint2.position);
+    const normAB = segAB.normalize();
+    const aPoint = joint1.position.translate(normAB.multiply(this.length / 2));
+    const bPoint = joint2.position.translate(normAB.multiply(-this.length / 2));
 
-    const wallVec = bPoint.clone().subtract(aPoint);
-    const windowVec = this.position.clone().subtract(aPoint);
-    this.positionPercent = windowVec.clone().divide(wallVec).x;
+    const wallSeg = new Flatten.Vector(aPoint, bPoint);
+    const windowSeg = new Flatten.Vector(aPoint, this.position);
+    this.positionPercent = windowSeg.x / wallSeg.x;
     // special case: vertical wall
     if (!isFinite(this.positionPercent) || isNaN(this.positionPercent)) {
-      this.positionPercent = windowVec.clone().divide(wallVec).y;
+      this.positionPercent = windowSeg.y / wallSeg.y;
     }
 
     // the window is out of range, drag back the window
@@ -187,15 +187,13 @@ export class Accessory extends ViewObject {
     const joint1 = ViewFactory.GetViewObject(wall.jointIDs[0]) as Joint;
     const joint2 = ViewFactory.GetViewObject(wall.jointIDs[1]) as Joint;
 
-    const aPoint = joint1.position.clone();
-    const bPoint = joint2.position.clone();
-    const normVec = bPoint.clone().subtract(aPoint).norm();  // a->b
-    aPoint.add(normVec.clone().multiplyScalar(this.length / 2));
-    bPoint.subtract(normVec.clone().multiplyScalar(this.length / 2));
+    const segAB = new Flatten.Vector(joint1.position, joint2.position);
+    const normAB = segAB.normalize();
+    const aPoint = joint1.position.translate(normAB.multiply(this.length / 2));
+    const bPoint = joint2.position.translate(normAB.multiply(-this.length / 2));
 
-    const wallVec = bPoint.clone().subtract(aPoint);
-    this.position = aPoint.clone().add(
-        wallVec.clone().multiplyScalar(this.positionPercent));
+    const wallSeg = new Flatten.Vector(aPoint, bPoint);
+    this.position = aPoint.translate(wallSeg.multiply(this.positionPercent));
 
     this.UpdateViewByPosition();
   }
@@ -214,10 +212,13 @@ export class Accessory extends ViewObject {
     const joint1 = ViewFactory.GetViewObject(wall.jointIDs[0]) as Joint;
     const joint2 = ViewFactory.GetViewObject(wall.jointIDs[1]) as Joint;
 
-    const aPoint = joint1.position.clone();
-    const bPoint = joint2.position.clone();
-    const vec = bPoint.clone().subtract(aPoint);
-    this.view.set({angle: (Math.atan2(vec.y, vec.x) / Math.PI * 180 - 90)});
+    const aPoint = joint1.position;
+    const bPoint = joint2.position;
+    this.view.set({
+      angle:
+          Math.atan2(bPoint.y - aPoint.y, bPoint.x - aPoint.x) / Math.PI * 180 -
+          90
+    });
   }
 
   private UpdateViewByImage() {
