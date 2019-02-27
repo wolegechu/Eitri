@@ -26,8 +26,6 @@ BUGs:
 optimization:
 
 - exportedProperties 类换到对应元素目录
-- point、vector 改用flatenjs
-- flatten import problem  (`export default Flatten;`)
 - 定义、申明分离
 
 Future: 

@@ -168,7 +168,7 @@ export function GetNearestWall(
 
     const p1 = (GetViewObject(obj.jointIDs[0]) as Joint).position;
     const p2 = (GetViewObject(obj.jointIDs[1]) as Joint).position;
-    const dis = GetDistanceOfPoint2LineSegment(pos, {p1, p2});
+    const dis = GetDistanceOfPoint2LineSegment(pos, {ps: p1, pe: p2});
     if (dis <= min) {
       min = dis;
       nearestWall = obj;
@@ -218,7 +218,7 @@ function IsJointOnWall(wall: Wall, joint: Joint) {
   const jointA = GetViewObject(wall.jointIDs[0]) as Joint;
   const jointB = GetViewObject(wall.jointIDs[1]) as Joint;
   const distance = GetDistanceOfPoint2LineSegment(
-      joint.position, {p1: jointA.position, p2: jointB.position});
+      joint.position, {ps: jointA.position, pe: jointB.position});
   return distance < 0.1;
 }
 

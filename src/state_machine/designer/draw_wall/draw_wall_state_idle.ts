@@ -44,7 +44,7 @@ export class WallIdleState extends BaseState {
       const joint2 = ViewFactory.GetViewObject(grabWall.jointIDs[1]) as Joint;
 
       const newPos = GetClosestPointOnSegment2Point(
-          pos, {a: joint1.position, b: joint2.position});
+          pos, {ps: joint1.position, pe: joint2.position});
 
       wall = ViewFactory.CreateWall(newPos, pos);
       const cutJoint = ViewFactory.GetViewObject(wall.jointIDs[0]) as Joint;

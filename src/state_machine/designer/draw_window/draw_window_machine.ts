@@ -54,7 +54,7 @@ export class DrawWindowMachine extends StateMachine {
       const joint2 = ViewFactory.GetViewObject(grabWall.jointIDs[1]) as Joint;
 
       const newPos = GetClosestPointOnSegment2Point(
-          pos, {a: joint1.position, b: joint2.position});
+          pos, {ps: joint1.position, pe: joint2.position});
 
       this.viewWindow.SetPosition(newPos);
       this.viewWindow.SetWallID(grabWall.id);
@@ -73,7 +73,7 @@ export class DrawWindowMachine extends StateMachine {
       const joint2 = ViewFactory.GetViewObject(grabWall.jointIDs[1]) as Joint;
 
       const newPos = GetClosestPointOnSegment2Point(
-          pos, {a: joint1.position, b: joint2.position});
+          pos, {ps: joint1.position, pe: joint2.position});
 
       this.viewWindow.SetPosition(newPos);
       this.viewWindow.SetWallID(grabWall.id);

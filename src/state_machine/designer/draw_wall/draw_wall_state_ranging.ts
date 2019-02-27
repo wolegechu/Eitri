@@ -1,3 +1,5 @@
+import Flatten from 'flatten-js';
+
 import * as EventSystem from '../../../event_system';
 import {Point} from '../../../utils';
 import {Joint} from '../../../view/canvas_components/joint';
@@ -75,8 +77,8 @@ export class WallRangingState extends BaseState {
   private RangingPosition(pos: Point): Point {
     const length = this.machine.lengthInputCache;
     const pivotPos = this.machine.GetPivotJoint().position;
-    const vec = pos.clone().subtract(pivotPos).norm();
-    const ret = pivotPos.clone().add(vec.multiplyScalar(length));
+    const vec = new Flatten.Vector(pivotPos, pos).normalize();
+    const ret = pivotPos.translate(vec.multiply(length));
     return ret;
   }
 }
