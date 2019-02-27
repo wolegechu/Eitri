@@ -1,5 +1,4 @@
-import * as EventSystem from '../../event_system';
-import {BaseState, StateMachine} from '../state_machine';
+import {StateMachine} from '../state_machine';
 
 import {TestStateA} from './test_state';
 
@@ -11,4 +10,8 @@ export class TestMachine extends StateMachine {
   }
 
   Exit(): void {}
+
+  GetState() {
+    return this.state;
+  }
 }

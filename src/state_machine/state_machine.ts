@@ -28,10 +28,10 @@ export abstract class BaseState {
 export abstract class StateMachine {
   protected state: BaseState;
 
-  constructor() { }
-  
+  constructor() {}
+
   abstract Exit(): void;
-  
+
   Transition(newState: BaseState): void {
     this.state.Leave();
     newState.Enter();
@@ -42,6 +42,4 @@ export abstract class StateMachine {
     s.Enter();
     this.state = s;
   }
-
-  
 }
