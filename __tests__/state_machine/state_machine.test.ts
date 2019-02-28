@@ -6,8 +6,7 @@ test('state machine', () => {
   const machine = new TestMachine();
   expect(machine.GetState() instanceof TestStateA).toBeTruthy();
 
-  const event = document.createEvent('KeyboardEvent');
-  event.initEvent('keydown');
+  const event = new KeyboardEvent('keydown');
   document.dispatchEvent(event);
 
   expect(machine.GetState() instanceof TestStateB).toBeTruthy();
