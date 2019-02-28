@@ -1,5 +1,3 @@
-import Flatten from 'flatten-js';
-
 import {Point} from '../../utils/index';
 
 import {Accessory} from './accessory';
@@ -136,14 +134,14 @@ export function GetNearestJoint(
   let min = distanceUpperBound;
   let nearestJoint: Joint = null;
 
-  for (const obj of idObjectMap.values()) {
-    if (!(obj instanceof Joint)) continue;
-    if (-1 !== exception.indexOf(obj)) continue;
+  const joints = GetViewObjectsWithType(Joint);
+  for (const joint of joints) {
+    if (-1 !== exception.indexOf(joint)) continue;
 
-    const dis = obj.position.distanceTo(pos)[0];
+    const dis = joint.position.distanceTo(pos)[0];
     if (dis <= min) {
       min = dis;
-      nearestJoint = obj;
+      nearestJoint = joint;
     }
   }
 
@@ -163,17 +161,16 @@ export function GetNearestWall(
   let min = distanceUpperBound;
   let nearestWall: Wall = null;
 
-  for (const obj of idObjectMap.values()) {
-    if (!(obj instanceof Wall)) continue;
-    if (-1 !== exception.indexOf(obj)) continue;
+  const walls = GetViewObjectsWithType(Wall);
+  for (const wall of walls) {
+    if (-1 !== exception.indexOf(wall)) continue;
 
-    const p1 = (GetViewObject(obj.jointIDs[0]) as Joint).position;
-    const p2 = (GetViewObject(obj.jointIDs[1]) as Joint).position;
-    const segment = new Flatten.Segment(p1, p2);
+    const segment = wall.segment;
+    if (!segment) continue;
     const dis = pos.distanceTo(segment)[0];
     if (dis <= min) {
       min = dis;
-      nearestWall = obj;
+      nearestWall = wall;
     }
   }
 
@@ -181,14 +178,13 @@ export function GetNearestWall(
 }
 
 function IsDuplicateWall(a: Wall, b: Wall): boolean {
-  const idsA = a.jointIDs;
-  const idsB = b.jointIDs;
-  if (idsA[0] === idsB[0] && idsA[1] === idsB[1]) {
+  if (a.joint1 === b.joint1 && a.joint2 === b.joint2) {
     return true;
   }
-  if (idsA[0] === idsB[1] && idsA[1] === idsB[0]) {
+  if (a.joint1 === b.joint2 && a.joint2 === b.joint1) {
     return true;
   }
+
   return false;
 }
 
@@ -217,9 +213,8 @@ function RemoveDuplicateWall() {
 }
 
 function IsJointOnWall(wall: Wall, joint: Joint) {
-  const jointA = GetViewObject(wall.jointIDs[0]) as Joint;
-  const jointB = GetViewObject(wall.jointIDs[1]) as Joint;
-  const segment = new Flatten.Segment(jointA.position, jointB.position);
+  const segment = wall.segment;
+  if (!segment) return false;
   const distance = joint.position.distanceTo(segment)[0];
   return distance < 0.1;
 }
@@ -234,7 +229,7 @@ function TrySplitWall(): boolean {
     const joints = GetViewObjectsWithType<Joint>(Joint);
     for (let j = 0; j < joints.length; ++j) {
       const joint = joints[j];
-      if (wall.jointIDs[0] === joint.id || wall.jointIDs[1] === joint.id) {
+      if (wall.joint1 === joint || wall.joint2 === joint) {
         continue;
       }
 

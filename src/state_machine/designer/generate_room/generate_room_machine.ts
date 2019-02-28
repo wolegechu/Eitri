@@ -33,11 +33,9 @@ export class GenerateRoomMachine extends StateMachine {
    * and don't call it elsewhere.
    */
   private Dfs(v: Joint, vertexes: Joint[], edges: Wall[]) {
-    for (const id of v.wallIDs) {
-      const wall = ViewFactory.GetViewObject(id) as Wall;
+    for (const wall of v.walls) {
       if (wall === edges[edges.length - 1]) continue;
-      const v2ID = wall.jointIDs[wall.jointIDs.indexOf(v.id) ^ 1];
-      const v2 = ViewFactory.GetViewObject(v2ID) as Joint;
+      const v2 = v === wall.joint1 ? wall.joint2 : wall.joint1;
 
       if (v2 === vertexes[0]) {
         // finish
@@ -98,8 +96,8 @@ export class GenerateRoomMachine extends StateMachine {
 
     for (const wall of ViewFactory.GetViewObjectsWithType<Wall>(Wall)) {
       if (edges.indexOf(wall) !== -1) continue;
-      const joint1 = ViewFactory.GetViewObject(wall.jointIDs[0]) as Joint;
-      const joint2 = ViewFactory.GetViewObject(wall.jointIDs[1]) as Joint;
+      const joint1 = wall.joint1;
+      const joint2 = wall.joint2;
       let p1 = new Flatten.Point(joint1.position.x, joint1.position.y);
       let p2 = new Flatten.Point(joint2.position.x, joint2.position.y);
       let vec = new Flatten.Vector(p1, p2);

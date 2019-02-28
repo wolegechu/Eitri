@@ -2,7 +2,6 @@ import Flatten from 'flatten-js';
 
 import {GRAB_JOINT_DISTANCE, GRAB_WALL_DISTANCE} from '../../../config/CONFIG';
 import * as EventSystem from '../../../event_system';
-import {Joint} from '../../../view/canvas_components/joint';
 import * as ViewFactory from '../../../view/canvas_components/view_factory';
 import {Wall} from '../../../view/canvas_components/wall';
 import {BaseState} from '../../state_machine';
@@ -41,21 +40,18 @@ export class WallIdleState extends BaseState {
     if (grabJoint) {
       wall = ViewFactory.CreateWall(grabJoint, pos);
     } else if (grabWall) {
-      const joint1 = ViewFactory.GetViewObject(grabWall.jointIDs[0]) as Joint;
-      const joint2 = ViewFactory.GetViewObject(grabWall.jointIDs[1]) as Joint;
-
-      const segment = new Flatten.Segment(joint1.position, joint2.position);
+      const segment = grabWall.segment;
       const newPos = pos.distanceTo(segment)[1].end;
 
       wall = ViewFactory.CreateWall(newPos, pos);
-      const cutJoint = ViewFactory.GetViewObject(wall.jointIDs[0]) as Joint;
+      const cutJoint = wall.joint1;
       grabWall.Split(cutJoint);
     } else {
       wall = ViewFactory.CreateWall(pos, pos);
     }
 
-    this.machine.lastWallID = wall.id;
-    this.machine.lastJointID = wall.jointIDs[1];
+    this.machine.lastWall = wall;
+    this.machine.lastJoint = wall.joint2;
     this.machine.Transition(new WallDrawingState(this.machine));
   }
 }

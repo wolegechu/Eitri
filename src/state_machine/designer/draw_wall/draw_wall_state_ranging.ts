@@ -43,9 +43,7 @@ export class WallRangingState extends BaseState {
     let pos = event.position;
     if (event.shiftDown) pos = this.ShiftPosition(pos);
     pos = this.RangingPosition(pos);
-
-    const joint = ViewFactory.GetViewObject(this.machine.lastJointID) as Joint;
-    joint.SetPosition(pos);
+    this.machine.lastJoint.SetPosition(pos);
   }
 
   private OnMouseDown(event: EventSystem.FssEvent): void {
@@ -56,10 +54,9 @@ export class WallRangingState extends BaseState {
     if (event.shiftDown) pos = this.ShiftPosition(pos);
     pos = this.RangingPosition(pos);
 
-    const joint = ViewFactory.GetViewObject(this.machine.lastJointID) as Joint;
-    const newWall = ViewFactory.CreateWall(pos, joint);
-    this.machine.lastWallID = newWall.id;
-    this.machine.lastJointID = newWall.jointIDs[0];
+    const newWall = ViewFactory.CreateWall(pos, this.machine.lastJoint);
+    this.machine.lastWall = newWall;
+    this.machine.lastJoint = newWall.joint1;
     this.machine.Transition(new WallDrawingState(this.machine));
   }
 

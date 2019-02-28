@@ -5,7 +5,7 @@ import {GetImage} from '../../image_manager';
 import {Point} from '../../utils/index';
 
 import {CanvasManager} from './canvas_manager';
-import {FurnitureExportedProperties, ObjectOptions, ViewObject} from './view_object';
+import {ObjectOptions, ViewObject} from './view_object';
 
 
 interface FurnitureOption extends ObjectOptions {

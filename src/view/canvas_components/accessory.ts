@@ -6,7 +6,6 @@ import {GetImage} from '../../image_manager';
 import {Point} from '../../utils/index';
 
 import {CanvasManager} from './canvas_manager';
-import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
 import {AccessoryExportedProperties, ExportedProperties, ObjectOptions, ViewObject} from './view_object';
 import {Wall} from './wall';
@@ -153,8 +152,8 @@ export class Accessory extends ViewObject {
   private PositionUpdatePercent(): number {
     const wall = ViewFactory.GetViewObject(this.wallID) as Wall;
     if (!wall) return;
-    const joint1 = ViewFactory.GetViewObject(wall.jointIDs[0]) as Joint;
-    const joint2 = ViewFactory.GetViewObject(wall.jointIDs[1]) as Joint;
+    const joint1 = wall.joint1;
+    const joint2 = wall.joint2;
 
     const segAB = new Flatten.Vector(joint1.position, joint2.position);
     const normAB = segAB.normalize();
@@ -184,8 +183,8 @@ export class Accessory extends ViewObject {
   private PercentUpdatePosition() {
     const wall = ViewFactory.GetViewObject(this.wallID) as Wall;
     if (!wall) return;
-    const joint1 = ViewFactory.GetViewObject(wall.jointIDs[0]) as Joint;
-    const joint2 = ViewFactory.GetViewObject(wall.jointIDs[1]) as Joint;
+    const joint1 = wall.joint1;
+    const joint2 = wall.joint2;
 
     const segAB = new Flatten.Vector(joint1.position, joint2.position);
     const normAB = segAB.normalize();
@@ -209,8 +208,8 @@ export class Accessory extends ViewObject {
   private UpdateViewByWall() {
     const wall = ViewFactory.GetViewObject(this.wallID) as Wall;
     if (!wall) return;
-    const joint1 = ViewFactory.GetViewObject(wall.jointIDs[0]) as Joint;
-    const joint2 = ViewFactory.GetViewObject(wall.jointIDs[1]) as Joint;
+    const joint1 = wall.joint1;
+    const joint2 = wall.joint2;
 
     const aPoint = joint1.position;
     const bPoint = joint2.position;
