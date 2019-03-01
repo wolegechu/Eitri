@@ -36,10 +36,7 @@ export class RectIdleState extends BaseState {
     if (grabJoint) {
       upLeftJoint = grabJoint;
     } else if (grabWall) {
-      const joint1 = ViewFactory.GetViewObject(grabWall.jointIDs[0]) as Joint;
-      const joint2 = ViewFactory.GetViewObject(grabWall.jointIDs[1]) as Joint;
-
-      const segment = new Flatten.Segment(joint1.position, joint2.position);
+      const segment = grabWall.segment;
       const newPos = pos.distanceTo(segment)[1].end;
 
       upLeftJoint = ViewFactory.CreateJoint(newPos);

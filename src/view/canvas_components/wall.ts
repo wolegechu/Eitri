@@ -1,7 +1,7 @@
 import {fabric} from 'fabric';
+import Flatten from 'flatten-js';
 
 import {RenderOrderConfig} from '../../config/render_order_config';
-import {Point} from '../../utils';
 
 import {Accessory} from './accessory';
 import {CanvasManager} from './canvas_manager';
@@ -39,18 +39,32 @@ export class Wall extends ViewObject {
   private width = 10;
   private type: string = WallType.NORMAL;
 
-  get jointIDs() {
-    return this._jointIDs;
+  get joint1(): Joint {
+    return ViewFactory.GetViewObject(this._jointIDs[0]) as Joint;
+  }
+  set joint1(newJoint: Joint) {
+    this._jointIDs[0] = newJoint.id;
+  }
+  get joint2(): Joint {
+    return ViewFactory.GetViewObject(this._jointIDs[1]) as Joint;
+  }
+  set joint2(newJoint: Joint) {
+    this._jointIDs[1] = newJoint.id;
+  }
+  get segment(): Flatten.Segment {
+    if (this._jointIDs.length !== 2 || !this.joint1 || !this.joint2) {
+      return undefined;
+    }
+
+    return new Flatten.Segment(this.joint1.position, this.joint2.position);
   }
 
   view: fabric.Line;
 
   get length(): number {
-    const joint1 = ViewFactory.GetViewObject(this.jointIDs[0]) as Joint;
-    const joint2 = ViewFactory.GetViewObject(this.jointIDs[1]) as Joint;
-
-    const length = joint1.position.distanceTo(joint2.position)[0];
-    return length;
+    const p1 = this.joint1.position;
+    const p2 = this.joint2.position;
+    return p1.distanceTo(p2)[0];
   }
 
   constructor(id: number, option: WallOption) {
@@ -112,10 +126,8 @@ export class Wall extends ViewObject {
    * Split the wall to two walls through a joint between two ends of the wall.
    */
   Split(cutJoint: Joint) {
-    const endJoint1 = ViewFactory.GetViewObject(this.jointIDs[0]) as Joint;
-    const endJoint2 = ViewFactory.GetViewObject(this.jointIDs[1]) as Joint;
-    ViewFactory.CreateWall(cutJoint, endJoint1);
-    ViewFactory.CreateWall(cutJoint, endJoint2);
+    ViewFactory.CreateWall(cutJoint, this.joint1);
+    ViewFactory.CreateWall(cutJoint, this.joint2);
     this.RemoveSelf();
   }
 
@@ -140,10 +152,12 @@ export class Wall extends ViewObject {
 
   RemoveSelf() {
     super.RemoveSelf();
-    this.jointIDs.forEach(jointID => {
-      const joint = ViewFactory.GetViewObject(jointID) as Joint;
-      if (joint) joint.RemoveWallID(this.id);
-    });
+    if (this.joint1) {
+      this.joint1.RemoveWallID(this.id);
+    }
+    if (this.joint2) {
+      this.joint2.RemoveWallID(this.id);
+    }
   }
 
   AddAccessoryID(id: number) {
@@ -177,9 +191,9 @@ export class Wall extends ViewObject {
   }
 
   private UpdateViewByJoint() {
-    if (2 !== this.jointIDs.length) return;
-    const joint1 = ViewFactory.GetViewObject(this.jointIDs[0]) as Joint;
-    const joint2 = ViewFactory.GetViewObject(this.jointIDs[1]) as Joint;
+    if (2 !== this._jointIDs.length) return;
+    const joint1 = this.joint1;
+    const joint2 = this.joint2;
     if (!joint1 || !joint2) return;
 
     this.view.set({

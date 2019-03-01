@@ -3,6 +3,7 @@ import Flatten from 'flatten-js';
 import {ChangeToSelectionMode} from '../../..';
 import {GRAB_WALL_DISTANCE} from '../../../config/CONFIG';
 import * as EventSystem from '../../../event_system';
+import {Point} from '../../../utils';
 import {Accessory} from '../../../view/canvas_components/accessory';
 import {Joint} from '../../../view/canvas_components/joint';
 import * as ViewFactory from '../../../view/canvas_components/view_factory';
@@ -46,42 +47,27 @@ export class DrawWindowMachine extends StateMachine {
         EventSystem.EventType.KEY_PRESS_ESC, this.funcOnPressESC);
   }
 
-  private OnMouseMove(e: EventSystem.FssEvent) {
-    const pos = e.position;
-
+  private UpdateViewByMouse(pos: Point) {
     const grabWall = ViewFactory.GetNearestWall(pos, [], GRAB_WALL_DISTANCE);
     if (grabWall) {
-      const joint1 = ViewFactory.GetViewObject(grabWall.jointIDs[0]) as Joint;
-      const joint2 = ViewFactory.GetViewObject(grabWall.jointIDs[1]) as Joint;
-
-      const segment = new Flatten.Segment(joint1.position, joint2.position);
+      const segment = grabWall.segment;
       const newPos = pos.distanceTo(segment)[1].end;
 
       this.viewWindow.SetPosition(newPos);
       this.viewWindow.SetWallID(grabWall.id);
 
     } else {
-      this.viewWindow.SetPosition(e.position);
+      this.viewWindow.SetPosition(pos);
     }
   }
 
+  private OnMouseMove(e: EventSystem.FssEvent) {
+    this.UpdateViewByMouse(e.position);
+  }
+
   private OnMouseDown(e: EventSystem.FssEvent) {
-    const pos = e.position;
-
-    const grabWall = ViewFactory.GetNearestWall(pos, [], GRAB_WALL_DISTANCE);
-    if (grabWall) {
-      const joint1 = ViewFactory.GetViewObject(grabWall.jointIDs[0]) as Joint;
-      const joint2 = ViewFactory.GetViewObject(grabWall.jointIDs[1]) as Joint;
-
-      const segment = new Flatten.Segment(joint1.position, joint2.position);
-      const newPos = pos.distanceTo(segment)[1].end;
-
-      this.viewWindow.SetPosition(newPos);
-      this.viewWindow.SetWallID(grabWall.id);
-
-      this.finished = true;
-    }
-
+    this.UpdateViewByMouse(e.position);
+    this.finished = true;
     ChangeToSelectionMode();
   }
 

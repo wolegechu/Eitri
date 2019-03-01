@@ -6,7 +6,6 @@ import {GetImage} from '../../image_manager';
 import {Point} from '../../utils/index';
 
 import {CanvasManager} from './canvas_manager';
-import {Joint} from './joint';
 import * as ViewFactory from './view_factory';
 import {AccessoryExportedProperties, ExportedProperties, ObjectOptions, ViewObject} from './view_object';
 import {Wall} from './wall';
@@ -98,7 +97,7 @@ export class Accessory extends ViewObject {
   }
 
   OnWallMove() {
-    this.PercentUpdatePosition();
+    this.UpdatePositionByPercent();
     this.UpdateView();
   }
 
@@ -110,7 +109,7 @@ export class Accessory extends ViewObject {
 
   SetPosition(pos: Point) {
     this.position = pos;
-    this.PositionUpdatePercent();
+    this.UpdatePercentByPosition();
     this.UpdateView();
   }
 
@@ -147,14 +146,11 @@ export class Accessory extends ViewObject {
     this.UpdateView();
   }
 
-  /**
-   * use the absolute position to update the position relative to the wall.
-   */
-  private PositionUpdatePercent(): number {
+  private GetWallSeg() {
     const wall = ViewFactory.GetViewObject(this.wallID) as Wall;
-    if (!wall) return;
-    const joint1 = ViewFactory.GetViewObject(wall.jointIDs[0]) as Joint;
-    const joint2 = ViewFactory.GetViewObject(wall.jointIDs[1]) as Joint;
+    if (!wall) return null;
+    const joint1 = wall.joint1;
+    const joint2 = wall.joint2;
 
     const segAB = new Flatten.Vector(joint1.position, joint2.position);
     const normAB = segAB.normalize();
@@ -162,6 +158,17 @@ export class Accessory extends ViewObject {
     const bPoint = joint2.position.translate(normAB.multiply(-this.length / 2));
 
     const wallSeg = new Flatten.Vector(aPoint, bPoint);
+    return {ps: aPoint, pe: bPoint, seg: wallSeg};
+  }
+  /**
+   * use the absolute position to update the position relative to the wall.
+   */
+  private UpdatePercentByPosition(): number {
+    const wallSegObj = this.GetWallSeg();
+    if (!wallSegObj) return;
+    const aPoint = wallSegObj.ps;
+    const wallSeg = wallSegObj.seg;
+
     const windowSeg = new Flatten.Vector(aPoint, this.position);
     this.positionPercent = windowSeg.x / wallSeg.x;
     // special case: vertical wall
@@ -173,7 +180,7 @@ export class Accessory extends ViewObject {
     if (this.positionPercent >= 1 || this.positionPercent < 0) {
       this.positionPercent = Math.max(0, this.positionPercent);
       this.positionPercent = Math.min(1, this.positionPercent);
-      this.PercentUpdatePosition();
+      this.UpdatePositionByPercent();
     }
     return this.positionPercent;
   }
@@ -181,18 +188,11 @@ export class Accessory extends ViewObject {
   /**
    * use the position relative to the wall to update the absolute position.
    */
-  private PercentUpdatePosition() {
-    const wall = ViewFactory.GetViewObject(this.wallID) as Wall;
-    if (!wall) return;
-    const joint1 = ViewFactory.GetViewObject(wall.jointIDs[0]) as Joint;
-    const joint2 = ViewFactory.GetViewObject(wall.jointIDs[1]) as Joint;
-
-    const segAB = new Flatten.Vector(joint1.position, joint2.position);
-    const normAB = segAB.normalize();
-    const aPoint = joint1.position.translate(normAB.multiply(this.length / 2));
-    const bPoint = joint2.position.translate(normAB.multiply(-this.length / 2));
-
-    const wallSeg = new Flatten.Vector(aPoint, bPoint);
+  private UpdatePositionByPercent() {
+    const wallSegObj = this.GetWallSeg();
+    if (!wallSegObj) return;
+    const aPoint = wallSegObj.ps;
+    const wallSeg = wallSegObj.seg;
     this.position = aPoint.translate(wallSeg.multiply(this.positionPercent));
 
     this.UpdateViewByPosition();
@@ -209,8 +209,8 @@ export class Accessory extends ViewObject {
   private UpdateViewByWall() {
     const wall = ViewFactory.GetViewObject(this.wallID) as Wall;
     if (!wall) return;
-    const joint1 = ViewFactory.GetViewObject(wall.jointIDs[0]) as Joint;
-    const joint2 = ViewFactory.GetViewObject(wall.jointIDs[1]) as Joint;
+    const joint1 = wall.joint1;
+    const joint2 = wall.joint2;
 
     const aPoint = joint1.position;
     const bPoint = joint2.position;

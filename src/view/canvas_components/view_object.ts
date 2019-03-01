@@ -1,4 +1,3 @@
-import {CanvasManager} from './canvas_manager';
 import * as ViewFactory from './view_factory';
 
 export const PROPERTY_TYPE_NUMBER = 'number';

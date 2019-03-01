@@ -1,11 +1,7 @@
-import Flatten from 'flatten-js';
-
 import {GRAB_JOINT_DISTANCE, GRAB_WALL_DISTANCE} from '../../../config/CONFIG';
 import * as EventSystem from '../../../event_system';
 import {Point} from '../../../utils';
-import {Joint} from '../../../view/canvas_components/joint';
 import * as ViewFactory from '../../../view/canvas_components/view_factory';
-import {Wall} from '../../../view/canvas_components/wall';
 import {BaseState} from '../../state_machine';
 
 import {WallDrawingMachine} from './draw_wall_machine';
@@ -71,8 +67,8 @@ export class WallDrawingState extends BaseState {
 
   private OnMouseMove(event: EventSystem.FssEvent): void {
     console.debug('drawing state mouse move');
-    const joint = ViewFactory.GetViewObject(this.machine.lastJointID) as Joint;
-    const wall = ViewFactory.GetViewObject(this.machine.lastWallID) as Wall;
+    const joint = this.machine.lastJoint;
+    const wall = this.machine.lastWall;
     let pos = event.position;
     if (event.shiftDown) pos = this.ShiftPosition(pos);
 
@@ -83,10 +79,7 @@ export class WallDrawingState extends BaseState {
     if (grabJoint && !event.shiftDown) {
       joint.SetPosition(grabJoint.position);
     } else if (grabWall) {
-      const joint1 = ViewFactory.GetViewObject(grabWall.jointIDs[0]) as Joint;
-      const joint2 = ViewFactory.GetViewObject(grabWall.jointIDs[1]) as Joint;
-
-      const segment = new Flatten.Segment(joint1.position, joint2.position);
+      const segment = grabWall.segment;
       const newPos = pos.distanceTo(segment)[1].end;
 
       joint.SetPosition(newPos);
@@ -98,8 +91,8 @@ export class WallDrawingState extends BaseState {
 
   private OnMouseDown(event: EventSystem.FssEvent): void {
     console.debug('drawing state mouse down');
-    const joint = ViewFactory.GetViewObject(this.machine.lastJointID) as Joint;
-    const wall = ViewFactory.GetViewObject(this.machine.lastWallID) as Wall;
+    const joint = this.machine.lastJoint;
+    const wall = this.machine.lastWall;
     let pos = event.position;
     if (event.shiftDown) pos = this.ShiftPosition(pos);
 
@@ -114,8 +107,8 @@ export class WallDrawingState extends BaseState {
     }
 
     const newWall = ViewFactory.CreateWall(pos, joint);
-    this.machine.lastWallID = newWall.id;
-    this.machine.lastJointID = newWall.jointIDs[0];
+    this.machine.lastWall = newWall;
+    this.machine.lastJoint = newWall.joint1;
     this.machine.Transition(new WallDrawingState(this.machine));
   }
 

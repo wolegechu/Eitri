@@ -28,8 +28,9 @@ export class Joint extends ViewObject {
   private _wallIDs: number[] = [];
   private _position: Point = new Point(0, 0);
 
-  get wallIDs() {
-    return this._wallIDs;
+  get walls(): Wall[] {
+    return this._wallIDs.map(id => ViewFactory.GetViewObject(id) as Wall)
+        .filter(val => !!val);
   }
   get position() {
     return this._position;
@@ -70,14 +71,14 @@ export class Joint extends ViewObject {
   }
 
   RemoveWallID(id: number) {
-    const index = this.wallIDs.indexOf(id);
-    if (index !== -1) this.wallIDs.splice(index, 1);
-    if (0 === this.wallIDs.length) this.RemoveSelf();
+    const index = this._wallIDs.indexOf(id);
+    if (index !== -1) this._wallIDs.splice(index, 1);
+    if (0 === this._wallIDs.length) this.RemoveSelf();
   }
 
   AddWallID(id: number) {
-    const index = this.wallIDs.indexOf(id);
-    if (index === -1) this.wallIDs.push(id);
+    const index = this._wallIDs.indexOf(id);
+    if (index === -1) this._wallIDs.push(id);
   }
 
   SetPosition(point: Point) {
@@ -90,25 +91,23 @@ export class Joint extends ViewObject {
     // special case: same joint
     if (this === other) return;
 
-    other.wallIDs.forEach(id => {
-      const wall = ViewFactory.GetViewObject(id) as Wall;
-      const index = wall.jointIDs.indexOf(other.id);
-      wall.jointIDs[index] = this.id;
+    other.walls.forEach(wall => {
+      if (wall.joint1 === other) {
+        wall.joint1 = this;
+      }
+      if (wall.joint2 === other) {
+        wall.joint2 = this;
+      }
     });
-    this._wallIDs = this.wallIDs.concat(other.wallIDs);
+
+    this._wallIDs = this._wallIDs.concat(other._wallIDs);
     other.RemoveSelf();
 
     // special case: this and other has a common wall.
-    const wallsToRemove = [];
-    for (let i = this.wallIDs.length - 1; i >= 0; --i) {
-      const wall = ViewFactory.GetViewObject(this.wallIDs[i]) as Wall;
-      if (!wall) continue;
-      if (wall.jointIDs[0] === wall.jointIDs[1]) {
-        wallsToRemove.push(wall);
+    this.walls.forEach(wall => {
+      if (wall.joint1 === wall.joint2) {
+        wall.RemoveSelf();
       }
-    }
-    wallsToRemove.forEach(o => {
-      o.RemoveSelf();
     });
   }
 
@@ -132,9 +131,8 @@ export class Joint extends ViewObject {
   }
 
   private UpdateWalls() {
-    this.wallIDs.forEach(id => {
-      const wall = ViewFactory.GetViewObject(id) as Wall;
-      if (wall) wall.OnJointMove();
+    this.walls.forEach(wall => {
+      wall.OnJointMove();
     });
   }
 

@@ -7,8 +7,8 @@ import {StateMachine} from '../../state_machine';
 import {WallIdleState} from './draw_wall_state_idle';
 
 export class WallDrawingMachine extends StateMachine {
-  lastWallID: number;
-  lastJointID: number;
+  lastWall: Wall;
+  lastJoint: Joint;
   lengthInputCache: number;
 
   funcOnPressESC = (e: EventSystem.FssEvent) => {
@@ -28,9 +28,7 @@ export class WallDrawingMachine extends StateMachine {
         EventSystem.EventType.KEY_PRESS_ESC, this.funcOnPressESC);
     this.state.Leave();
 
-    // remove the last Wall
-    const wall = ViewFactory.GetViewObject(this.lastWallID) as Wall;
-    if (wall) wall.RemoveSelf();
+    if (this.lastWall) this.lastWall.RemoveSelf();
 
     ViewFactory.Resolve();
   }
@@ -41,11 +39,10 @@ export class WallDrawingMachine extends StateMachine {
    * Pivot joint is the joint not move with mouse.
    */
   GetPivotJoint(): Joint {
-    const lastWall = ViewFactory.GetViewObject(this.lastWallID) as Wall;
+    const lastWall = this.lastWall;
 
-    const pivotJointID =
-        lastWall.jointIDs[lastWall.jointIDs.indexOf(this.lastJointID) ^ 1];
-    const pivotJoint = ViewFactory.GetViewObject(pivotJointID) as Joint;
+    const pivotJoint =
+        lastWall.joint1 === this.lastJoint ? lastWall.joint2 : lastWall.joint1;
     return pivotJoint;
   }
 
