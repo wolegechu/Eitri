@@ -31,7 +31,7 @@ export class SelectionMachine extends StateMachine {
 
   Exit(): void {
     CanvasManager.SetAllSelectable(false);
-
+    console.debug('Leave Seletion Mode ');
     if (this.selectedObject && this.selectedObject.OnUnSelect) {
       this.selectedObject.OnUnSelect();
     }

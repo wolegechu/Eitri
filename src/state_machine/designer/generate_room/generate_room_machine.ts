@@ -1,27 +1,22 @@
 import Flatten from 'flatten-js';
 
-import {ChangeToSelectionMode} from '../../..';
 import {Joint} from '../../../view/canvas_components/joint';
 import {Room} from '../../../view/canvas_components/room';
 import * as ViewFactory from '../../../view/canvas_components/view_factory';
 import {Wall} from '../../../view/canvas_components/wall';
-import {StateMachine} from '../../state_machine';
 
 
-export class GenerateRoomMachine extends StateMachine {
-  constructor() {
-    super();
-    console.debug('Enter Generate Room Mode');
-
+export class RoomGenerator {
+  
+  static Generate() {
     ViewFactory.GetViewObjectsWithType<Room>(Room).forEach(room => {
       room.RemoveSelf();
     });
 
     this.GenerateRooms();
-    ChangeToSelectionMode();
   }
 
-  private GenerateRooms() {
+  private static GenerateRooms() {
     ViewFactory.GetViewObjectsWithType<Joint>(Joint).forEach(v => {
       this.Dfs(v, [v], []);
     });
@@ -32,7 +27,7 @@ export class GenerateRoomMachine extends StateMachine {
    * you don't need to know the detail.
    * and don't call it elsewhere.
    */
-  private Dfs(v: Joint, vertexes: Joint[], edges: Wall[]) {
+  private static Dfs(v: Joint, vertexes: Joint[], edges: Wall[]) {
     for (const wall of v.walls) {
       if (wall === edges[edges.length - 1]) continue;
       const v2 = v === wall.joint1 ? wall.joint2 : wall.joint1;
@@ -61,7 +56,7 @@ export class GenerateRoomMachine extends StateMachine {
     }
   }
 
-  private CheckRoomLegal(vertexes: Joint[], edges: Wall[]): boolean {
+  private static CheckRoomLegal(vertexes: Joint[], edges: Wall[]): boolean {
     // the first vertex position test
     const pivotPos = vertexes[0].position;  // the first vertex
     for (const vert of vertexes) {
@@ -84,7 +79,7 @@ export class GenerateRoomMachine extends StateMachine {
     }
   }
 
-  private IsRoom(vertexes: Joint[], edges: Wall[]): boolean {
+  private static IsRoom(vertexes: Joint[], edges: Wall[]): boolean {
     const verts = new Array<Flatten.Point>();
     for (const vert of vertexes) {
       verts.push(new Flatten.Point(vert.position.x, vert.position.y));
@@ -109,6 +104,4 @@ export class GenerateRoomMachine extends StateMachine {
     }
     return true;
   }
-
-  Exit(): void {}
 }
