@@ -42,11 +42,11 @@ export class Wall extends ViewObject {
   get joint1(): Joint {
     return ViewFactory.GetViewObject(this._jointIDs[0]) as Joint;
   }
-  get joint2(): Joint {
-    return ViewFactory.GetViewObject(this._jointIDs[1]) as Joint;
-  }
   set joint1(newJoint: Joint) {
     this._jointIDs[0] = newJoint.id;
+  }
+  get joint2(): Joint {
+    return ViewFactory.GetViewObject(this._jointIDs[1]) as Joint;
   }
   set joint2(newJoint: Joint) {
     this._jointIDs[1] = newJoint.id;
