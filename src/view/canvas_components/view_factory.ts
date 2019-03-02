@@ -76,9 +76,9 @@ export function CreateFurnitureGroup(option: FurnitureGroupOption) {
   return obj;
 }
 
-export function CreateBackground(htmlImage: HTMLImageElement) {
+export function CreateBackground(img: HTMLImageElement) {
   const id = GetNewID();
-  const back = new Background(id, htmlImage);
+  const back = new Background(id, {htmlImage: img});
   AddObject(back);
   return back;
 }
