@@ -3,7 +3,7 @@ import {LoadImages} from './image_manager';
 import {DrawRectangleMachine} from './state_machine/designer/draw_rectangle/draw_rectangle_machine';
 import {WallDrawingMachine} from './state_machine/designer/draw_wall/draw_wall_machine';
 import {DrawWindowMachine} from './state_machine/designer/draw_window/draw_window_machine';
-import {GenerateRoomMachine} from './state_machine/designer/generate_room/generate_room_machine';
+import {RoomGenerator} from './state_machine/designer/generate_room/generate_room_machine';
 import {RulerMachine} from './state_machine/designer/ruler/ruler_machine';
 import {SelectionMachine} from './state_machine/designer/selection/selection_machine';
 import {StateMachine} from './state_machine/state_machine';
@@ -37,8 +37,7 @@ function DrawWindow() {
 }
 
 function GenerateRoom() {
-  machine.Exit();
-  machine = new GenerateRoomMachine();
+  RoomGenerator.Generate();
 }
 
 function ChangeToSelectionMode() {
