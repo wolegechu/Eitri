@@ -1,19 +1,6 @@
 // tslint:disable-next-line:variable-name
 const RemoveObject = jest.fn((obj: ViewObject) => {});
 
-let joint1: Joint, joint5: Joint, joint6: Joint, joint7: Joint;
-let wall2: Wall, wall3: Wall, wall4: Wall;
-function Init() {
-  RemoveObject.mockClear();
-  joint1 = new Joint(1, {_wallIDs: [2, 3, 4], _position: {x: 1, y: 2}});
-  joint5 = new Joint(5, {_wallIDs: [2, 4, 100], _position: {x: 1, y: 2}});
-  joint6 = new Joint(6, {_wallIDs: [2], _position: {x: 1, y: 2}});
-  joint7 = new Joint(7, {_wallIDs: [2], _position: {x: 1, y: 2}});
-  wall2 = new Wall(2, {_jointIDs: [1, 7]});
-  wall3 = new Wall(3, {});
-  wall4 = new Wall(4, {});
-}
-
 jest.mock('../../../src/view/canvas_components/canvas_manager');
 
 let funcGetObj: (id: number) =>
