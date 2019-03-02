@@ -36,7 +36,7 @@ export class Wall extends ViewObject {
 
   private _jointIDs: number[] = [];
   private accessoryIDs: number[] = [];
-  private width = 10;
+  private width = 19;
   private type: string = WallType.NORMAL;
 
   get joint1(): Joint {
@@ -73,7 +73,7 @@ export class Wall extends ViewObject {
     this.view = new fabric.Line([0, 0, 0, 0], {
       originX: 'center',
       originY: 'center',
-      strokeWidth: 19,
+      strokeWidth: this.width,
       stroke: UNSELECTED_COLOR,
       selectable: false,
       lockMovementX: true,
@@ -117,7 +117,8 @@ export class Wall extends ViewObject {
 
   UpdateView(): void {
     this.UpdateViewByJoint();
-
+    this.UpdateViewByWidth();
+    
     this.view.setCoords();
     CanvasManager.Render();
   }
@@ -201,6 +202,12 @@ export class Wall extends ViewObject {
       'y1': joint1.position.y,
       'x2': joint2.position.x,
       'y2': joint2.position.y,
+    });
+  }
+
+  private UpdateViewByWidth() {
+    this.view.set({
+      strokeWidth: this.width,
     });
   }
 }
