@@ -36,7 +36,9 @@ export class RoomExportedProperties extends ExportedProperties {
   type: OptionProperty;
 }
 
-export interface ObjectOptions {}
+export interface ObjectOptions {
+  id?: number;
+}
 
 export abstract class ViewObject {
   abstract get typeName(): string;

@@ -10,7 +10,7 @@ import {Wall} from './wall';
 
 const JOINT_RADIUS = 10;
 
-interface JointOption extends ObjectOptions {
+export interface JointOption extends ObjectOptions {
   _wallIDs?: number[];
   _position?: {x: number, y: number};
 }

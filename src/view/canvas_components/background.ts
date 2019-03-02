@@ -6,6 +6,10 @@ import {CanvasManager} from './canvas_manager';
 import {ObjectOptions, ViewObject} from './view_object';
 
 
+interface BackgroundOptions extends ObjectOptions {
+  htmlImage: HTMLImageElement;
+}
+
 /**
  * The background image.
  */
@@ -23,8 +27,10 @@ export class Background extends ViewObject {
     return this._scale;
   }
 
-  constructor(id: number, htmlImage: HTMLImageElement) {
+  constructor(id: number, option: BackgroundOptions) {
     super(id);
+
+    const htmlImage = option.htmlImage;
 
     this._scale = Math.min(
         CanvasManager.width / htmlImage.width,
