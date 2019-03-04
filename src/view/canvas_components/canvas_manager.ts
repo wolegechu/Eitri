@@ -158,8 +158,15 @@ export class CanvasManager {
         this.lastPosY = e.clientY;
       }
     });
-    canvas.on('mouse:up', function(opt) {
+    canvas.on('mouse:up', function (opt) {
+      const e = opt.e as MouseEvent;
       this.isDragging = false;
+      // Fabric.js has a bug, after drag the canvas, we can't select object. 
+      // The haven't been solved until now: https://github.com/fabricjs/fabric.js/issues/4660
+      // I found a tricky method to solve this problem. 
+      // Maybe one day it will be solved officially.
+      canvas.zoomToPoint(
+        new fabric.Point(e.clientX, e.clientY), canvas.getZoom());
     });
   }
 }
