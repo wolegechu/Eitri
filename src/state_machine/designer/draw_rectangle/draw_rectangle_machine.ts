@@ -1,9 +1,10 @@
 import * as EventSystem from '../../../event_system';
 import {ChangeToSelectionMode} from '../../../index';
 import {Joint} from '../../../view/canvas_components/joint';
-import * as ViewFactory from '../../../view/canvas_components/view_factory';
 import {Wall} from '../../../view/canvas_components/wall';
+import * as ViewFactory from '../../../view/view_factory';
 import {StateMachine} from '../../state_machine';
+
 import {RectIdleState} from './draw_rectangle_state_idle';
 
 

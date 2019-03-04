@@ -6,7 +6,7 @@ import * as EventSystem from '../../../event_system';
 import {Point} from '../../../utils';
 import {Accessory} from '../../../view/canvas_components/accessory';
 import {Joint} from '../../../view/canvas_components/joint';
-import * as ViewFactory from '../../../view/canvas_components/view_factory';
+import * as ViewFactory from '../../../view/view_factory';
 import {StateMachine} from '../../state_machine';
 
 export class DrawWindowMachine extends StateMachine {

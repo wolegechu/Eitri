@@ -1,11 +1,11 @@
 // tslint:disable-next-line:variable-name
 const RemoveObject = jest.fn((obj: ViewObject) => {});
 
-jest.mock('../../../src/view/canvas_components/canvas_manager');
+jest.mock('../../../src/view/canvas_manager');
 
 let funcGetObj: (id: number) =>
     ViewObject;  // used to mock function GetViewObject
-jest.mock('../../../src/view/canvas_components/view_factory', () => {
+jest.mock('../../../src/view/view_factory', () => {
   function GetViewObject(id: number): ViewObject {
     return funcGetObj(id);
   }
@@ -16,7 +16,7 @@ jest.mock('../../../src/view/canvas_components/view_factory', () => {
 
 import {Joint, JointOption} from '../../../src/view/canvas_components/joint';
 import {ViewObject} from '../../../src/view/canvas_components/view_object';
-import * as ViewFactory from '../../../src/view/canvas_components/view_factory';
+import * as ViewFactory from '../../../src/view/view_factory';
 import {Wall} from '../../../src/view/canvas_components/wall';
 import {Point} from '../../../src/utils';
 

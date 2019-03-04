@@ -3,7 +3,7 @@ import Flatten from 'flatten-js';
 import {GRAB_JOINT_DISTANCE, GRAB_WALL_DISTANCE} from '../../../config/CONFIG';
 import * as EventSystem from '../../../event_system';
 import {Joint} from '../../../view/canvas_components/joint';
-import * as ViewFactory from '../../../view/canvas_components/view_factory';
+import * as ViewFactory from '../../../view/view_factory';
 import {BaseState} from '../../state_machine';
 
 import {DrawRectangleMachine} from './draw_rectangle_machine';

@@ -2,14 +2,13 @@ import Flatten from 'flatten-js';
 
 import {Joint} from '../../../view/canvas_components/joint';
 import {Room} from '../../../view/canvas_components/room';
-import * as ViewFactory from '../../../view/canvas_components/view_factory';
 import {Wall} from '../../../view/canvas_components/wall';
+import * as ViewFactory from '../../../view/view_factory';
 
 
 export class RoomGenerator {
-  
   static Generate() {
-    ViewFactory.GetViewObjectsWithType<Room>(Room).forEach(room => {
+    ViewFactory.GetViewObjectsWithType(Room).forEach(room => {
       room.RemoveSelf();
     });
 
@@ -17,7 +16,7 @@ export class RoomGenerator {
   }
 
   private static GenerateRooms() {
-    ViewFactory.GetViewObjectsWithType<Joint>(Joint).forEach(v => {
+    ViewFactory.GetViewObjectsWithType(Joint).forEach(v => {
       this.Dfs(v, [v], []);
     });
   }
@@ -89,7 +88,7 @@ export class RoomGenerator {
     const polygon = new Flatten.Polygon();
     polygon.addFace(verts);
 
-    for (const wall of ViewFactory.GetViewObjectsWithType<Wall>(Wall)) {
+    for (const wall of ViewFactory.GetViewObjectsWithType(Wall)) {
       if (edges.indexOf(wall) !== -1) continue;
       const joint1 = wall.joint1;
       const joint2 = wall.joint2;

@@ -1,11 +1,11 @@
 import {fabric} from 'fabric';
 
-import {RenderOrderConfig} from '../../config/render_order_config';
-import {GetImage} from '../../image_manager';
-import {Point} from '../../utils/index';
+import {RenderOrderConfig} from '../config/render_order_config';
+import {GetImage} from '../image_manager';
+import {Point} from '../utils/index';
 
+import {ViewObject} from './canvas_components/view_object';
 import * as ViewFactory from './view_factory';
-import {ViewObject} from './view_object';
 
 
 export class CanvasManager {
@@ -158,15 +158,16 @@ export class CanvasManager {
         this.lastPosY = e.clientY;
       }
     });
-    canvas.on('mouse:up', function (opt) {
+    canvas.on('mouse:up', function(opt) {
       const e = opt.e as MouseEvent;
       this.isDragging = false;
-      // Fabric.js has a bug, after drag the canvas, we can't select object. 
-      // The haven't been solved until now: https://github.com/fabricjs/fabric.js/issues/4660
-      // I found a tricky method to solve this problem. 
-      // Maybe one day it will be solved officially.
+      // Fabric.js has a bug, after drag the canvas, we can't select object.
+      // The haven't been solved until now:
+      // https://github.com/fabricjs/fabric.js/issues/4660 I found a tricky
+      // method to solve this problem. Maybe one day it will be solved
+      // officially.
       canvas.zoomToPoint(
-        new fabric.Point(e.clientX, e.clientY), canvas.getZoom());
+          new fabric.Point(e.clientX, e.clientY), canvas.getZoom());
     });
   }
 }

@@ -1,8 +1,8 @@
 import * as XLSX from 'xlsx';
 
-import {Fill} from './furniture_filler/furniture_filler';
+import {Fill, GeneratePedestals} from './furniture_filler/furniture_filler';
 import * as FSS from './index';
-import * as ViewFactory from './view/canvas_components/view_factory';
+import * as ViewFactory from './view/view_factory';
 
 
 console.log('test solution');
@@ -34,13 +34,16 @@ jsonLoader.onchange = (e) => {
 
 const buttonTest = document.getElementById('test');
 buttonTest.onclick = () => {
-  const p1 = ViewFactory.CreatePedestal();
-  Object.assign(
-      p1, {x: 100, y: 200, width: 150, height: 250, rotation: 0, flip: false});
+  // const p1 = ViewFactory.CreatePedestal();
+  // Object.assign(
+  //     p1, {x: 100, y: 200, width: 150, height: 250, rotation: 0, flip:
+  //     false});
 
-  const p2 = ViewFactory.CreatePedestal();
-  Object.assign(
-      p2, {x: 500, y: 200, width: 150, height: 250, rotation: 0, flip: true});
+  // const p2 = ViewFactory.CreatePedestal();
+  // Object.assign(
+  //     p2, {x: 500, y: 200, width: 150, height: 250, rotation: 0, flip:
+  //     true});
+  GeneratePedestals();
   Fill();
 
 

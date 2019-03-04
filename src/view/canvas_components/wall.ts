@@ -2,11 +2,11 @@ import {fabric} from 'fabric';
 import Flatten from 'flatten-js';
 
 import {RenderOrderConfig} from '../../config/render_order_config';
+import {CanvasManager} from '../canvas_manager';
+import * as ViewFactory from '../view_factory';
 
 import {Accessory} from './accessory';
-import {CanvasManager} from './canvas_manager';
 import {Joint} from './joint';
-import * as ViewFactory from './view_factory';
 import {ObjectOptions, PROPERTY_TYPE_NUMBER, PROPERTY_TYPE_OPTION, ViewObject, WallExportedProperties} from './view_object';
 
 const UNSELECTED_COLOR = '#808080';
@@ -118,7 +118,7 @@ export class Wall extends ViewObject {
   UpdateView(): void {
     this.UpdateViewByJoint();
     this.UpdateViewByWidth();
-    
+
     this.view.setCoords();
     CanvasManager.Render();
   }

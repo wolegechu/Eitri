@@ -1,7 +1,7 @@
 import {GRAB_JOINT_DISTANCE, GRAB_WALL_DISTANCE} from '../../../config/CONFIG';
 import * as EventSystem from '../../../event_system';
 import {Point} from '../../../utils';
-import * as ViewFactory from '../../../view/canvas_components/view_factory';
+import * as ViewFactory from '../../../view/view_factory';
 import {BaseState} from '../../state_machine';
 
 import {WallDrawingMachine} from './draw_wall_machine';

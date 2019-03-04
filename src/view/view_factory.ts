@@ -1,14 +1,14 @@
-import {Point} from '../../utils/index';
+import {Point} from '../utils/index';
 
-import {Accessory} from './accessory';
-import {Background} from './background';
+import {Accessory} from './canvas_components/accessory';
+import {Background} from './canvas_components/background';
+import {FurnitureGroup, FurnitureGroupOption} from './canvas_components/furniture_group';
+import {Joint} from './canvas_components/joint';
+import {Pedestal} from './canvas_components/pedestal';
+import {Room} from './canvas_components/room';
+import {ObjectOptions, ViewObject} from './canvas_components/view_object';
+import {Wall} from './canvas_components/wall';
 import {CanvasManager} from './canvas_manager';
-import {FurnitureGroup, FurnitureGroupOption} from './furniture_group';
-import {Joint} from './joint';
-import {Pedestal} from './pedestal';
-import {Room} from './room';
-import {ObjectOptions, ViewObject} from './view_object';
-import {Wall} from './wall';
 
 
 const idObjectMap = new Map<number, ViewObject>();
@@ -192,7 +192,7 @@ function IsDuplicateWall(a: Wall, b: Wall): boolean {
  * return remove success or not.
  */
 function TryRemoveDuplicateWall(): boolean {
-  const walls = GetViewObjectsWithType<Wall>(Wall);
+  const walls = GetViewObjectsWithType(Wall);
   for (let i = 0; i < walls.length; ++i) {
     const wallA = walls[i];
     for (let j = i + 1; j < walls.length; ++j) {
@@ -223,10 +223,10 @@ function IsJointOnWall(wall: Wall, joint: Joint) {
  * return split success or not.
  */
 function TrySplitWall(): boolean {
-  const walls = GetViewObjectsWithType<Wall>(Wall);
+  const walls = GetViewObjectsWithType(Wall);
   for (let i = 0; i < walls.length; ++i) {
     const wall = walls[i];
-    const joints = GetViewObjectsWithType<Joint>(Joint);
+    const joints = GetViewObjectsWithType(Joint);
     for (let j = 0; j < joints.length; ++j) {
       const joint = joints[j];
       if (wall.joint1 === joint || wall.joint2 === joint) {

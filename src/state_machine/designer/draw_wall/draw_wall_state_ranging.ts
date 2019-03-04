@@ -3,8 +3,8 @@ import Flatten from 'flatten-js';
 import * as EventSystem from '../../../event_system';
 import {Point} from '../../../utils';
 import {Joint} from '../../../view/canvas_components/joint';
-import * as ViewFactory from '../../../view/canvas_components/view_factory';
 import {Wall} from '../../../view/canvas_components/wall';
+import * as ViewFactory from '../../../view/view_factory';
 import {BaseState} from '../../state_machine';
 
 import {WallDrawingMachine} from './draw_wall_machine';

@@ -2,7 +2,7 @@ import {fabric} from 'fabric';
 
 import {RenderOrderConfig} from '../../config/render_order_config';
 
-import {CanvasManager} from './canvas_manager';
+import {CanvasManager} from '../canvas_manager';
 import {ObjectOptions, ViewObject} from './view_object';
 
 
