@@ -7,8 +7,8 @@ import {RoomGenerator} from './state_machine/designer/generate_room/generate_roo
 import {RulerMachine} from './state_machine/designer/ruler/ruler_machine';
 import {SelectionMachine} from './state_machine/designer/selection/selection_machine';
 import {StateMachine} from './state_machine/state_machine';
-import {CanvasManager} from './view/canvas_components/canvas_manager';
-import * as ViewFactory from './view/canvas_components/view_factory';
+import {CanvasManager} from './view/canvas_manager';
+import * as ViewFactory from './view/view_factory';
 
 let machine: StateMachine = null;
 

@@ -5,8 +5,8 @@ import {GLOBAL_SCALE} from '../../../config/CONFIG';
 import * as EventSystem from '../../../event_system';
 import {GetImage} from '../../../image_manager';
 import {Background} from '../../../view/canvas_components/background';
-import {CanvasManager} from '../../../view/canvas_components/canvas_manager';
-import * as ViewFactory from '../../../view/canvas_components/view_factory';
+import {CanvasManager} from '../../../view/canvas_manager';
+import * as ViewFactory from '../../../view/view_factory';
 import {StateMachine} from '../../state_machine';
 
 export class RulerMachine extends StateMachine {
@@ -150,8 +150,7 @@ export class RulerMachine extends StateMachine {
   }
 
   private OnEnterPress(e: EventSystem.FssEvent) {
-    const backgrouds =
-        ViewFactory.GetViewObjectsWithType<Background>(Background);
+    const backgrouds = ViewFactory.GetViewObjectsWithType(Background);
     if (!backgrouds || backgrouds.length === 0) return;
     const backgroud = backgrouds[0];
 

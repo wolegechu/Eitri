@@ -1,4 +1,4 @@
-import {CanvasManager} from '../view/canvas_components/canvas_manager';
+import {CanvasManager} from '../view/canvas_manager';
 
 import {EventType} from './event_types';
 import {FssEvent} from './fss_event';

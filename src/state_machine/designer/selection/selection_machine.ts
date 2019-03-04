@@ -1,6 +1,6 @@
 import * as EventSystem from '../../../event_system';
-import {CanvasManager} from '../../../view/canvas_components/canvas_manager';
 import {ViewObject} from '../../../view/canvas_components/view_object';
+import {CanvasManager} from '../../../view/canvas_manager';
 import {UIIndex} from '../../../view/html_components/index';
 import {StateMachine} from '../../state_machine';
 

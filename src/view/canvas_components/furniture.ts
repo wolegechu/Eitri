@@ -4,7 +4,7 @@ import {RenderOrderConfig} from '../../config/render_order_config';
 import {GetImage} from '../../image_manager';
 import {Point} from '../../utils/index';
 
-import {CanvasManager} from './canvas_manager';
+import {CanvasManager} from '../canvas_manager';
 import {ObjectOptions, ViewObject} from './view_object';
 
 

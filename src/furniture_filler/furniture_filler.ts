@@ -1,5 +1,7 @@
+import {Joint} from '../view/canvas_components/joint';
 import {Pedestal} from '../view/canvas_components/pedestal';
-import * as ViewFactory from '../view/canvas_components/view_factory';
+import {Room} from '../view/canvas_components/room';
+import * as ViewFactory from '../view/view_factory';
 
 
 export function Fill() {
@@ -72,33 +74,35 @@ export function Fill() {
 /**
  * Generate Pedestals Automaticly
  */
-// export function GetRoomsAsPedestals() {
-//     const rooms = ViewFactory.GetViewObjectsWithType<Room>(Room);
-//     const result: Pedestlas[] = [];
-//     rooms.forEach(room => {
-//         let left = 1e8, top = 1e8, right = -1e8, bottom = -1e8;
-//         room.jointIDs.forEach(id => {
-//             const joint = ViewFactory.GetViewObject(id) as Joint;
-//             const p = joint.position;
-//             if (p.x < left) {
-//                 left = p.x;
-//             }
-//             if (p.x > right) {
-//                 right = p.x;
-//             }
-//             if (p.y < top) {
-//                 top = p.y;
-//             }
-//             if (p.y > bottom) {
-//                 bottom = p.y;
-//             }
-//         });
-//         result.push({
-//             x: left,
-//             y: top,
-//             width: right-left,
-//             height: bottom-top
-//         });
-//     });
-//     return result;
-// }
+export function GeneratePedestals() {
+  const rooms = ViewFactory.GetViewObjectsWithType(Room);
+  const result: Pedestal[] = [];
+  rooms.forEach(room => {
+    let left = 1e8, top = 1e8, right = -1e8, bottom = -1e8;
+    room.jointIDs.forEach(id => {
+      const joint = ViewFactory.GetViewObject(id) as Joint;
+      const p = joint.position;
+      if (p.x < left) {
+        left = p.x;
+      }
+      if (p.x > right) {
+        right = p.x;
+      }
+      if (p.y < top) {
+        top = p.y;
+      }
+      if (p.y > bottom) {
+        bottom = p.y;
+      }
+    });
+    const pedestal = ViewFactory.CreatePedestal();
+    Object.assign(pedestal, {
+      x: left,
+      y: top,
+      width: right - left,
+      height: bottom - top,
+      rotation: 0,
+      flip: false
+    });
+  });
+}
