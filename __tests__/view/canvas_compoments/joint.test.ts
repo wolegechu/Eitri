@@ -25,9 +25,9 @@ describe('Joint', () => {
   test('position', () => {
     // init
     const joint1 = new Joint(1, {_wallIDs: [2, 3, 4], _position: {x: 1, y: 2}});
-    const map: {[key: number]: ViewObject} = {1: joint1};
+    const mapIdToViewObject: {[key: number]: ViewObject} = {1: joint1};
     funcGetObj = (id) => {
-      return map[id];
+      return mapIdToViewObject[id];
     };
 
     // test
@@ -40,13 +40,13 @@ describe('Joint', () => {
     // init
     const joint1 =
         new Joint(1, {_wallIDs: [2, 3, -1], _position: {x: 1, y: 2}});
-    const map: {[key: number]: ViewObject} = {
+    const mapIdToViewObject: {[key: number]: ViewObject} = {
       1: joint1,
       2: new Wall(2, {}),
       3: new Wall(3, {}),
     };
     funcGetObj = (id) => {
-      return map[id];
+      return mapIdToViewObject[id];
     };
 
     // test
@@ -61,11 +61,11 @@ describe('Joint', () => {
   test('to json', () => {
     // init
     const joint1 = new Joint(1, {_wallIDs: [2, 3, 4], _position: {x: 1, y: 2}});
-    const map: {[key: number]: ViewObject} = {
+    const mapIdToViewObject: {[key: number]: ViewObject} = {
       1: joint1,
     };
     funcGetObj = (id) => {
-      return map[id];
+      return mapIdToViewObject[id];
     };
 
     // test
@@ -84,9 +84,10 @@ describe('Joint', () => {
     // init
     RemoveObject.mockClear();
     const joint1 = new Joint(1, {_wallIDs: [2], _position: {x: 1, y: 2}});
-    const map: {[key: number]: ViewObject} = {1: joint1, 2: new Wall(2, {})};
+    const mapIdToViewObject:
+        {[key: number]: ViewObject} = {1: joint1, 2: new Wall(2, {})};
     funcGetObj = (id) => {
-      return map[id];
+      return mapIdToViewObject[id];
     };
 
     // test
@@ -100,11 +101,11 @@ describe('Joint', () => {
     // init
     RemoveObject.mockClear();
     const joint1 = new Joint(1, {_wallIDs: [2, 3], _position: {x: 1, y: 2}});
-    const map:
+    const mapIdToViewObject:
         {[key: number]:
              ViewObject} = {1: joint1, 2: new Wall(2, {}), 3: new Wall(3, {})};
     funcGetObj = (id) => {
-      return map[id];
+      return mapIdToViewObject[id];
     };
 
     // test
@@ -118,11 +119,11 @@ describe('Joint', () => {
     // init
     RemoveObject.mockClear();
     const joint1 = new Joint(1, {_wallIDs: [], _position: {x: 1, y: 2}});
-    const map: {[key: number]: ViewObject} = {
+    const mapIdToViewObject: {[key: number]: ViewObject} = {
       1: joint1,
     };
     funcGetObj = (id) => {
-      return map[id];
+      return mapIdToViewObject[id];
     };
 
     // test
@@ -138,10 +139,10 @@ describe('Joint', () => {
     const j1 = new Joint(1, {_wallIDs: [3, 4], _position: {x: 1, y: 2}});
     const j2 = new Joint(2, {_wallIDs: [3, 5], _position: {x: 1, y: 2}});
     const w3 = new Wall(3, {_jointIDs: [1, 2]});
-    const map: {[key: number]: ViewObject} =
+    const mapIdToViewObject: {[key: number]: ViewObject} =
         {1: j1, 2: j2, 3: w3, 4: new Wall(4, {}), 5: new Wall(5, {})};
     funcGetObj = (id) => {
-      return map[id];
+      return mapIdToViewObject[id];
     };
 
     // test
