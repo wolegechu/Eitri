@@ -11,12 +11,6 @@ import {Wall} from './canvas_components/wall';
 import {CanvasManager} from './canvas_manager';
 
 
-type JsonItemData = {
-  id: number,
-  type: string,
-  content: ObjectOptions
-};
-
 export class ViewFactory {
   private static idObjectMap = new Map<number, ViewObject>();
   private static viewObjectMap = new Map<fabric.Object, ViewObject>();
@@ -193,14 +187,16 @@ export class ViewFactory {
     this.RemoveDuplicateWall();
   }
 
-
-
   static ExportToJson(): string {
-    const json: JsonItemData[] = [];
+    // tslint:disable-next-line:no-any
+    const json: { [key: string]: ObjectOptions[] } = {};
 
     for (const obj of this.idObjectMap.values()) {
       if (!obj.ToJson) continue;
-      json.push({id: obj.id, type: obj.typeName, content: obj.ToJson()});
+      if (!json[obj.typeName]) {
+        json[obj.typeName] = [];
+      }
+      json[obj.typeName].push(obj.ToJson());
     }
     return JSON.stringify(json);
   }
@@ -216,22 +212,21 @@ export class ViewFactory {
 
     this.Clear();
 
-    const data: JsonItemData[] = JSON.parse(json);
-    for (const item of data) {
-      const constructor = constructorMap.get(item.type);
-      const obj = new constructor(item.id, item.content);
-      this.AddObject(obj);
+    const data = JSON.parse(json);
+    for (const type of Object.keys(data)) {
+      const constructor = constructorMap.get(type);
+      for (const item of data[type]) {
+        const obj = new constructor(item.id, item);
+        this.AddObject(obj);
+      }
     }
 
     // It's realy dangerous to iterate a Map.values() directly.
     // Because of the modification of the Map may occur in for loop,
     // which could result in endless loop !!!
     // So we do like this:
-    const contents = [];
-    for (const obj of this.idObjectMap.values()) {
-      contents.push(obj);
-    }
-
+    const contents: ViewObject[] = [];
+    this.idObjectMap.forEach(o => contents.push(o));
     for (const obj of contents) {
       obj.UpdateView();
     }
