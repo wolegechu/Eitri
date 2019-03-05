@@ -5,7 +5,7 @@ import {GetImage} from '../image_manager';
 import {Point} from '../utils/index';
 
 import {ViewObject} from './canvas_components/view_object';
-import * as ViewFactory from './view_factory';
+import {ViewFactory} from './view_factory';
 
 
 export class CanvasManager {

@@ -2,7 +2,7 @@ import {fabric} from 'fabric';
 
 import {RenderOrderConfig} from '../../config/render_order_config';
 import {CanvasManager} from '../canvas_manager';
-import * as ViewFactory from '../view_factory';
+import {ViewFactory} from '../view_factory';
 
 import {Joint} from './joint';
 import {ObjectOptions, PROPERTY_TYPE_OPTION, RoomExportedProperties, ViewObject} from './view_object';

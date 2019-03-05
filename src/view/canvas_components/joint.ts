@@ -2,9 +2,9 @@ import {fabric} from 'fabric';
 
 import {RenderOrderConfig} from '../../config/render_order_config';
 import {Point} from '../../utils/index';
-
 import {CanvasManager} from '../canvas_manager';
-import * as ViewFactory from '../view_factory';
+import {ViewFactory} from '../view_factory';
+
 import {ObjectOptions, ViewObject} from './view_object';
 import {Wall} from './wall';
 
@@ -109,6 +109,13 @@ export class Joint extends ViewObject {
         wall.RemoveSelf();
       }
     });
+  }
+
+  IsOnwall(wall: Wall): boolean {
+    const segment = wall.segment;
+    if (!segment) return false;
+    const distance = this.position.distanceTo(segment)[0];
+    return distance < 0.1;
   }
 
   protected Set(option: JointOption): void {

@@ -2,7 +2,7 @@ import * as EventSystem from '../../../event_system';
 import {ChangeToSelectionMode} from '../../../index';
 import {Joint} from '../../../view/canvas_components/joint';
 import {Wall} from '../../../view/canvas_components/wall';
-import * as ViewFactory from '../../../view/view_factory';
+import {ViewFactory} from '../../../view/view_factory';
 import {StateMachine} from '../../state_machine';
 
 import {WallIdleState} from './draw_wall_state_idle';

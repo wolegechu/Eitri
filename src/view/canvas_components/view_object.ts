@@ -1,4 +1,4 @@
-import * as ViewFactory from '../view_factory';
+import {ViewFactory} from '../view_factory';
 
 export const PROPERTY_TYPE_NUMBER = 'number';
 export const PROPERTY_TYPE_OPTION = 'option';

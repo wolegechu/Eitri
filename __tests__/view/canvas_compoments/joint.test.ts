@@ -1,22 +1,26 @@
-// tslint:disable-next-line:variable-name
-const RemoveObject = jest.fn((obj: ViewObject) => {});
+const funcRemoveObj = jest.fn((obj: ViewObject) => {});
 
 jest.mock('../../../src/view/canvas_manager');
 
 let funcGetObj: (id: number) =>
     ViewObject;  // used to mock function GetViewObject
 jest.mock('../../../src/view/view_factory', () => {
-  function GetViewObject(id: number): ViewObject {
-    return funcGetObj(id);
+  class ViewFactory {
+    static GetViewObject(id: number): ViewObject {
+      return funcGetObj(id);
+    }
+    static RemoveObject(obj: ViewObject) {
+      funcRemoveObj(obj);
+    }
   }
 
-  return {GetViewObject, RemoveObject};
+  return {ViewFactory};
 });
 
 
 import {Joint, JointOption} from '../../../src/view/canvas_components/joint';
 import {ViewObject} from '../../../src/view/canvas_components/view_object';
-import * as ViewFactory from '../../../src/view/view_factory';
+import {ViewFactory} from '../../../src/view/view_factory';
 import {Wall} from '../../../src/view/canvas_components/wall';
 import {Point} from '../../../src/utils';
 
@@ -82,7 +86,7 @@ describe('Joint', () => {
 
   test('remove wall ID correct operation', () => {
     // init
-    RemoveObject.mockClear();
+    funcRemoveObj.mockClear();
     const joint1 = new Joint(1, {_wallIDs: [2], _position: {x: 1, y: 2}});
     const mapIdToViewObject:
         {[key: number]: ViewObject} = {1: joint1, 2: new Wall(2, {})};
@@ -94,12 +98,12 @@ describe('Joint', () => {
     const joint = ViewFactory.GetViewObject(1) as Joint;
     joint.RemoveWallID(2);
     expect(joint.walls.length).toBe(0);
-    expect(RemoveObject).toBeCalledWith(joint);
+    expect(funcRemoveObj).toBeCalledWith(joint);
   });
 
   test('remove wall ID 2 incorrect operation', () => {
     // init
-    RemoveObject.mockClear();
+    funcRemoveObj.mockClear();
     const joint1 = new Joint(1, {_wallIDs: [2, 3], _position: {x: 1, y: 2}});
     const mapIdToViewObject:
         {[key: number]:
@@ -112,12 +116,12 @@ describe('Joint', () => {
     const joint = ViewFactory.GetViewObject(1) as Joint;
     joint.RemoveWallID(3);
     expect(joint.walls.length).toBe(1);
-    expect(RemoveObject).not.toBeCalled();
+    expect(funcRemoveObj).not.toBeCalled();
   });
 
   test('set position', () => {
     // init
-    RemoveObject.mockClear();
+    funcRemoveObj.mockClear();
     const joint1 = new Joint(1, {_wallIDs: [], _position: {x: 1, y: 2}});
     const mapIdToViewObject: {[key: number]: ViewObject} = {
       1: joint1,
@@ -135,7 +139,7 @@ describe('Joint', () => {
 
   test('merge', () => {
     // init
-    RemoveObject.mockClear();
+    funcRemoveObj.mockClear();
     const j1 = new Joint(1, {_wallIDs: [3, 4], _position: {x: 1, y: 2}});
     const j2 = new Joint(2, {_wallIDs: [3, 5], _position: {x: 1, y: 2}});
     const w3 = new Wall(3, {_jointIDs: [1, 2]});
@@ -157,6 +161,6 @@ describe('Joint', () => {
     expect(ids.indexOf(3)).toBe(-1);
     expect(ids.indexOf(4)).not.toBe(-1);
     expect(ids.indexOf(5)).not.toBe(-1);
-    expect(RemoveObject).toBeCalledWith(wall3);
+    expect(funcRemoveObj).toBeCalledWith(wall3);
   });
 });
