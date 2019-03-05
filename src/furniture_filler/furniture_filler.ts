@@ -1,7 +1,7 @@
 import {Joint} from '../view/canvas_components/joint';
 import {Pedestal} from '../view/canvas_components/pedestal';
 import {Room} from '../view/canvas_components/room';
-import * as ViewFactory from '../view/view_factory';
+import {ViewFactory} from '../view/view_factory';
 
 
 export function Fill() {

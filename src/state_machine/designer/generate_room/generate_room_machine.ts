@@ -3,7 +3,7 @@ import Flatten from 'flatten-js';
 import {Joint} from '../../../view/canvas_components/joint';
 import {Room} from '../../../view/canvas_components/room';
 import {Wall} from '../../../view/canvas_components/wall';
-import * as ViewFactory from '../../../view/view_factory';
+import {ViewFactory} from '../../../view/view_factory';
 
 
 export class RoomGenerator {

@@ -3,8 +3,8 @@ import {fabric} from 'fabric';
 import {RenderOrderConfig} from '../../config/render_order_config';
 import {GetImage} from '../../image_manager';
 import {Point} from '../../utils/index';
+import {ViewFactory} from '../view_factory';
 
-import * as ViewFactory from '../view_factory';
 import {FurnitureExportedProperties, ObjectOptions, ViewObject} from './view_object';
 
 type FurnitureParameter = {

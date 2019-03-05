@@ -3,7 +3,7 @@ import Flatten from 'flatten-js';
 
 import {RenderOrderConfig} from '../../config/render_order_config';
 import {CanvasManager} from '../canvas_manager';
-import * as ViewFactory from '../view_factory';
+import {ViewFactory} from '../view_factory';
 
 import {Accessory} from './accessory';
 import {Joint} from './joint';
@@ -169,6 +169,18 @@ export class Wall extends ViewObject {
   RemoveAccessoryID(id: number) {
     const index = this.accessoryIDs.indexOf(id);
     if (index !== -1) this.accessoryIDs.splice(index, 1);
+  }
+
+  IsDuplicateTo(b: Wall): boolean {
+    const a = this;
+    if (a.joint1 === b.joint1 && a.joint2 === b.joint2) {
+      return true;
+    }
+    if (a.joint1 === b.joint2 && a.joint2 === b.joint1) {
+      return true;
+    }
+
+    return false;
   }
 
   protected Set(option: WallOption): void {

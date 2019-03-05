@@ -8,7 +8,8 @@ import {RulerMachine} from './state_machine/designer/ruler/ruler_machine';
 import {SelectionMachine} from './state_machine/designer/selection/selection_machine';
 import {StateMachine} from './state_machine/state_machine';
 import {CanvasManager} from './view/canvas_manager';
-import * as ViewFactory from './view/view_factory';
+import { ViewFactory } from './view/view_factory';
+
 
 let machine: StateMachine = null;
 

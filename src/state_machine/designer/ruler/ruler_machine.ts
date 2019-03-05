@@ -6,7 +6,7 @@ import * as EventSystem from '../../../event_system';
 import {GetImage} from '../../../image_manager';
 import {Background} from '../../../view/canvas_components/background';
 import {CanvasManager} from '../../../view/canvas_manager';
-import * as ViewFactory from '../../../view/view_factory';
+import {ViewFactory} from '../../../view/view_factory';
 import {StateMachine} from '../../state_machine';
 
 export class RulerMachine extends StateMachine {
