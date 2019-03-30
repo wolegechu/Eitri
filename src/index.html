@@ -1,80 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <meta name="description" content="" />
-  <meta name="author" content="" />
-
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
-
-  <title>FSS Designer</title>
 </head>
 
 <body>
-  <div class="container">
-    <div class="card">
-      <div class="card-body">
-        <div class="row">
-          <div class="col">
-              <div class="btn-group" role="group" aria-label="Basic example">
-                  <button type="button" class="btn btn-secondary" id='draw_wall'>画线</button>
-                  <button type="button" class="btn btn-secondary" id='draw_rectangle'>画房间</button>
-                  <button type="button" class="btn btn-secondary" id='draw_window'>画窗</button>
-                  <button type="button" class="btn btn-secondary" id='generate_room'>生成房间</button>
-                  <button type="button" class="btn btn-secondary" id='export'>导出</button>
-                  <button type="button" class="btn btn-secondary" id='test'>测试</button>
-                  
-                </div>
-          </div>
-          <div class="col">
-              <form id="uploadImg" runat="server">          
-                  <div class="input-group">
-                      <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="imgLoader" aria-describedby="inputGroupFileAddon01">
-                        <label class="custom-file-label" for="inputGroupFile01">Choose Image</label>
-                      </div>
-                  </div>
-              </form>
-              <form id="uploadJson" runat="server">
-                <div class="input-group">
-                  <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="jsonLoader" aria-describedby="inputGroupFileAddon01">
-                    <label class="custom-file-label" for="inputGroupFile01">Choose Json</label>
-                  </div>
-                </div>
-              </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-body">
-      <div class="row">
-        <div class="input-group col">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">长度</span>
-          </div>
-          <input type="text" id= "input_length" class="form-control" placeholder="0.00" aria-describedby="basic-addon1">
-        </div>
-        <div class="col">
-            <select id="select" class="selectpicker">
-            </select>
-        </div>
-        <div class="col"></div>
-      </div>
-    </div>
-    </div>
-    <canvas id='c' width="1000" height="500"></canvas>
-  </div>
-
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
-  
-  <script src="bundle.js"></script>
+  <div id='app'></div>
 </body>
+<script src="bundle.js"></script>
 </html>

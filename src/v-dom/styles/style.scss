@@ -1,0 +1,72 @@
+@import './common.scss';
+@import '../assets/iconfont.css';
+body{
+  margin: unset;
+}
+.app{
+  width: 100vw;
+  height: 100vh;
+  .head{
+    padding: 0 20px;
+    background: #faf8f8;
+    border-bottom: 1px solid #e7e7e7;
+    height: 60px;
+    .logo{
+      cursor: pointer;
+      background: rgb(5, 163, 226);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      line-height: 50px;
+      color: white;
+    }
+    .action{
+      justify-content: end;
+      .item{
+        margin-right: 20px;
+        color: gray;
+        .icon{
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+  .container{
+    flex: 1;
+    height: 100%;
+    .left-plane{
+      width: 50px;
+      margin: unset;
+      padding: 30px 10px;
+      background: #e5e7e7;
+      height: calc(100% - 60px);
+      flex-shrink: 0;
+      .item{
+        width: 100%;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #888282;
+        font-size: 12px;
+        &:hover{
+          .icon{
+            font-size: 35px;
+          }
+        }
+        .icon{
+          color: black;
+          font-size: 20px;
+        }
+      }
+    }
+    .content{
+      align-self: flex-start;
+      flex: 1;
+      height: 100%;
+      .canvas{
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+}
+  

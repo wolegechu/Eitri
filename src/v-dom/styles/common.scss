@@ -1,0 +1,16 @@
+.row{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.col{
+  display: flex;
+  flex-direction: column;
+}
+.item{
+  cursor: pointer;
+  &:active{
+    opacity: 0.6;
+  }
+}

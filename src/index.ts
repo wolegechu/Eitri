@@ -108,4 +108,4 @@ export {
   Init
 };
 
-import './test';
+// import './test';
