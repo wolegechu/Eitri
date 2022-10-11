@@ -41,7 +41,7 @@
     "@types/xlsx": "0.0.36",
     "assert": "^1.4.1",
     "bootstrap-select": "^1.13.5",
-    "fabric": "^2.7.0",
+    "fabric": "^5.2.4",
     "flatten-js": "^0.6.7",
     "xlsx": "^0.14.1"
   },
